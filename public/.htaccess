@@ -1,0 +1,51 @@
+<IfModule mod_rewrite.c>
+  <IfModule mod_negotiation.c>
+      Options -MultiViews -Indexes
+  </IfModule>
+  <IfModule mod_headers.c>
+    Header set Content-Security-Policy "frame-ancestors 'self' https://financas.mutue.ao"
+    Header set X-Frame-Options "ALLOW-FROM https://financas.mutue.ao"
+
+  </IfModule>
+
+  RewriteEngine On
+
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
+
+  # Handle Authorization Header
+  RewriteCond %{HTTP:Authorization} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+  # Redirect Trailing Slashes If Not A Folder...
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} (.+)/$
+  RewriteRule ^ %1 [L,R=301]
+
+  # Handle Front Controller...
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ index.php [L]
+</IfModule>
+
+# <IfModule mod_rewrite.c>
+#   <IfModule mod_negotiation.c>
+#       Options -MultiViews -Indexes
+#   </IfModule>
+
+#   RewriteEngine On
+
+#   # Handle Authorization Header
+#   RewriteCond %{HTTP:Authorization} .
+#   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+#   # Redirect Trailing Slashes If Not A Folder...
+#   RewriteCond %{REQUEST_FILENAME} !-d
+#   RewriteCond %{REQUEST_URI} (.+)/$
+#   RewriteRule ^ %1 [L,R=301]
+
+#   # Handle Front Controller...
+#   RewriteCond %{REQUEST_FILENAME} !-d
+#   RewriteCond %{REQUEST_FILENAME} !-f
+#   RewriteRule ^ index.php [L]
+# </IfModule>
