@@ -30,18 +30,22 @@ class AuthController extends Controller
         
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             // Autenticação bem-sucedida
-            return redirect()->intended(RouteServiceProvider::HOME);
+            
+            $user = User::with(['empresas'])->findOrFail(Auth::user()->id);
+            
+            if($user->empresas && count($user->empresas) > 0 ){
+                // return redirect()->intended('/escolher-empresa-operar');
+                return redirect()->intended(RouteServiceProvider::HOME_ESCOLHER_EMPRESAS);
+            }else{
+                return redirect()->intended(RouteServiceProvider::HOME);
+            }
+            
         }
  
         return back()->withErrors([
             'email' => 'Credenciais inválidas',
         ]);
        
-
-        // return back()->withErrors([
-        //     "email" => "Dados Invalidos",
-        //     "password" => "Dados Invalidos",
-        // ]);
     }
    
     public function register()

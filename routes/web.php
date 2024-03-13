@@ -5,6 +5,8 @@ use App\Http\Controllers\{
     ClasseController,
     ContaController,
     DashboardController,
+    EmpresaController,
+    OperacaoController,
     SubContaController
 };
 use Illuminate\Support\Facades\Route;
@@ -35,6 +37,16 @@ Route::group(["middleware" => "auth"], function () {
     Route::delete('classes/delete/{id}', [ClasseController::class, 'destroy']);
     Route::resource('contas', ContaController::class);
     Route::resource('sub-contas', SubContaController::class);
+    Route::resource('empresas', EmpresaController::class);
+    Route::get('/empresas/iniciar-sessão/{id}', [EmpresaController::class, 'iniciar_sessao']);
+    Route::post('/logout-empresa', [EmpresaController::class, 'logout_empresa'])->name('mf.logout_empresa');
+    Route::get('/escolher-empresa-operar', [EmpresaController::class, 'escolher_empresa_operar']);
+    
+    Route::get('/diarios', [OperacaoController::class, 'diarios']);
+    Route::get('/movimentos', [OperacaoController::class, 'movimentos']);
+    Route::get('/balancetes', [OperacaoController::class, 'balancetes']);
+
+
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');
 

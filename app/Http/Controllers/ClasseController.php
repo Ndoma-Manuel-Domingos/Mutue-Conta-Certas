@@ -28,19 +28,18 @@ class ClasseController extends Controller
     {
         // Exibe o formulário para criar um novo post
         
-        $data['classes'] = Classe::select('id', 'nome AS text')->get();
+        $data['classes'] = Classe::select('id', 'designacao AS text')->get();
        
         return Inertia::render('Classes/Create', $data);
     }
 
     public function store(Request $request)
     {
-        
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
         $validator = Validator::make($request->all(), [
             "classe_id" => "required",
-            "status" => "required",
+            "estado" => "required",
         ]);
     
         if ($validator->fails()) {
@@ -49,8 +48,11 @@ class ClasseController extends Controller
         
         $classes =  ClasseEmpresa::create([
             'classe_id' => $request->classe_id,
-            'status' => $request->status,
+            'estado' => $request->estado,
             'empresa_id' => auth()->user()->empresa_id,
+            'created_by' => auth()->user()->id,
+            'updated_by' => auth()->user()->id,
+            'deleted_by' => auth()->user()->id,
         ]);
         
         // return redirect()->route('classes.index');
@@ -70,7 +72,7 @@ class ClasseController extends Controller
         // Exibe o formulário para editar um post
         $data['classe'] = ClasseEmpresa::findOrFail($id);
         
-        $data['classes'] = Classe::select('id', 'nome AS text')->get();
+        $data['classes'] = Classe::select('id', 'designacao AS text')->get();
        
         return Inertia::render('Classes/Edit', $data);
     }
@@ -78,18 +80,18 @@ class ClasseController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            "status" => "required",
+            "estado" => "required",
             "classe_id" => "required",
         ], 
         [
-            "status.required" => "Campo Obrigatório",
+            "estado.required" => "Campo Obrigatório",
             "classe_id.required" => "Campo Obrigatório",
         ]);
         
         // Atualiza um post específico no banco de dados
         $classe = ClasseEmpresa::findOrFail($id);
         $classe->classe_id = $request->classe_id;
-        $classe->status = $request->status;
+        $classe->estado = $request->estado;
         $classe->update();
         
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);

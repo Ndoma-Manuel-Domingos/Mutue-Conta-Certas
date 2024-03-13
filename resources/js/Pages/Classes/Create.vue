@@ -36,12 +36,12 @@
                     </div>
 
                     <div class="col-12 col-md-6 mb-4">
-                      <label for="status" class="form-label">Estado</label>
-                      <Select2 v-model="form.status"
-                        id="status" class="col-12 col-md-12"
+                      <label for="estado" class="form-label">Estado</label>
+                      <Select2 v-model="form.estado"
+                        id="estado" class="col-12 col-md-12"
                         :options="estados" :settings="{ width: '100%' }" 
                       />
-                      <span class="text-danger" v-if="form.errors && form.errors.status">{{ form.errors.status }}</span>
+                      <span class="text-danger" v-if="form.errors && form.errors.estado">{{ form.errors.estado }}</span>
                     </div>
                   </div>
                 </div>
@@ -69,6 +69,9 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
+    sessions() {
+      return this.$page.props.sessions.empresa_sessao;
+    },
   },
   data() {
     return {
@@ -80,7 +83,7 @@ export default {
       
       form: {
         classe_id: "",
-        status: "",
+        estado: "",
       },
     };
   },

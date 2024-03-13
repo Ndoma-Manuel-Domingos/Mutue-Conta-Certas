@@ -40,9 +40,9 @@
                     <tbody>
                       <tr v-for="item in classes.data" :key="item">
                         <td>#</td>
-                        <td>{{ item.classe.codigo }}</td>
-                        <td>{{ item.classe.nome }}</td>
-                        <td class="text-capitalize">{{ item.status }}</td>
+                        <td>{{ item.classe.numero }}</td>
+                        <td>{{ item.classe.designacao }}</td>
+                        <td class="text-capitalize">{{ item.estado }}</td>
                         <td>
                           <div class="float-right">
                             <a :href="`/classes/${item.id}/edit`" class="btn btn-sm btn-success"><i
@@ -105,6 +105,9 @@ export default {
   computed: {
     user() {
       return this.$page.props.auth.user;
+    },
+    sessions() {
+      return this.$page.props.sessions.empresa_sessao;
     },
   },
   data() {

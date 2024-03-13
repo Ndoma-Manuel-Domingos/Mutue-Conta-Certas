@@ -31,7 +31,7 @@
                       <tr>
                         <th>ID</th>
                         <th>Código</th>
-                        <th>Nome</th>
+                        <th>Conta</th>
                         <th>Classe</th>
                         <th>Estado</th>
                         <th class="text-right">Ações</th>
@@ -41,10 +41,10 @@
                     <tbody>
                       <tr v-for="item in contas.data" :key="item">
                         <td>#</td>
-                        <td>{{ item.codigo }}</td>
-                        <td>{{ item.nome }}</td>
-                        <td>{{ item.classe.nome }}</td>
-                        <td class="text-capitalize">{{ item.status }}</td>
+                        <td>{{ item.conta.numero }}</td>
+                        <td>{{ item.conta.designacao }}</td>
+                        <td>{{ item.classe.designacao }}</td>
+                        <td class="text-capitalize">{{ item.estado }}</td>
                         <td>
                           <div class="float-right">
                             <a :href="`/contas/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
@@ -90,6 +90,9 @@ export default {
   computed: {
     user() {
       return this.$page.props.auth.user;
+    },
+    sessions() {
+      return this.$page.props.sessions.empresa_sessao;
     },
   },
   data() {

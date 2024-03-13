@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conta;
+use App\Models\ContaEmpresa;
 use App\Models\SubConta;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,7 +16,6 @@ class SubContaController extends Controller
     public function index()
     {
         // Retorna a lista de posts
-        
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
         $data['subcontas'] = SubConta::with(['empresa', 'conta'])->where('empresa_id', $users->empresa_id)->paginate(7);
@@ -26,35 +26,36 @@ class SubContaController extends Controller
     public function create()
     {
         // Exibe o formulário para criar um novo post
+        $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['contas'] = Conta::select('id', 'nome AS text')->get();
+        $data['contas'] = ContaEmpresa::where('empresa_id', $users->empresa_id)->join('contas', 'controle_conta_empresas.conta_id' , '=', 'contas.id')->select('contas.id', 'contas.designacao AS text')
+        ->get();
        
         return Inertia::render('SubContas/Create', $data);
     }
 
     public function store(Request $request)
     {
-        
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
              
         $request->validate([
             "conta_id" => "required",
-            "nome" => "required",
-            "codigo" => "required",
-            "status" => "required",
+            "designacao" => "required",
+            "numero" => "required",
+            "estado" => "required",
         ], 
         [
             "conta_id.required" => "Campo Obrigatório",
-            "nome.required" => "Campo Obrigatório",
-            "codigo.required" => "Campo Obrigatório",
-            "status.required" => "Campo Obrigatório",
+            "designacao.required" => "Campo Obrigatório",
+            "numero.required" => "Campo Obrigatório",
+            "estado.required" => "Campo Obrigatório",
         ]);
         
         $classes =  SubConta::create([
             'conta_id' => $request->conta_id,
-            'nome' => $request->nome,
-            'codigo' => $request->codigo,
-            'status' => $request->status,
+            'designacao' => $request->designacao,
+            'numero' => $request->numero,
+            'estado' => $request->estado,
             'empresa_id' => auth()->user()->empresa_id,
         ]);
         
@@ -73,7 +74,12 @@ class SubContaController extends Controller
         // Exibe o formulário para editar um post
         $data['subconta'] = SubConta::findOrFail($id);
         
-        $data['contas'] = Conta::select('id', 'nome AS text')->get();
+        $users = User::with('empresa')->findOrFail(auth()->user()->id);
+        
+        $data['contas'] = ContaEmpresa::where('empresa_id', $users->empresa_id)
+        ->join('contas', 'controle_conta_empresas.conta_id' , '=', 'contas.id')
+        ->select('contas.id', 'contas.designacao AS text')
+        ->get();
        
         return Inertia::render('SubContas/Edit', $data);
     }
@@ -81,24 +87,26 @@ class SubContaController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            "status" => "required",
+            "estado" => "required",
             "conta_id" => "required",
-            "nome" => "required",
-            "codigo" => "required",
+            "designacao" => "required",
+            "numero" => "required",
         ], 
         [
-            "status.required" => "Campo Obrigatório",
+            "estado.required" => "Campo Obrigatório",
             "conta_id.required" => "Campo Obrigatório",
-            "nome.required" => "Campo Obrigatório",
-            "codigo.required" => "Campo Obrigatório",
+            "designacao.required" => "Campo Obrigatório",
+            "numero.required" => "Campo Obrigatório",
         ]);
         
+
+
         // Atualiza um post específico no banco de dados
         $classe = SubConta::findOrFail($id);
         $classe->conta_id = $request->conta_id;
-        $classe->nome = $request->nome;
-        $classe->codigo = $request->codigo;
-        $classe->status = $request->status;
+        $classe->designacao = $request->designacao;
+        $classe->numero = $request->numero;
+        $classe->estado = $request->estado;
         $classe->update();
         
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);

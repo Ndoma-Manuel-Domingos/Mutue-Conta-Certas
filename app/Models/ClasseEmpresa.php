@@ -9,14 +9,16 @@ class ClasseEmpresa extends Model
 {
     use HasFactory;
         
-    protected $table = "tb_classes_empresas";
+    protected $table = "controle_classe_empresas";
     
     protected $fillable = [
         'classe_id',
         'empresa_id',
-        'status',
+        'estado',
+        'created_by',
+        'updated_by',
+        'deleted_by',
     ];
-    
         
     public function empresa()
     {
@@ -26,6 +28,16 @@ class ClasseEmpresa extends Model
     public function classe()
     {
         return $this->belongsTo(Classe::class, 'classe_id', 'id');
+    }
+    
+    public function criador()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }  
+    
+    public function alterador()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'id');
     }
     
 }

@@ -16,6 +16,39 @@
           <p>Dashboard</p>
         </Link>
       </li>
+      
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+          <i class="nav-icon fas fa-cog"></i>
+          <p>
+            Empresas
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li
+            class="nav-item"
+            title="EMPRESAS"
+          >
+            <Link
+              href="/empresas"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Empresas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Listagem</p>
+            </Link>
+          </li>
+
+        </ul>
+      </li>
 
       <li class="nav-item">
         <a
@@ -85,6 +118,107 @@
         </ul>
       </li>
 
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+          <i class="nav-icon fas fa-cog"></i>
+          <p>
+            Operações
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li
+            class="nav-item"
+            title="CLASSES"
+          >
+            <Link
+              href="/diarios"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Classes/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Diários</p>
+            </Link>
+          </li>
+          
+          <li
+            class="nav-item"
+            title="Movimentos"
+          >
+            <Link
+              href="/movimentos"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Contas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Movimentos</p>
+            </Link>
+          </li>
+
+          <li
+            class="nav-item"
+            title="Balancetes"
+          >
+            <Link
+              href="/balancetes"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'SubContas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Balancetes</p>
+            </Link>
+          </li>
+
+
+        </ul>
+      </li>
+      
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+          <i class="nav-icon fas fa-cog"></i>
+          <p>
+            Exercícios
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li
+            class="nav-item"
+            title="EMPRESAS"
+          >
+            <Link
+              href="/empresas"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Empresas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Listagem</p>
+            </Link>
+          </li>
+
+        </ul>
+      </li>
+
       <!-- <div class="ml-auto">
         <ul class="navbar-nav">
           <li class="nav-item text-left">
@@ -120,6 +254,9 @@ export default {
   computed: {
     user() {
       return this.$page.props.auth.user;
+    },
+    sessions() {
+      return this.$page.props.sessions.empresa_sessao;
     },
   },
 };
