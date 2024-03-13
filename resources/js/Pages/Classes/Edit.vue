@@ -41,14 +41,14 @@
 
                     <div class="col-12 col-md-6 mb-4">
                       <label for="" class="form-label">Estados</label>
-                      <Select2 v-model="form.status"
-                        id="status" class="col-12 col-md-12"
+                      <Select2 v-model="form.estado"
+                        id="estado" class="col-12 col-md-12"
                         :options="estados" :settings="{ width: '100%' }" 
                       />
                       <span
                         class="text-danger"
-                        v-if="form.errors && form.errors.status"
-                        >{{ form.errors.status }}</span
+                        v-if="form.errors && form.errors.estado"
+                        >{{ form.errors.estado }}</span
                       >
                     </div>
                   </div>
@@ -75,6 +75,9 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
+    sessions() {
+      return this.$page.props.sessions.empresa_sessao;
+    },
   },
   data() {
     return {
@@ -85,7 +88,7 @@ export default {
       
       form: {
         classe_id: this.classe.classe_id ?? "",
-        status: this.classe.status ?? "",
+        estado: this.classe.estado ?? "",
         itemId: this.classe.id ?? "",
       },
     };
@@ -95,7 +98,6 @@ export default {
     submit() {
       this.$Progress.start();
       axios
-        // .put(route("classes.update"), this.form.itemId, this.form)
         .put(`/classes/${this.form.itemId}`, this.form)
         .then((response) => {
           // this.form.reset();

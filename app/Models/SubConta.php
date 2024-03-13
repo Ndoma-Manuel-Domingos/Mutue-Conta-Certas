@@ -9,14 +9,19 @@ class SubConta extends Model
 {
     use HasFactory;
         
-    protected $table = "tb_subcontas";
+    protected $table = "sub_contas";
     
     protected $fillable = [
-        'nome',
-        'codigo',
-        'status',
+        'numero',
+        'designacao',
+        'descricao',
+        'estado',
+        'controle_conta_id',
         'conta_id',
         'empresa_id',
+        'created_by',
+        'updated_by',
+        'deleted_by',
     ];
             
     public function empresa()
@@ -28,5 +33,12 @@ class SubConta extends Model
     {
         return $this->belongsTo(Conta::class, 'conta_id', 'id');
     }
+    
+    /**controle ou conta empresas */
+    public function empresa_conta()
+    {
+        return $this->belongsTo(ContaEmpresa::class, 'controle_conta_id', 'id');
+    }
+    
     
 }

@@ -40,7 +40,7 @@
                                         </button>
                                     </div>
                                     <div class="col-12 text-center my-2">
-                                        <a href="/criar-conta">Criar Empresa</a>
+                                        <a href="/criar-conta">Criar Conta</a>
                                     </div>
                                 </div>
                             </div>

@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -39,6 +41,9 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
+            ],
+            'sessions' => [
+                'empresa_sessao' => Session::get('empresa_logada_mutue_contas_certas_2024'),
             ],
             'flash' => function () use ($request) {
                 return [

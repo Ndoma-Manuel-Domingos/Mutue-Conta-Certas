@@ -9,14 +9,12 @@ class Conta extends Model
 {
     use HasFactory;
         
-    protected $table = "tb_contas";
+    protected $table = "contas";
     
     protected $fillable = [
-        'nome',
-        'codigo',
-        'status',
-        'classe_id',
-        'empresa_id',
+        'numero',
+        'designacao',
+        'descricao',
     ];
             
     public function empresa()

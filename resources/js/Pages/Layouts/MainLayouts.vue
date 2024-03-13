@@ -45,10 +45,24 @@
                     <span>Actualizar Dados</span>
                     <!-- <span class="float-right text-muted text-sm">2 days</span> -->
                   </a>
+                  
+                  <div v-if="sessions"> 
+                    <div class="dropdown-divider"></div>
+                    <Link
+                      @click="logout_empresa"
+                      class="dropdown-item text-danger"
+                      type="button"
+                      method="post"
+                      as="button"
+                    >
+                      <i class="fas fa-sign-out-alt mr-2"></i
+                      ><span>Terminar sessão Empresa</span>
+                    </Link>
+                  </div>
 
                   <div class="dropdown-divider"></div>
                   <Link
-                    href="/logout"
+                    @click="logout"
                     class="dropdown-item text-danger"
                     type="button"
                     method="post"
@@ -56,7 +70,6 @@
                   >
                     <i class="fas fa-sign-out-alt mr-2"></i
                     ><span>Terminar sessão</span>
-                    <!-- <span class="float-right text-muted text-sm">2 days</span> -->
                   </Link>
                 </div>
               </div>
@@ -119,8 +132,77 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
+    sessions() {
+      return this.$page.props.sessions.empresa_sessao;
+    },
   },
-  methods: {},
+  methods: {
+    logout() {
+      this.$Progress.start();
+
+      axios.post(route('mf.logout'))
+        .then((response) => {
+          this.$Progress.finish();
+          
+          Swal.fire({
+            toast: true,
+            icon: "success",
+            title: "Volte sempres!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+          window.location.reload();
+        })
+        .catch((error) => {
+          // sweetError("Ocorreu um erro ao actualizar Instituição!");
+          this.$Progress.fail();
+          Swal.fire({
+            toast: true,
+            icon: "danger",
+            title: "Correu um erro ao salvar os dados!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+        });
+    },
+    
+    logout_empresa() {
+      this.$Progress.start();
+
+      axios.post(route('mf.logout_empresa'))
+        .then((response) => {
+          this.$Progress.finish();
+          
+          Swal.fire({
+            toast: true,
+            icon: "success",
+            title: "Volte sempres!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+          window.location.reload();
+        })
+        .catch((error) => {
+          // sweetError("Ocorreu um erro ao actualizar Instituição!");
+          this.$Progress.fail();
+          Swal.fire({
+            toast: true,
+            icon: "danger",
+            title: "Correu um erro ao salvar os dados!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+        });
+    },
+  },
 };
 </script>
 

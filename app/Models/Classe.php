@@ -9,11 +9,26 @@ class Classe extends Model
 {
     use HasFactory;
         
-    protected $table = "tb_classes";
+    protected $table = "classes";
     
     protected $fillable = [
-        'nome',
-        'codigo',
-        'status',
+        'numero',
+        'designacao',
+        'descricao',
     ];
+                    
+    public function criador()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }  
+    
+    public function alterador()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'id');
+    }
+    
+    public function deletador()
+    {
+        return $this->belongsTo(User::class, 'deleted_by', 'id');
+    }
 }

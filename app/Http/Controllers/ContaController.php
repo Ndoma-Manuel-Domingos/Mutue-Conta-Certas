@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classe;
 use App\Models\Conta;
+use App\Models\ContaEmpresa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class ContaController extends Controller
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['contas'] = Conta::with(['empresa', 'classe'])->where('empresa_id', $users->empresa_id)->paginate(7);
+        $data['contas'] = ContaEmpresa::with(['empresa', 'conta', 'classe'])->where('empresa_id', $users->empresa_id)->paginate(7);
                
         return Inertia::render('Contas/Index', $data);
     }
@@ -26,33 +27,36 @@ class ContaController extends Controller
     public function create()
     {
         // Exibe o formulário para criar um novo post
-        
-        $data['classes'] = Classe::select('id', 'nome AS text')->get();
+        $data['classes'] = Classe::select('id', 'designacao AS text')->get();
+        $data['contas'] = Conta::select('id', 'designacao AS text')->get();
        
         return Inertia::render('Contas/Create', $data);
     }
 
     public function store(Request $request)
     {
-        
+
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
              
         $request->validate([
             "classe_id" => "required",
-            "nome" => "required",
-            "status" => "required",
+            "conta_id" => "required",
+            "numero" => "required",
+            "estado" => "required",
         ], 
         [
             "classe_id.required" => "Campo Obrigatório",
-            "nome.required" => "Campo Obrigatório",
-            "status.required" => "Campo Obrigatório",
+            "conta_id.required" => "Campo Obrigatório",
+            "numero.required" => "Campo Obrigatório",
+            "estado.required" => "Campo Obrigatório",
         ]);
         
-        $classes =  Conta::create([
+        $classes =  ContaEmpresa::create([
             'classe_id' => $request->classe_id,
-            'nome' => $request->nome,
-            'codigo' => $request->codigo,
-            'status' => $request->status,
+            'conta_id' => $request->conta_id,
+            'numero' => $request->numero,
+            'estado' => $request->estado,
+            'created_by' => auth()->user()->id,
             'empresa_id' => auth()->user()->empresa_id,
         ]);
         
@@ -71,9 +75,10 @@ class ContaController extends Controller
     public function edit($id)
     {
         // Exibe o formulário para editar um post
-        $data['conta'] = Conta::findOrFail($id);
+        $data['conta'] = ContaEmpresa::findOrFail($id);
         
-        $data['classes'] = Classe::select('id', 'nome AS text')->get();
+        $data['classes'] = Classe::select('id', 'designacao AS text')->get();
+        $data['contas'] = Conta::select('id', 'designacao AS text')->get();
        
         return Inertia::render('Contas/Edit', $data);
     }
@@ -81,24 +86,24 @@ class ContaController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            "status" => "required",
+            "estado" => "required",
             "classe_id" => "required",
-            "nome" => "required",
-            "codigo" => "required",
+            "conta_id" => "required",
+            "numero" => "required",
         ], 
         [
-            "status.required" => "Campo Obrigatório",
+            "estado.required" => "Campo Obrigatório",
             "classe_id.required" => "Campo Obrigatório",
-            "nome.required" => "Campo Obrigatório",
-            "codigo.required" => "Campo Obrigatório",
+            "conta_id.required" => "Campo Obrigatório",
+            "numero.required" => "Campo Obrigatório",
         ]);
         
         // Atualiza um post específico no banco de dados
-        $classe = Conta::findOrFail($id);
+        $classe = ContaEmpresa::findOrFail($id);
         $classe->classe_id = $request->classe_id;
-        $classe->nome = $request->nome;
-        $classe->codigo = $request->codigo;
-        $classe->status = $request->status;
+        $classe->conta_id = $request->conta_id;
+        $classe->numero = $request->numero;
+        $classe->estado = $request->estado;
         $classe->update();
         
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);

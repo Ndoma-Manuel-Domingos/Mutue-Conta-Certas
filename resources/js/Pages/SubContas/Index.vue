@@ -41,10 +41,10 @@
                     <tbody>
                       <tr v-for="item in subcontas.data" :key="item">
                         <td>#</td>
-                        <td>{{ item.codigo }}</td>
-                        <td>{{ item.nome }}</td>
-                        <td>{{ item.conta.nome }}</td>
-                        <td class="text-capitalize">{{ item.status }}</td>
+                        <td>{{ item.numero }}</td>
+                        <td>{{ item.designacao }}</td>
+                        <td>{{ item.conta.designacao }}</td>
+                        <td class="text-capitalize">{{ item.estado }}</td>
                         <td>
                           <div class="float-right">
                             <a :href="`/sub-contas/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
@@ -90,6 +90,9 @@ export default {
   computed: {
     user() {
       return this.$page.props.auth.user;
+    },
+    sessions() {
+      return this.$page.props.sessions.empresa_sessao;
     },
   },
   data() {

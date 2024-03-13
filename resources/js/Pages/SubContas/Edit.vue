@@ -28,15 +28,15 @@
                   <div class="row">
                   
                     <div class="col-12 col-md-6 mb-4">
-                      <label for="codigo" class="form-label">Código de subConta</label>
-                      <input type="text" id="codigo" v-model="form.codigo" class="form-control" placeholder="Ex: 1.1, 1.1.1">
-                      <span class="text-danger" v-if="form.errors && form.errors.codigo">{{ form.errors.codigo }}</span>
+                      <label for="numero" class="form-label">Código de subConta</label>
+                      <input type="text" id="numero" v-model="form.numero" class="form-control" placeholder="Ex: 1.1, 1.1.1">
+                      <span class="text-danger" v-if="form.errors && form.errors.numero">{{ form.errors.numero }}</span>
                     </div>
                   
                     <div class="col-12 col-md-6 mb-4">
-                      <label for="nome" class="form-label">SubConta</label>
-                      <input type="text" id="nome" v-model="form.nome" class="form-control" placeholder="informe o nome da sub conta:">
-                      <span class="text-danger" v-if="form.errors && form.errors.nome">{{ form.errors.nome }}</span>
+                      <label for="designacao" class="form-label">SubConta</label>
+                      <input type="text" id="designacao" v-model="form.designacao" class="form-control" placeholder="informe o designacao da sub conta:">
+                      <span class="text-danger" v-if="form.errors && form.errors.designacao">{{ form.errors.designacao }}</span>
                     </div>
                   
                   
@@ -55,14 +55,14 @@
 
                     <div class="col-12 col-md-6 mb-4">
                       <label for="" class="form-label">Estados</label>
-                      <Select2 v-model="form.status"
-                        id="status" class="col-12 col-md-12"
+                      <Select2 v-model="form.estado"
+                        id="estado" class="col-12 col-md-12"
                         :options="estados" :settings="{ width: '100%' }" 
                       />
                       <span
                         class="text-danger"
-                        v-if="form.errors && form.errors.status"
-                        >{{ form.errors.status }}</span
+                        v-if="form.errors && form.errors.estado"
+                        >{{ form.errors.estado }}</span
                       >
                     </div>
                   </div>
@@ -89,6 +89,9 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
+    sessions() {
+      return this.$page.props.sessions.empresa_sessao;
+    },
   },
   data() {
     return {
@@ -99,9 +102,9 @@ export default {
       
       form: {
         conta_id: this.subconta.conta_id ?? "",
-        nome: this.subconta.nome ?? "",
-        codigo: this.subconta.codigo ?? "",
-        status: this.subconta.status ?? "",
+        designacao: this.subconta.designacao ?? "",
+        numero: this.subconta.numero ?? "",
+        estado: this.subconta.estado ?? "",
         itemId: this.subconta.id ?? "",
       },
     };
