@@ -98,5 +98,7 @@ class ClasseController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+        $classe = ClasseEmpresa::findOrFail((int)$id);
+        
     }
 }

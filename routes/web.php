@@ -32,6 +32,7 @@ Route::group(["middleware" => "auth"], function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('mf.logout');
     Route::resource('classes', ClasseController::class);
+    Route::delete('classes/delete/{id}', [ClasseController::class, 'destroy']);
     Route::resource('contas', ContaController::class);
     Route::resource('sub-contas', SubContaController::class);
 
