@@ -2,9 +2,9 @@
     <body class="hold-transition login-page" >
         <AuthLayouts>
 
-            <video autoplay muted loop id="myVideo">
+            <!-- <video autoplay muted loop id="myVideo">
               <source src="images/pexels-rodnae-productions-7821854 (1080p).mp4" type="video/mp4">
-            </video>
+            </video> -->
 
             <div class="login-box">        
                 <div class="card card-outline">

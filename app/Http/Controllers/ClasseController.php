@@ -7,6 +7,7 @@ use App\Models\ClasseEmpresa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -28,7 +29,7 @@ class ClasseController extends Controller
     {
         // Exibe o formulário para criar um novo post
         
-        $data['classes'] = Classe::select('id', 'designacao AS text')->get();
+        $data['classes'] = Classe::select('id', 'designacao As d', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->get();
        
         return Inertia::render('Classes/Create', $data);
     }
@@ -64,7 +65,22 @@ class ClasseController extends Controller
 
     public function show($id)
     {
-        // Exibe um post específico
+    
+        $empresa = ClasseEmpresa::findOrFail($id);
+        
+        $estado = "";
+        
+        if($empresa->estado == "activo"){
+            $estado = "desactivo";
+        }
+        if($empresa->estado == "desactivo"){
+            $estado = "activo";
+        }
+        
+        $empresa->estado = $estado;
+        $empresa->update();
+        
+        return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
 
     public function edit($id)
@@ -72,7 +88,7 @@ class ClasseController extends Controller
         // Exibe o formulário para editar um post
         $data['classe'] = ClasseEmpresa::findOrFail($id);
         
-        $data['classes'] = Classe::select('id', 'designacao AS text')->get();
+        $data['classes'] = Classe::select('id', 'designacao As d', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->get();
        
         return Inertia::render('Classes/Edit', $data);
     }

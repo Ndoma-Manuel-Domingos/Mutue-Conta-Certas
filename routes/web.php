@@ -6,7 +6,10 @@ use App\Http\Controllers\{
     ContaController,
     DashboardController,
     EmpresaController,
+    ExercicioController,
     OperacaoController,
+    PeriodoController,
+    PlanoGeralContaController,
     SubContaController
 };
 use Illuminate\Support\Facades\Route;
@@ -34,7 +37,11 @@ Route::group(["middleware" => "auth"], function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('mf.logout');
     Route::resource('classes', ClasseController::class);
+    Route::resource('plano-geral-contas', PlanoGeralContaController::class);
+    Route::resource('exercicios', ExercicioController::class);
+    Route::resource('periodos', PeriodoController::class);
     Route::resource('contas', ContaController::class);
+    Route::get('/get-conta/{id}', [ContaController::class, 'get_conta']);
     Route::resource('sub-contas', SubContaController::class);
     Route::resource('empresas', EmpresaController::class);
     Route::get('/empresas/iniciar-sessão/{id}', [EmpresaController::class, 'iniciar_sessao']);

@@ -37,6 +37,11 @@ class ContaEmpresa extends Model
         return $this->belongsTo(Conta::class, 'conta_id', 'id');
     }
     
+    public function sub_contas_empresa()
+    {
+        return $this->hasMany(SubConta::class, 'conta_id', 'conta_id');
+    }
+    
     public function criador()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');

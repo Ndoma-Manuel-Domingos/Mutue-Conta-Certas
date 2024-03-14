@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Classe;
 use App\Models\Conta;
 use App\Models\ContaEmpresa;
+use App\Models\SubConta;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ContaController extends Controller
@@ -19,7 +21,7 @@ class ContaController extends Controller
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['contas'] = ContaEmpresa::with(['empresa', 'conta', 'classe'])->where('empresa_id', $users->empresa_id)->paginate(7);
+        $data['contas'] = ContaEmpresa::with(['empresa', 'conta', 'classe'])->where('empresa_id', $users->empresa_id)->paginate(10);
                
         return Inertia::render('Contas/Index', $data);
     }
@@ -27,8 +29,9 @@ class ContaController extends Controller
     public function create()
     {
         // Exibe o formulário para criar um novo post
-        $data['classes'] = Classe::select('id', 'designacao AS text')->get();
-        $data['contas'] = Conta::select('id', 'designacao AS text')->get();
+        $data['classes'] = Classe::select('id', 'designacao As d', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->get();
+        $data['contas'] = Conta::select('id', 'designacao As d', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->get();
+
        
         return Inertia::render('Contas/Create', $data);
     }
@@ -67,18 +70,48 @@ class ContaController extends Controller
         // Salva um novo post no banco de dados
     }
 
+
     public function show($id)
     {
-        // Exibe um post específico
+    
+        $empresa = ContaEmpresa::findOrFail($id);
+        
+        $estado = "";
+        
+        if($empresa->estado == "activo"){
+            $estado = "desactivo";
+        }
+        if($empresa->estado == "desactivo"){
+            $estado = "activo";
+        }
+        
+        $empresa->estado = $estado;
+        $empresa->update();
+        
+        return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
 
+
+    public function get_conta($id)
+    {
+        $conta = Conta::findOrFail($id);
+        $subcontas = SubConta::with(['empresa', 'conta'])->where('conta_id', $conta->id)->orderBy('id', 'desc')->get();
+        
+        return response()->json(
+            [
+                'conta' => $conta, 
+                "subcontas"=> $subcontas
+            ]
+        , 200);
+    }
+    
     public function edit($id)
     {
         // Exibe o formulário para editar um post
         $data['conta'] = ContaEmpresa::findOrFail($id);
         
-        $data['classes'] = Classe::select('id', 'designacao AS text')->get();
-        $data['contas'] = Conta::select('id', 'designacao AS text')->get();
+        $data['classes'] = Classe::select('id', 'designacao As d', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->get();
+        $data['contas'] = Conta::select('id', 'designacao As d', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->get();
        
         return Inertia::render('Contas/Edit', $data);
     }
