@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use PDF;
 
 class ContaController extends Controller
 {
@@ -112,5 +113,13 @@ class ContaController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+    }
+
+    public function imprimirContas(){
+        
+        $data['contas_data'] = ContaEmpresa::with(['empresa', 'conta', 'classe'])->get();     
+        // dd($data['contas_data']);
+        $pdf = PDF::loadView('pdf.contas.Contas', $data)->setPaper('a4', 'landscape');
+        return $pdf->stream('Contas.pdf');
     }
 }

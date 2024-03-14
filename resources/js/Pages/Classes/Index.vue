@@ -23,6 +23,10 @@
             <div class="card">
               <div class="card-header">
                 <a href="/classes/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR CLASSES</a>
+
+                <button class="btn btn-danger" @click="imprimirContas()">
+                  <i class="fas fa-save"></i> Imprimir Contas
+                </button>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -49,7 +53,7 @@
                                 class="fas fa-edit"></i> Editar</a>
                             <a @click="openModal(item.id)" data-toggle="modal" data-target="#exampleModalCenter"
                               class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i>
-                              Apagar</a>
+                              Desactivar</a>
                           </div>
                         </td>
                       </tr>
@@ -74,7 +78,7 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-trash"></i>Tem certeza que deseja eliminar essa classe ?</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fas fa-exclamation-circle" style="font-size: 3em; color: #C70039;"></i> <br> Tem certeza que deseja desactivar essa classe ?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -118,7 +122,10 @@ export default {
   },
   mounted() { },
   methods: {
-
+    imprimirContas() {
+      // window.open("/estudante/lista-avaliacao/" + btoa(btoa(btoa(this.usuario))) + '/' +  btoa(btoa(btoa(this.ano_lectivo))) + '/' + btoa(btoa(btoa(this.query.id_semestre))));
+      window.open("imprimir-classes");
+    },
     openModal(id) {
       this.dialog = true;
       this.id_delete = id;
@@ -127,13 +134,13 @@ export default {
       this.dialog = false;
     },
     deleteItem(id) {
-      alert(JSON.stringify(id))
+      
       this.$Progress.start();
       axios.delete('classes/delete/' + id).then((response) => {
         Swal.fire({
           toast: true,
           icon: "success",
-          title: "Dados Salvos com Sucesso!",
+          title: "O registo foi eliminado com sucesso!",
           animation: false,
           position: "top-end",
           showConfirmButton: false,

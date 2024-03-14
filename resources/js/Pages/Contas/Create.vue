@@ -32,15 +32,6 @@
                       <input type="text" id="numero" v-model="form.numero" class="form-control" placeholder="Ex: 1.1, 1.1.1">
                       <span class="text-danger" v-if="form.errors && form.errors.numero">{{ form.errors.numero }}</span>
                     </div>
-                    
-                    <div class="col-12 col-md-6 mb-4">
-                      <label for="conta_id" class="form-label">Contas</label>
-                      <Select2 v-model="form.conta_id"
-                        id="conta_id" class="col-12 col-md-12"
-                        :options="contas" :settings="{ width: '100%' }" 
-                      />
-                      <span class="text-danger" v-if="form.errors && form.errors.conta_id">{{ form.errors.conta_id }}</span>
-                    </div>
                   
                     <div class="col-12 col-md-6 mb-4">
                       <label for="classe_id" class="form-label">Classes</label>
@@ -49,6 +40,15 @@
                         :options="classes" :settings="{ width: '100%' }" 
                       />
                       <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{ form.errors.classe_id }}</span>
+                    </div>
+
+                    <div class="col-12 col-md-6 mb-4">
+                      <label for="conta_id" class="form-label">Contas</label>
+                      <Select2 v-model="form.conta_id"
+                        id="conta_id" class="col-12 col-md-12"
+                        :options="contas" :settings="{ width: '100%' }" 
+                      />
+                      <span class="text-danger" v-if="form.errors && form.errors.conta_id">{{ form.errors.conta_id }}</span>
                     </div>
 
                     <div class="col-12 col-md-6 mb-4">
