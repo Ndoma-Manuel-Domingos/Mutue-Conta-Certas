@@ -51,7 +51,7 @@
       <table id="table_id" class="display" style="background-color:white; border-radius:4px;">
     <thead>
         <tr class="">
-            <th style="text-align: center;color:white; background-color: gray; width: 5px;"><b>#</b></th>
+            
             <th style="text-align: center;color:white; background-color: gray;"><b>Conta nº</b></th>
             <th style="text-align: center;color:white; background-color: gray;"><b>Designação da conta</b></th>
             <th style="text-align: center;color:white; background-color: gray;"><b>Classe</b></th>
@@ -65,12 +65,11 @@
     <tbody>
         @foreach($contas_data as $item)
         <tr>
-            <td style="text-align: center;"></td>
             <td style="text-align: center;">{{$item->conta->numero}}</td>
-            <td style="text-align: center;">{{$item->conta->designacao}}</td>
-            <td style="text-align: center;">{{$item->classe->designacao}}</td>
-            <td style="text-align: center;">{{$item->empresa->nome_empresa}}</td>
-            <td style="text-align: center;">{{$item->estado}}</td>
+            <td style="text-align: left;">{{$item->conta->designacao}}</td>
+            <td style="text-align: left;">{{$item->classe->designacao}}</td>
+            <td style="text-align: left;">{{$item->empresa->nome_empresa}}</td>
+            <td style="text-align: left;">{{$item->estado}}</td>
             
             {{-- <td style="text-align: center;">{{$item}}</td>             --}}
         </tr>

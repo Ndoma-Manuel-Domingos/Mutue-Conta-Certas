@@ -28,19 +28,6 @@
                   <div class="row">
                   
                     <div class="col-12 col-md-6 mb-4">
-                      <label for="numero" class="form-label">Código de subConta</label>
-                      <input type="text" id="numero" v-model="form.numero" class="form-control" placeholder="Ex: 1.1, 1.1.1">
-                      <span class="text-danger" v-if="form.errors && form.errors.numero">{{ form.errors.numero }}</span>
-                    </div>
-                  
-                    <div class="col-12 col-md-6 mb-4">
-                      <label for="designacao" class="form-label">SubConta</label>
-                      <input type="text" id="designacao" v-model="form.designacao" class="form-control" placeholder="informe o designacao da sub conta:">
-                      <span class="text-danger" v-if="form.errors && form.errors.designacao">{{ form.errors.designacao }}</span>
-                    </div>
-                  
-                  
-                    <div class="col-12 col-md-6 mb-4">
                       <label for="" class="form-label">Conta</label>
                       <Select2 v-model="form.conta_id"
                         id="conta_id" class="col-12 col-md-12"
@@ -52,6 +39,19 @@
                         >{{ form.errors.conta_id }}</span
                       >
                     </div>
+                    
+                    <div class="col-12 col-md-6 mb-4">
+                      <label for="numero" class="form-label">Código de subConta</label>
+                      <input type="text" id="numero" v-model="form.numero" class="form-control" placeholder="Ex: 1.1, 1.1.1">
+                      <span class="text-danger" v-if="form.errors && form.errors.numero">{{ form.errors.numero }}</span>
+                    </div>
+                  
+                    <div class="col-12 col-md-6 mb-4">
+                      <label for="designacao" class="form-label">Designação</label>
+                      <input type="text" id="designacao" v-model="form.designacao" class="form-control" placeholder="informe o designação da subconta:">
+                      <span class="text-danger" v-if="form.errors && form.errors.designacao">{{ form.errors.designacao }}</span>
+                    </div>
+                  
 
                     <div class="col-12 col-md-6 mb-4">
                       <label for="" class="form-label">Estados</label>

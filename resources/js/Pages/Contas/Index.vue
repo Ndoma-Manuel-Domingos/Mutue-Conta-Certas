@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">LISTAM CONTAS</h1>
+            <h1 class="m-0">LISTAGEM CONTAS</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -51,9 +51,12 @@
                         <td class="text-capitalize">{{ item.estado }}</td>
                         <td>
                           <div class="float-right">
-                            <a :href="`/contas/${item.id}/edit`" class="btn btn-sm btn-success"><i
-                                class="fas fa-edit"></i> Editar</a>
-                            <a href="" class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i> Apagar</a>
+                            <a :href="`/contas/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
+                            
+                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
+                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
+                            
+                            <!-- <a href="" class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i> Apagar</a> -->
                           </div>
                         </td>
                       </tr>
@@ -98,12 +101,45 @@ export default {
   data() {
     return {};
   },
-  mounted() { },
+  mounted() {},
   methods: {
     imprimirContas() {
       // window.open("/estudante/lista-avaliacao/" + btoa(btoa(btoa(this.usuario))) + '/' +  btoa(btoa(btoa(this.ano_lectivo))) + '/' + btoa(btoa(btoa(this.query.id_semestre))));
       window.open("imprimir-contas");
-    }
+    },
+    mudar_estado(item) {
+      this.$Progress.start();
+
+      axios.get(`/contas/${item.id}`)
+        .then((response) => {
+          this.$Progress.finish();
+          Swal.fire({
+            toast: true,
+            icon: "success",
+            title: "Estado Alterado com sucesso!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+      
+          window.location.reload();
+        })
+        .catch((error) => {
+          
+          this.$Progress.fail();
+          Swal.fire({
+            toast: true,
+            icon: "danger",
+            title: "Correu um erro ao Estado Alterado com sucesso!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+          
+        });
+    },
   },
 };
 </script>

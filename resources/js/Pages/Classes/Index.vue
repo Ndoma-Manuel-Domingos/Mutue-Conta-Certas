@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">LISTAM CLASSES</h1>
+            <h1 class="m-0">LISTAGEM CLASSES</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -49,11 +49,10 @@
                         <td class="text-capitalize">{{ item.estado }}</td>
                         <td>
                           <div class="float-right">
-                            <a :href="`/classes/${item.id}/edit`" class="btn btn-sm btn-success"><i
-                                class="fas fa-edit"></i> Editar</a>
-                            <a @click="openModal(item.id)" data-toggle="modal" data-target="#exampleModalCenter"
-                              class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i>
-                              Desactivar</a>
+                            <a :href="`/classes/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
+                            <!-- <a @click="deleteItem(item)" class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i> Apagar</a> -->
+                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
+                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
                           </div>
                         </td>
                       </tr>
@@ -166,6 +165,40 @@ export default {
         console.error("Erro ao fazer requisição POST:", error);
       });
 
+    },
+    
+    mudar_estado(item) {
+      this.$Progress.start();
+
+      axios.get(`/classes/${item.id}`)
+        .then((response) => {
+          this.$Progress.finish();
+          Swal.fire({
+            toast: true,
+            icon: "success",
+            title: "Estado Alterado com sucesso!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+      
+          window.location.reload();
+        })
+        .catch((error) => {
+          
+          this.$Progress.fail();
+          Swal.fire({
+            toast: true,
+            icon: "danger",
+            title: "Correu um erro ao Estado Alterado com sucesso!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+          
+        });
     },
   },
 };

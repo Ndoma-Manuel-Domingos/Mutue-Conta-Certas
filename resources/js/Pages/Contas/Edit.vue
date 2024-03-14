@@ -27,21 +27,7 @@
                 <div class="card-body">
                   <div class="row">
                   
-                    <div class="col-12 col-md-6 mb-4">
-                      <label for="numero" class="form-label">Código Conta</label>
-                      <input type="text" id="numero" v-model="form.numero" class="form-control" placeholder="Ex: 1.1, 1.1.1">
-                      <span class="text-danger" v-if="form.errors && form.errors.numero">{{ form.errors.numero }}</span>
-                    </div>
-                  
-                    <div class="col-12 col-md-6 mb-4">
-                      <label for="nome" class="form-label">Contas</label>
-                      <Select2 v-model="form.conta_id"
-                        id="conta_id" class="col-12 col-md-12"
-                        :options="contas" :settings="{ width: '100%' }" 
-                      />
-                      <span class="text-danger" v-if="form.errors && form.errors.conta_id">{{ form.errors.conta_id }}</span>
-                    </div>
-                  
+                                    
                   
                     <div class="col-12 col-md-6 mb-4">
                       <label for="" class="form-label">Classes</label>
@@ -55,6 +41,25 @@
                         >{{ form.errors.classe_id }}</span
                       >
                     </div>
+                    
+                    
+                    <div class="col-12 col-md-6 mb-4">
+                      <label for="nome" class="form-label">Contas</label>
+                      <Select2 v-model="form.conta_id"
+                        id="conta_id" class="col-12 col-md-12"
+                        :options="contas" :settings="{ width: '100%' }" 
+                        @select="getSubContas($event)"
+                      />
+                      <span class="text-danger" v-if="form.errors && form.errors.conta_id">{{ form.errors.conta_id }}</span>
+                    </div>
+
+                  
+                    <div class="col-12 col-md-6 mb-4">
+                      <label for="numero" class="form-label">Código Conta</label>
+                      <input type="text" id="numero" v-model="form.numero" class="form-control" placeholder="Ex: 1.1, 1.1.1">
+                      <span class="text-danger" v-if="form.errors && form.errors.numero">{{ form.errors.numero }}</span>
+                    </div>
+                  
 
                     <div class="col-12 col-md-6 mb-4">
                       <label for="" class="form-label">Estados</label>
@@ -114,6 +119,20 @@ export default {
   },
   mounted() {},
   methods: {
+  
+    getSubContas({ id, text }) {
+      axios
+        .get(`/get-conta/${this.form.conta_id}`)
+        .then((response) => {
+          console.log(response.data);
+          this.form.numero = response.data.conta.numero + ".";
+          this.subcontas = [];
+          this.subcontas = response.data.subcontas;
+        })
+        .catch((error) => {});
+    },
+
+
     submit() {
       this.$Progress.start();
       axios

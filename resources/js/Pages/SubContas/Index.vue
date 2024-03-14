@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">LISTAM SUBCONTAS</h1>
+            <h1 class="m-0">LISTAGEM SUBCONTAS</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -23,6 +23,11 @@
             <div class="card">
               <div class="card-header"> 
                 <a href="/sub-contas/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR SUBCONTAS</a>
+
+                <button class="btn btn-danger" @click="imprimirContas()">
+                  <i class="fas fa-save"></i> Imprimir Contas
+                </button>
+
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -43,7 +48,7 @@
                         <td>#</td>
                         <td>{{ item.numero }}</td>
                         <td>{{ item.designacao }}</td>
-                        <td>{{ item.conta.designacao }}</td>
+                        <td>{{ item.conta.numero }} - {{ item.conta.designacao }}</td>
                         <td class="text-capitalize">{{ item.estado }}</td>
                         <td>
                           <div class="float-right">
@@ -99,7 +104,11 @@ export default {
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {
+    imprimirContas() {
+      window.open("imprimir-sub-contas");
+    },
+  },
 };
 </script>
   

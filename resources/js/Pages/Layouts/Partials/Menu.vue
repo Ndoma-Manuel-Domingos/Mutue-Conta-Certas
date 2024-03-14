@@ -63,6 +63,25 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
+          
+          <li
+            class="nav-item"
+            title="PGC"
+          >
+            <Link
+              href="/plano-geral-contas"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'PlanoGeralConta/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>PGC</p>
+            </Link>
+          </li>
+        
+        
           <li
             class="nav-item"
             title="CLASSES"
@@ -186,7 +205,7 @@
         </ul>
       </li>
       
-      <li class="nav-item">
+      <li class="nav-item" v-if="sessions">
         <a
           href="#"
           class="nav-link"
@@ -194,25 +213,42 @@
         >
           <i class="nav-icon fas fa-cog"></i>
           <p>
-            Exercícios
+            Gestão
             <i class="right fas fa-angle-left"></i>
           </p>
         </a>
         <ul class="nav nav-treeview">
           <li
             class="nav-item"
-            title="EMPRESAS"
+            title="Exercicios"
           >
             <Link
-              href="/empresas"
+              href="/exercicios"
               class="nav-link"
               :class="{
                 active:
-                  $page.component == 'Empresas/Index',
+                  $page.component == 'Exercicios/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
-              <p>Listagem</p>
+              <p>Exercícios</p>
+            </Link>
+          </li>
+          
+          <li
+            class="nav-item"
+            title="Periodos"
+          >
+            <Link
+              href="/periodos"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Periodos/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Períodos</p>
             </Link>
           </li>
 

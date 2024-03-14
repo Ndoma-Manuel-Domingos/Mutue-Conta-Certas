@@ -16,6 +16,11 @@ class Classe extends Model
         'designacao',
         'descricao',
     ];
+    
+    public function contas_empresa()
+    {
+        return $this->hasMany(ContaEmpresa::class, 'classe_id', 'id');
+    }  
                     
     public function criador()
     {

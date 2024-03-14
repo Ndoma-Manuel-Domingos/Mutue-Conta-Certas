@@ -8,7 +8,9 @@ use App\Models\SubConta;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use PDF;
 
 class SubContaController extends Controller
 {
@@ -28,9 +30,12 @@ class SubContaController extends Controller
         // Exibe o formulário para criar um novo post
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['contas'] = ContaEmpresa::where('empresa_id', $users->empresa_id)->join('contas', 'controle_conta_empresas.conta_id' , '=', 'contas.id')->select('contas.id', 'contas.designacao AS text')
+        $data['contas'] = ContaEmpresa::where('empresa_id', $users->empresa_id)->join('contas', 'controle_conta_empresas.conta_id' , '=', 'contas.id')
+        ->select('contas.id', 'designacao As d', DB::raw('CONCAT(contas.numero, " - ", contas.designacao) AS text'))
         ->get();
-       
+                
+        $data['subcontas'] = SubConta::with(['empresa', 'conta'])->orderBy('id', 'asc')->get();
+    
         return Inertia::render('SubContas/Create', $data);
     }
 
@@ -78,7 +83,8 @@ class SubContaController extends Controller
         
         $data['contas'] = ContaEmpresa::where('empresa_id', $users->empresa_id)
         ->join('contas', 'controle_conta_empresas.conta_id' , '=', 'contas.id')
-        ->select('contas.id', 'contas.designacao AS text')
+        ->select('contas.id', 'designacao As d', DB::raw('CONCAT(contas.numero, " - ", contas.designacao) AS text'))
+        // ->select('contas.id', 'contas.designacao AS text')
         ->get();
        
         return Inertia::render('SubContas/Edit', $data);
@@ -115,5 +121,12 @@ class SubContaController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+    }
+
+    public function imprimirSubContas(){
+        $data['subConta_data'] = SubConta::with(['empresa', 'conta', 'empresa_conta'])->get();     
+        
+        $pdf = PDF::loadView('pdf.contas.SubConta', $data)->setPaper('a4', 'landscape');
+        return $pdf->stream('Contas.pdf');
     }
 }

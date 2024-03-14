@@ -19,7 +19,7 @@ class ClasseEmpresa extends Model
         'updated_by',
         'deleted_by',
     ];
-        
+            
     public function empresa()
     {
         return $this->belongsTo(Empresa::class, 'empresa_id', 'id');

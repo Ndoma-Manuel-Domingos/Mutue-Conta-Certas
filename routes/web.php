@@ -6,7 +6,10 @@ use App\Http\Controllers\{
     ContaController,
     DashboardController,
     EmpresaController,
+    ExercicioController,
     OperacaoController,
+    PeriodoController,
+    PlanoGeralContaController,
     SubContaController
 };
 use Illuminate\Support\Facades\Route;
@@ -34,8 +37,11 @@ Route::group(["middleware" => "auth"], function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('mf.logout');
     Route::resource('classes', ClasseController::class);
-    Route::delete('classes/delete/{id}', [ClasseController::class, 'destroy']);
+    Route::resource('plano-geral-contas', PlanoGeralContaController::class);
+    Route::resource('exercicios', ExercicioController::class);
+    Route::resource('periodos', PeriodoController::class);
     Route::resource('contas', ContaController::class);
+    Route::get('/get-conta/{id}', [ContaController::class, 'get_conta']);
     Route::resource('sub-contas', SubContaController::class);
     Route::resource('empresas', EmpresaController::class);
     Route::get('/empresas/iniciar-sessão/{id}', [EmpresaController::class, 'iniciar_sessao']);
@@ -50,7 +56,10 @@ Route::group(["middleware" => "auth"], function () {
 
     // Rotas de impressao de documentos-Ednilson
     Route::get('imprimir-contas', [ContaController::class, 'imprimirContas']);
+    Route::get('imprimir-sub-contas', [SubContaController::class, 'imprimirSubContas']);
     Route::get('imprimir-classes', [ClasseController::class, 'imprimirClasses']);
+    Route::get('imprimir-exercicios', [ExercicioController::class, 'imprimirExercicios']);
+    Route::get('imprimir-periodos', [PeriodoController::class, 'imprimirPeriodo']);
 
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');
