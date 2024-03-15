@@ -152,18 +152,35 @@
         <ul class="nav nav-treeview">
           <li
             class="nav-item"
-            title="CLASSES"
+            title="DIÁRIOS"
           >
             <Link
               href="/diarios"
               class="nav-link"
               :class="{
                 active:
-                  $page.component == 'Classes/Index',
+                  $page.component == 'Diarios/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Diários</p>
+            </Link>
+          </li>
+          
+          <li
+            class="nav-item"
+            title="TIPOS DE DOCUMENTOS"
+          >
+            <Link
+              href="/tipos-documentos"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'TipoDocumentos/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Tipos de Documentos</p>
             </Link>
           </li>
           

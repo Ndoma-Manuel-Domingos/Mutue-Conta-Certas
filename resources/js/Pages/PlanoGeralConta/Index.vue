@@ -21,17 +21,32 @@
         <div class="row">
           <div class="col-12 col-md-12">
             <div class="card">
+            
+              <div class="card-header">
+                <a href="/classes/create" class="btn-sm btn-primary btn float-left mx-1">Criar Classe</a>
+                <a href="/contas/create" class="btn-sm btn-primary btn float-left mx-1">Criar Conta</a>
+                <a href="/sub-contas/create" class="btn-sm btn-primary btn float-left mx-1">Criar Subconta</a>
+                <Link href="" class="text-secondary">
+                  Total Registro: {{ plano.total }}</Link
+                >
+                <Paginacao
+                  :links="plano.links"
+                  :prev="plano.prev_page_url"
+                  :next="plano.next_page_url"
+                />
+              </div>
+            
               <div class="card-body">
                 <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap" v-for="plan in plano" :key="plan">
+                  <table class="table table-sm table-hover text-nowrap" v-for="plan in plano.data" :key="plan">
                     
                     <thead>
-                      <tr class="btn-info">
+                      <tr class="btn-dark">
                         <th class="text-uppercase">{{ plan.classe.numero }} - {{ plan.classe.designacao }}</th>
                       </tr>
                     </thead>
                     <tbody v-for="conta in plan.classe.contas_empresa" :key="conta">
-                      <tr>
+                      <tr class="btn-light">
                         <th style="padding-left: 60px;">{{ conta.conta.numero }} - {{ conta.conta.designacao }}</th>
                       </tr>
                       
@@ -46,12 +61,12 @@
               
               <div class="card-footer">
                 <!-- <Link href="" class="text-secondary">
-                  Total Registro: {{ classes.total }}</Link
+                  Total Registro: {{ plano.total }}</Link
                 >
                 <Paginacao
-                  :links="classes.links"
-                  :prev="classes.prev_page_url"
-                  :next="classes.next_page_url"
+                  :links="plano.links"
+                  :prev="plano.prev_page_url"
+                  :next="plano.next_page_url"
                 /> -->
               </div>
             </div>

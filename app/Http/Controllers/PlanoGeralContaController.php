@@ -18,7 +18,7 @@ class PlanoGeralContaController extends Controller
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['plano'] = ClasseEmpresa::with(['empresa', 'classe.contas_empresa.conta', 'classe.contas_empresa.sub_contas_empresa'])->get(); //;->where('empresa_id', $users->empresa_id)->paginate(10);
+        $data['plano'] = ClasseEmpresa::with(['empresa', 'classe.contas_empresa.conta', 'classe.contas_empresa.sub_contas_empresa'])->paginate(1);
                
         // dd($data['plano']);
                

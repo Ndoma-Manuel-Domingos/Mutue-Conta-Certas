@@ -177,7 +177,7 @@ export default {
     },
     
     verificar_sessao_empresa(item){
-      return this.sessions && this.sessions.id == item.id ? false : true
+      return this.sessions && this.sessions.id == item.id ? true : false
     }
     
   },
