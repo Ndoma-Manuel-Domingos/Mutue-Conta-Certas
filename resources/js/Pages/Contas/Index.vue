@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">LISTAGEM CONTAS</h1>
+            <h1 class="m-0">LISTAGEM  DE CONTA</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -22,7 +22,7 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header"> 
-                <a href="/contas/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR CONTAS</a>
+                <a href="/contas/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR CONTA</a>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
