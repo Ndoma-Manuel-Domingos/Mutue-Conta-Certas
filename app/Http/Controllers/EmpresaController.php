@@ -205,7 +205,7 @@ class EmpresaController extends Controller
         
     public function escolher_empresa_operar(Request $request)
     {
-        // dd("escolher Empresa para operar");
+       
     
         // Session::forget('empresa_logada_mutue_contas_certas_2024');
 

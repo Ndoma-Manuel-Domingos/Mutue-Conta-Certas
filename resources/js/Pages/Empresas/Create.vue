@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">CRIAR EMPRESAS</h1>
+            <h1 class="m-0">CRIAR EMPRESA</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -30,13 +30,13 @@
                     <div class="row">
                       
                       <div class="col-12 col-md-6 mb-4">
-                        <label for="nome_empresa" class="form-label">Nome Empresa</label>
+                        <label for="nome_empresa" class="form-label">Nome</label>
                         <input type="text" id="nome_empresa" v-model="form.nome_empresa" class="form-control" placeholder="Nome da Empresa">
                         <span class="text-danger" v-if="form.errors && form.errors.nome_empresa">{{ form.errors.nome_empresa }}</span>
                       </div>
                        
                       <div class="col-12 col-md-6 mb-4">
-                        <label for="codigo_empresa" class="form-label">NIF Empresa</label>
+                        <label for="codigo_empresa" class="form-label">NIF</label>
                         <input type="text" id="codigo_empresa" v-model="form.codigo_empresa" class="form-control" placeholder="Número de Identificação Físcal">
                         <span class="text-danger" v-if="form.errors && form.errors.codigo_empresa">{{ form.errors.codigo_empresa }}</span>
                       </div>
@@ -64,14 +64,14 @@
                 
                 <div class="card">
                   <div class="card-header">
-                      <h5>Regimes/Moedas de Operações</h5>
+                      <h5>Regime do IVA/Moeda de Operação</h5>
                     </div>
                     
                     <div class="card-body">
                       <div class="row">
                         
                         <div class="col-12 col-md-3 mb-4">
-                          <label for="regime_empresa_id" class="form-label">Regimes</label>
+                          <label for="regime_empresa_id" class="form-label">Regime do IVA</label>
                           <Select2 v-model="form.regime_empresa_id"
                             id="regime_empresa_id" class="col-12 col-md-12"
                             :options="regimes" :settings="{ width: '100%' }" 
@@ -80,7 +80,7 @@
                         </div>
                           
                         <div class="col-12 col-md-3 mb-4">
-                          <label for="moeda_base_id" class="form-label">Moeda Base</label>
+                          <label for="moeda_base_id" class="form-label">Moeda de Operação</label>
                           <Select2 v-model="form.moeda_base_id"
                             id="moeda_base_id" class="col-12 col-md-12"
                             :options="moedas" :settings="{ width: '100%' }" 
@@ -88,23 +88,23 @@
                           <span class="text-danger" v-if="form.errors && form.errors.moeda_base_id">{{ form.errors.moeda_base_id }}</span>
                         </div>
                         
-                        <div class="col-12 col-md-3 mb-4">
+                        <!-- <div class="col-12 col-md-3 mb-4">
                           <label for="moeda_alternativa_id" class="form-label">Moeda Alternativa</label>
                           <Select2 v-model="form.moeda_alternativa_id"
                             id="moeda_alternativa_id" class="col-12 col-md-12"
                             :options="moedas" :settings="{ width: '100%' }" 
                           />
                           <span class="text-danger" v-if="form.errors && form.errors.moeda_alternativa_id">{{ form.errors.moeda_alternativa_id }}</span>
-                        </div>
+                        </div> -->
                         
-                        <div class="col-12 col-md-3 mb-4">
+                        <!-- <div class="col-12 col-md-3 mb-4">
                           <label for="moeda_cambio_id" class="form-label">Moeda para Cambio</label>
                           <Select2 v-model="form.moeda_cambio_id"
                             id="moeda_cambio_id" class="col-12 col-md-12"
                             :options="moedas" :settings="{ width: '100%' }" 
                           />
                           <span class="text-danger" v-if="form.errors && form.errors.moeda_cambio_id">{{ form.errors.moeda_cambio_id }}</span>
-                        </div>
+                        </div> -->
                         
                       </div>
                     </div>
@@ -115,7 +115,7 @@
                 
                 <div class="card">
                   <div class="card-header">
-                      <h5>Endereço da Empresa</h5>
+                      <h5>Endereço</h5>
                     </div>
                     
                     <div class="card-body">
@@ -128,7 +128,7 @@
                         </div>
                         
                         <div class="col-12 col-md-3 mb-4">
-                          <label for="casa" class="form-label">Nº Casa</label>
+                          <label for="casa" class="form-label">Nº do Edifício</label>
                           <input type="text" id="casa" v-model="form.casa" class="form-control" placeholder="Casa">
                           <span class="text-danger" v-if="form.errors && form.errors.casa">{{ form.errors.casa }}</span>
                         </div>
