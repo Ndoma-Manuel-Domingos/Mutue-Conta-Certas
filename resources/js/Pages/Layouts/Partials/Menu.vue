@@ -221,6 +221,136 @@
 
         </ul>
       </li>
+
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+          <i class="fas fa-credit-card"></i>
+        
+          <p>
+            
+          <!-- Gestão de relatorios  -->
+          
+            Gestão de Relatorios
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li
+            class="nav-item"
+            title="CLASSES"
+          >
+            <Link
+              href="/diarios"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Classes/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Balanços</p>
+            </Link>
+          </li>
+          
+          <li
+            class="nav-item"
+            title="Movimentos"
+          >
+            <Link
+              href="/movimentos"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Contas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Balacentes</p>
+            </Link>
+          </li>
+
+          <li
+            class="nav-item"
+            title="Balancetes"
+          >
+            
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+        <p>
+        <i class="fas fa-credit-card"></i>
+        Extratos</p>
+          <!-- Gestão de relatorios  -->
+            <i class="right fas fa-angle-left"></i>
+        </a>
+        <ul class="nav nav-treeview">
+          <li
+            class="nav-item"
+            title="CLASSES"
+          >
+            <Link
+              href="/diarios"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Classes/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Diário</p>
+            </Link>
+          </li>
+          
+          <li
+            class="nav-item"
+            title="Movimentos"
+          >
+            <Link
+              href="/movimentos"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Contas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Semanal</p>
+            </Link>
+          </li>
+
+          <li
+            class="nav-item"
+            title="Balancetes"
+          >
+            <Link
+              href="/balancetes"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'SubContas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Anual</p>
+            </Link>
+          </li>
+
+
+        </ul>
+      </li>
+           
+          </li>
+
+
+        </ul>
+      </li>
       
       <li class="nav-item" v-if="sessions">
         <a

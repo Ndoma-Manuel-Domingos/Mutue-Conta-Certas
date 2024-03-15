@@ -16,6 +16,23 @@
       </div>
     </div>
 
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <button class="btn btn-sm btn-danger"  @click="imprimirPlano()">
+                <i class="fas fa-file pdf"></i> Imprimir PGC
+              </button>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="content">
       <div class="container-fluid">
         <div class="row">
@@ -49,16 +66,16 @@
                       <tr class="btn-light">
                         <th style="padding-left: 60px;">{{ conta.conta.numero }} - {{ conta.conta.designacao }}</th>
                       </tr>
-                      
+
                       <tr v-for="sub_conta in conta.sub_contas_empresa" :key="sub_conta">
                         <td style="padding-left: 120px;">{{ sub_conta.numero }} - {{ sub_conta.designacao }} </td>
                       </tr>
-                    
+
                     </tbody>
                   </table>
                 </div>
               </div>
-              
+
               <div class="card-footer">
                 <!-- <Link href="" class="text-secondary">
                   Total Registro: {{ plano.total }}</Link
@@ -76,7 +93,7 @@
     </div>
   </MainLayouts>
 </template>
-  
+
 <script>
 
 import Paginacao from "../../components/Paginacao.vue";
@@ -86,7 +103,7 @@ export default {
   props: [
     'plano'
   ],
-  components:{
+  components: {
     Paginacao,
   },
   computed: {
@@ -100,13 +117,15 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() { },
   methods: {
-  
+
     deleteItem(item) {
       console.log(item.id)
     },
-    
+    imprimirPlano() {
+      window.open("imprimir-plano");
+    },
     mudar_estado(item) {
       this.$Progress.start();
 
@@ -122,11 +141,11 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-      
+
           window.location.reload();
         })
         .catch((error) => {
-          
+
           this.$Progress.fail();
           Swal.fire({
             toast: true,
@@ -137,11 +156,9 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-          
+
         });
     },
   },
 };
 </script>
-  
-  

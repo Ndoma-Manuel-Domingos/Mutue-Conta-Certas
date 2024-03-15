@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">LISTAGEM EMPRESAS</h1>
+            <h1 class="m-0">LISTAGEM  DE EMPRESA</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -22,7 +22,7 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header"> 
-                <a href="/empresas/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR EMPRESAS</a>
+                <a href="/empresas/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR EMPRESA</a>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -31,10 +31,10 @@
                       <tr>
                         <th>NIF</th>
                         <th>Nome</th>
-                        <th>Regime</th>
+                        <th>Regime do IVA</th>
                         <th>Moeda Base</th>
-                        <th>Moeda Alternativo</th>
-                        <th>Moeda Cámbio</th>
+                        <!-- <th>Moeda Alternativo</th>
+                        <th>Moeda Cámbio</th> -->
                         <th>Estado</th>
                         <th class="text-right">Ações</th>
                       </tr>
@@ -47,8 +47,8 @@
                         <td>{{ item.nome_empresa }}</td>
                         <td>{{ item.regime.designacao }}</td>
                         <td>{{ item.moeda.base.designacao }} - {{ item.moeda.base.sigla }}</td>
-                        <td>{{ item.moeda.alternativa.designacao }} - {{ item.moeda.alternativa.sigla }}</td>
-                        <td>{{ item.moeda.cambio.designacao }} - {{ item.moeda.cambio.sigla }}</td>
+                        <!-- <td>{{ item.moeda.alternativa.designacao }} - {{ item.moeda.alternativa.sigla }}</td>
+                        <td>{{ item.moeda.cambio.designacao }} - {{ item.moeda.cambio.sigla }}</td> -->
                         <td class="text-capitalize">{{ item.estado_empresa_id == 1 ? 'Activo': 'Desactivo' }}</td>
                         <td>
                                               
