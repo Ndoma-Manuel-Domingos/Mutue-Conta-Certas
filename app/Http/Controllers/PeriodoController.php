@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use PDF;
 
 class PeriodoController extends Controller
 {
@@ -110,5 +111,12 @@ class PeriodoController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+    }
+
+    public function imprimirPeriodo(){
+        $data['periodo_data'] = Periodo::with(['empresa', 'exercicio'])->get();     
+        
+        $pdf = PDF::loadView('pdf.contas.Periodo', $data)->setPaper('a4', 'landscape');
+        return $pdf->stream('Contas.pdf');
     }
 }

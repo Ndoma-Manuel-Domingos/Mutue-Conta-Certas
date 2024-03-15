@@ -64,6 +64,14 @@ Route::group(["middleware" => "auth"], function () {
 
 
 
+    // Rotas de impressao de documentos-Ednilson
+    Route::get('imprimir-contas', [ContaController::class, 'imprimirContas']);
+    Route::get('imprimir-sub-contas', [SubContaController::class, 'imprimirSubContas']);
+    Route::get('imprimir-classes', [ClasseController::class, 'imprimirClasses']);
+    Route::get('imprimir-exercicios', [ExercicioController::class, 'imprimirExercicios']);
+    Route::get('imprimir-periodos', [PeriodoController::class, 'imprimirPeriodo']);
+
+
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');
 
 });

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use PDF;
 
 class SubContaController extends Controller
 {
@@ -120,5 +121,12 @@ class SubContaController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+    }
+
+    public function imprimirSubContas(){
+        $data['subConta_data'] = SubConta::with(['empresa', 'conta', 'empresa_conta'])->get();     
+        
+        $pdf = PDF::loadView('pdf.contas.SubConta', $data)->setPaper('a4', 'landscape');
+        return $pdf->stream('Contas.pdf');
     }
 }

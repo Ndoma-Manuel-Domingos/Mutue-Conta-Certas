@@ -23,6 +23,10 @@
             <div class="card">
               <div class="card-header"> 
                 <a href="/exercicios/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR EXERCÍCIO</a>
+
+                <button class="btn btn-danger" @click="imprimirContas()">
+                  <i class="fas fa-save"></i> Imprimir Contas
+                </button>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -98,6 +102,10 @@ export default {
   methods: {
     deleteItem(item) {
       console.log(item.id)
+    },
+
+    imprimirContas() {
+      window.open("imprimir-exercicios");
     },
   },
 };

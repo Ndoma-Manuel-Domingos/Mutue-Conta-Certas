@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use PDF;
 
 class ExercicioController extends Controller
 {
@@ -107,5 +108,12 @@ class ExercicioController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+    }
+
+    public function imprimirExercicios(){
+        $data['exercicio_data'] = Exercicio::with(['empresa'])->get();     
+        
+        $pdf = PDF::loadView('pdf.contas.Exercicio', $data)->setPaper('a4', 'landscape');
+        return $pdf->stream('Contas.pdf');
     }
 }

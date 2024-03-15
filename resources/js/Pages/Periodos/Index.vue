@@ -23,6 +23,10 @@
             <div class="card">
               <div class="card-header"> 
                 <a href="/periodos/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR PERÍODO</a>
+                
+                <button class="btn btn-danger" @click="imprimirPeriodos()">
+                  <i class="fas fa-save"></i> Imprimir Contas
+                </button>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -100,6 +104,9 @@ export default {
   methods: {
     deleteItem(item) {
       console.log(item.id)
+    },
+    imprimirPeriodos() {
+      window.open("imprimir-periodos");
     },
   },
 };

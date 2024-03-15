@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use PDF;
 
 class ClasseController extends Controller
 {
@@ -20,7 +21,7 @@ class ClasseController extends Controller
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['classes'] = ClasseEmpresa::with(['empresa', 'classe'])->paginate(7);
+        $data['classes'] = ClasseEmpresa::with(['empresa', 'classe'])->where('estado', '!=', 'inactivo')->paginate(7);
                
         return Inertia::render('Classes/Index', $data);
     }
@@ -116,5 +117,22 @@ class ClasseController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+        try {
+
+            $classe = ClasseEmpresa::findOrFail((int)$id);
+            $classe->estado = 'inactivo';
+            $classe->update();
+
+            return response()->json(['message' => "O registo foi eliminado com sucesso!"], 200);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage());
+        }
+    }
+
+    public function imprimirClasses(){
+        $data['classes_data'] = ClasseEmpresa::with(['empresa', 'classe'])->get();     
+        
+        $pdf = PDF::loadView('pdf.contas.Classes', $data)->setPaper('a4', 'landscape');
+        return $pdf->stream('Contas.pdf');
     }
 }

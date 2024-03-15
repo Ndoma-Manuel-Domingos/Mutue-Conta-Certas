@@ -21,8 +21,12 @@
         <div class="row">
           <div class="col-12 col-md-12">
             <div class="card">
-              <div class="card-header"> 
+              <div class="card-header">
                 <a href="/contas/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR CONTAS</a>
+
+                <button class="btn btn-danger" @click="imprimirContas()">
+                  <i class="fas fa-save"></i> Imprimir Contas
+                </button>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -37,7 +41,7 @@
                         <th class="text-right">Ações</th>
                       </tr>
                     </thead>
-                    
+
                     <tbody>
                       <tr v-for="item in contas.data" :key="item">
                         <td>#</td>
@@ -60,16 +64,11 @@
                   </table>
                 </div>
               </div>
-              
+
               <div class="card-footer">
                 <Link href="" class="text-secondary">
-                  Total Registro: {{ contas.total }}</Link
-                >
-                <Paginacao
-                  :links="contas.links"
-                  :prev="contas.prev_page_url"
-                  :next="contas.next_page_url"
-                />
+                Total Registro: {{ contas.total }}</Link>
+                <Paginacao :links="contas.links" :prev="contas.prev_page_url" :next="contas.next_page_url" />
               </div>
             </div>
           </div>
@@ -78,7 +77,7 @@
     </div>
   </MainLayouts>
 </template>
-  
+
 <script>
 
 import Paginacao from "../../components/Paginacao.vue";
@@ -88,7 +87,7 @@ export default {
   props: [
     'contas'
   ],
-  components:{
+  components: {
     Paginacao,
   },
   computed: {
@@ -104,6 +103,10 @@ export default {
   },
   mounted() {},
   methods: {
+    imprimirContas() {
+      // window.open("/estudante/lista-avaliacao/" + btoa(btoa(btoa(this.usuario))) + '/' +  btoa(btoa(btoa(this.ano_lectivo))) + '/' + btoa(btoa(btoa(this.query.id_semestre))));
+      window.open("imprimir-contas");
+    },
     mudar_estado(item) {
       this.$Progress.start();
 
@@ -140,5 +143,3 @@ export default {
   },
 };
 </script>
-  
-  

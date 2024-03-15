@@ -23,6 +23,11 @@
             <div class="card">
               <div class="card-header"> 
                 <a href="/sub-contas/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR SUBCONTAS</a>
+
+                <button class="btn btn-danger" @click="imprimirContas()">
+                  <i class="fas fa-save"></i> Imprimir Contas
+                </button>
+
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -99,7 +104,11 @@ export default {
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {
+    imprimirContas() {
+      window.open("imprimir-sub-contas");
+    },
+  },
 };
 </script>
   
