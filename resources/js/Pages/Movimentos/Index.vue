@@ -30,42 +30,47 @@
                     <thead>
                       <tr>
                         <th>ID</th>
-                        <th>Conta</th>
-                        <th>Operação</th>
+                        <th>Diário</th>
+                        <th>Documento</th>
                         <th>Debito</th>
                         <th>Credito</th>
+                        <th>Data</th>
+                        <th>Exercícios</th>
+                        <th>Operador</th>
                         <th class="text-right">Ações</th>
                       </tr>
                     </thead>
                     
                     <tbody>
-                      <!-- <tr v-for="item in movimentos.data" :key="item">
-                        <td>#</td>
-                        <td>teste</td>
-                        <td>test</td>
-                        <td>test</td>
-                        <td class="text-capitalize">testse</td>
+                      <tr v-for="item in movimentos.data" :key="item">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td>
+                        <td>{{ item.tipo_documento.numero }} - {{ item.tipo_documento.designacao }}</td>
+                        <td>{{ formatValor(item.debito) }}</td>
+                        <td>{{ formatValor(item.credito) }}</td>
+                        <td>{{ item.data_lancamento }}</td>
+                        <td>{{ item.exercicio.designacao }}</td>
+                        <td>{{ item.criador.name }}</td>
                         <td>
                           <div class="float-right">
                             <a :href="``" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
-                            <a href="" class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i> Apagar</a>
                           </div>
                         </td>
-                      </tr> -->
+                      </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
               
               <div class="card-footer">
-                <!-- <Link href="" class="text-secondary">
+                <Link href="" class="text-secondary">
                   Total Registro: {{ movimentos.total }}</Link
                 >
                 <Paginacao
                   :links="movimentos.links"
                   :prev="movimentos.prev_page_url"
                   :next="movimentos.next_page_url"
-                /> -->
+                />
               </div>
             </div>
           </div>
@@ -99,7 +104,15 @@ export default {
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {
+    formatValor(atual) {
+      const valorFormatado = Intl.NumberFormat("pt-br", {
+        style: "currency",
+        currency: "AOA",
+      }).format(atual);
+      return valorFormatado;
+    },
+  },
 };
 </script>
   

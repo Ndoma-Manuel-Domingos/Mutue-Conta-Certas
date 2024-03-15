@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Diario;
 use App\Models\Exercicio;
+use App\Models\Movimento;
 use App\Models\MovimentoItem;
 use App\Models\SubConta;
 use App\Models\TipoDocumento;
@@ -21,8 +22,10 @@ class MovimentoController extends Controller
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
+            
+        $session = Session::get('empresa_logada_mutue_contas_certas_2024');
 
-        $data['movimentos'] = []; // TipoDocumento::with(['empresa', 'diario'])->paginate(10);
+        $data['movimentos'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $session['id'])->paginate(10);
                
         return Inertia::render('Movimentos/Index', $data);
     }
@@ -33,45 +36,65 @@ class MovimentoController extends Controller
         $data['exercicios'] = Exercicio::select('id', 'designacao As text')->get();
         $data['tipo_documentos'] = TipoDocumento::select('id', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->get();
         $data['contas'] = SubConta::select('id', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->get();
+        
+        $user = User::findOrFail(auth()->user()->id);
+        $session = Session::get('empresa_logada_mutue_contas_certas_2024');
+        
+        $data['item_movimentos'] = MovimentoItem::with(['subconta.conta', 'empresa'])->where('movimento_id', NULL)->where('empresa_id', $session['id'])->where('user_id', $user->id)->get();
+        $data['resultados'] = MovimentoItem::with(['subconta.conta', 'empresa'])->whereNull('movimento_id')->where('empresa_id', $session['id'])->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
        
         return Inertia::render('Movimentos/Create', $data);
     }
 
     public function store(Request $request)
     {
- 
+    
         $request->validate([
-            "designacao" => "required",
+            "exercicio_id" => "required",
+            "data_lancamento" => "required",
             "diario_id" => "required",
-            "numero" => "required",
-            "estado" => "required",
+            "tipo_documento_id" => "required",
+            "lancamento_atual" => "required",
         ], 
         [
-            "designacao.required" => "Campo Obrigatório",
+            "exercicio_id.required" => "Campo Obrigatório",
+            "data_lancamento.required" => "Campo Obrigatório",
             "diario_id.required" => "Campo Obrigatório",
-            "numero.required" => "Campo Obrigatório",
-            "estado.required" => "Campo Obrigatório",
+            "tipo_documento_id.required" => "Campo Obrigatório",
+            "lancamento_atual.required" => "Campo Obrigatório",
         ]);
         
-        $users = User::with('empresa')->findOrFail(auth()->user()->id);
-    
-        $empresa_sessao_global = Session::get('empresa_logada_mutue_contas_certas_2024');
-                
-        if($empresa_sessao_global){
-            
-            TipoDocumento::create([
-                'designacao' => $request->designacao,
-                'diario_id' => $request->diario_id,
-                'numero' => $request->numero,
-                'estado' => $request->estado,
-                'created_by' => auth()->user()->id,
-                'empresa_id' => $empresa_sessao_global['id'],
-            ]);
+        $user = User::findOrFail(auth()->user()->id);
+        $session = Session::get('empresa_logada_mutue_contas_certas_2024');    
         
-        }
+        $codigo = time();
         
-        // return redirect()->route('classes.index');
+        $resultado = MovimentoItem::with(['subconta.conta', 'empresa'])->whereNull('movimento_id')->where('empresa_id', $session['id'])->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito, SUM(iva) AS total_iva')->first();
         
+        $create = Movimento::create([
+            'hash' => $codigo,
+            'debito' => $resultado->total_debito,
+            'credito' => $resultado->total_credito,
+            'iva' => $resultado->total_iva,
+            'empresa_id' => $session['id'],
+            'descricao' => "",
+            'exercicio_id' => $request->exercicio_id,
+            'data_lancamento' => $request->data_lancamento,
+            'lancamento_atual' => $request->lancamento_atual,
+            'diario_id' => $request->diario_id,
+            'tipo_documento_id' => $request->tipo_documento_id,
+            'user_id' => $user->id,
+            'created_by' => $user->id,
+        ]);
+        
+        $items = MovimentoItem::with(['subconta.conta', 'empresa'])->where('movimento_id', NULL)->where('empresa_id', $session['id'])->where('user_id', $user->id)->get();
+        foreach ($items as $item) {
+            $update = MovimentoItem::findOrFail($item->id);
+            $update->hash = $codigo;
+            $update->movimento_id = $create->id;
+            $update->update();
+        }        
+
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     
         // Salva um novo post no banco de dados

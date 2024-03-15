@@ -142,6 +142,8 @@ export default {
     "exercicios",
     "tipo_documentos",
     "contas",
+    "item_movimentos",
+    "resultados",
   ],
   computed: {
     user() {
@@ -167,16 +169,11 @@ export default {
       resultados: [],
       
       form: {
-        
         exercicio_id: "",
         data_lancamento: "",
         lancamento_atual: "001",
         diario_id: "",
         tipo_documento_id: "",
-      
-        numero: "",
-        designacao: "",
-        estado: "activo",
       },
     };
   },
@@ -190,7 +187,7 @@ export default {
           
           this.form.numero = response.data.diario.numero + ".";
           this.tipo_documentos = [];
-          this.tipo_documentos = response.data.tipo_documentos;
+          this.tipo_documentos = response.data.tipos_documentos;
           
         })
         .catch((error) => {});
