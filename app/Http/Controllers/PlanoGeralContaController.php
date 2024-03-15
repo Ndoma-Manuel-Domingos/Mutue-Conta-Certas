@@ -8,6 +8,7 @@ use App\Models\ContaEmpresa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use PDF;
 
 class PlanoGeralContaController extends Controller
 {
@@ -53,5 +54,12 @@ class PlanoGeralContaController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+    }
+
+    public function imprimirPlano(){ 
+        $data['plano_data'] = ClasseEmpresa::with(['empresa', 'classe.contas_empresa.conta', 'classe.contas_empresa.sub_contas_empresa'])->get(); //;->where('empresa_id', $users->empresa_id)->paginate(10);
+           
+        $pdf = PDF::loadView('pdf.contas.PlanoContas', $data)->setPaper('a3', 'landscape');
+        return $pdf->stream('Contas.pdf');
     }
 }
