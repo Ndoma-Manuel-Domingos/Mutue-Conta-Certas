@@ -5,12 +5,15 @@ use App\Http\Controllers\{
     ClasseController,
     ContaController,
     DashboardController,
+    DiarioController,
     EmpresaController,
     ExercicioController,
+    MovimentoController,
     OperacaoController,
     PeriodoController,
     PlanoGeralContaController,
-    SubContaController
+    SubContaController,
+    TipoDocumentoController
 };
 use Illuminate\Support\Facades\Route;
 
@@ -48,8 +51,15 @@ Route::group(["middleware" => "auth"], function () {
     Route::post('/logout-empresa', [EmpresaController::class, 'logout_empresa'])->name('mf.logout_empresa');
     Route::get('/escolher-empresa-operar', [EmpresaController::class, 'escolher_empresa_operar']);
     
-    Route::get('/diarios', [OperacaoController::class, 'diarios']);
-    Route::get('/movimentos', [OperacaoController::class, 'movimentos']);
+    Route::resource('diarios', DiarioController::class);
+    Route::get('/get-diario/{id}', [DiarioController::class, 'get_diario']);
+    Route::resource('tipos-documentos', TipoDocumentoController::class);
+    Route::resource('movimentos', MovimentoController::class);
+    Route::get('/adicionar-conta-movimento/{id}', [MovimentoController::class, 'adicionar_conta_movimento']);
+    Route::get('/remover-conta-movimento/{id}', [MovimentoController::class, 'remover_conta_movimento']);
+    Route::get('/alterar-debito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_debito_conta_movimento']);
+    Route::get('/alterar-credito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_credito_conta_movimento']);
+    // Route::get('/movimentos', [OperacaoController::class, 'movimentos']);
     Route::get('/balancetes', [OperacaoController::class, 'balancetes']);
 
 

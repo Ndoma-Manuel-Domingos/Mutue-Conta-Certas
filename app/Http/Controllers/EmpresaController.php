@@ -179,6 +179,9 @@ class EmpresaController extends Controller
     
     public function iniciar_sessao($id)
     {
+    
+        Session::forget('empresa_logada_mutue_contas_certas_2024');
+        
         $empresa = Empresa::with(['endereco', 'regime', 'moeda.base', 'moeda.alternativa', 'moeda.cambio'])->findOrFail($id);
         
         $empresa_array = [

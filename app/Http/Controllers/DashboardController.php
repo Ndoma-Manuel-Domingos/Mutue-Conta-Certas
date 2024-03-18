@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubConta;
+use App\Models\SUBCONTATESTE;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +21,23 @@ class DashboardController extends Controller
     
     public function dashboard(Request $request)
     {
+    
+        // $sucontas = SUBCONTATESTE::where('CodConta', '71')->get();
+        
+        // foreach ($sucontas as $conta) {
+        //     SubConta::create(
+        //         [
+        //             'numero' => $conta->Numero,
+        //             'designacao' => $conta->Descricao,
+        //             'descricao' => $conta->Descricao,
+        //             'estado' => 'activo',
+        //             'conta_id' => 54,
+        //             'empresa_id' => 1,
+        //         ]
+        //     );
+        // }
+        
+        // dd("finish");
     
         $sua_sessao_global = Session::get('empresa_logada_mutue_contas_certas_2024');
         
