@@ -29,13 +29,13 @@
                   <table class="table table-hover text-nowrap">
                     <thead>
                       <tr>
-                        <th>ID</th>
+                        <th>Nº</th>
                         <th>Diário</th>
                         <th>Documento</th>
-                        <th>Debito</th>
-                        <th>Credito</th>
+                        <th>Débito</th>
+                        <th>Crédito</th>
                         <th>Data</th>
-                        <th>Exercícios</th>
+                        <th>Exercício</th>
                         <th>Operador</th>
                         <th class="text-right">Ações</th>
                       </tr>

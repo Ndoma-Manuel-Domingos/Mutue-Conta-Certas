@@ -96,7 +96,7 @@ class ContaController extends Controller
     public function get_conta($id)
     {
         $conta = Conta::findOrFail($id);
-        $subcontas = SubConta::with(['empresa', 'conta'])->where('conta_id', $conta->id)->orderBy('id', 'desc')->get();
+        $subcontas = SubConta::with(['empresa', 'conta'])->where('conta_id', $conta->id)->orderBy('id', 'asc')->get();
         
         return response()->json(
             [

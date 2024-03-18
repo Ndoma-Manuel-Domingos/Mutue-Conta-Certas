@@ -25,8 +25,9 @@ class MovimentoController extends Controller
             
         $session = Session::get('empresa_logada_mutue_contas_certas_2024');
 
-        $data['movimentos'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $session['id'])->paginate(10);
-               
+        $data['movimentos'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $session['id'])->orderBy('id', 'desc')->paginate(10);
+
+        
         return Inertia::render('Movimentos/Index', $data);
     }
 
@@ -42,6 +43,8 @@ class MovimentoController extends Controller
         
         $data['item_movimentos'] = MovimentoItem::with(['subconta.conta', 'empresa'])->where('movimento_id', NULL)->where('empresa_id', $session['id'])->where('user_id', $user->id)->get();
         $data['resultados'] = MovimentoItem::with(['subconta.conta', 'empresa'])->whereNull('movimento_id')->where('empresa_id', $session['id'])->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
+       
+        $data['ultimo_movimento'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $session['id'])->count();
        
         return Inertia::render('Movimentos/Create', $data);
     }
@@ -221,6 +224,38 @@ class MovimentoController extends Controller
         
         return response()->json(['item_movimentos' => $item_movimentos, 'resultados' => $resultados], 200);
     }  
+    
+    // public function alterar_iva_conta_movimento($id, $iva)
+    // {
+    //     $user = User::findOrFail(auth()->user()->id);
+        
+    //     $movimento = MovimentoItem::findOrFail($id);
+    //     $movimento->credito = $iva;
+    //     $movimento->update();
+        
+    //     $session = Session::get('empresa_logada_mutue_contas_certas_2024');
+        
+    //     $item_movimentos = MovimentoItem::with(['subconta.conta', 'empresa'])->where('movimento_id', NULL)->where('empresa_id', $session['id'])->where('user_id', $user->id)->get();
+    //     $resultados = MovimentoItem::with(['subconta.conta', 'empresa'])->whereNull('movimento_id')->where('empresa_id', $session['id'])->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
+        
+    //     return response()->json(['item_movimentos' => $item_movimentos, 'resultados' => $resultados], 200);
+    // }  
+    
+    // public function alterar_descricao_conta_movimento($id, $descricao)
+    // {
+    //     $user = User::findOrFail(auth()->user()->id);
+        
+    //     $movimento = MovimentoItem::findOrFail($id);
+    //     $movimento->descricao = $descricao;
+    //     $movimento->update();
+        
+    //     $session = Session::get('empresa_logada_mutue_contas_certas_2024');
+        
+    //     $item_movimentos = MovimentoItem::with(['subconta.conta', 'empresa'])->where('movimento_id', NULL)->where('empresa_id', $session['id'])->where('user_id', $user->id)->get();
+    //     $resultados = MovimentoItem::with(['subconta.conta', 'empresa'])->whereNull('movimento_id')->where('empresa_id', $session['id'])->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
+        
+    //     return response()->json(['item_movimentos' => $item_movimentos, 'resultados' => $resultados], 200);
+    // }  
     
     public function edit($id)
     {

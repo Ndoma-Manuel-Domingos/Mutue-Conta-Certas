@@ -179,7 +179,7 @@ export default {
         conta_id: "",
         designacao: "",
         numero: "",
-        estado: "",
+        estado: "activo",
       },
     };
   },

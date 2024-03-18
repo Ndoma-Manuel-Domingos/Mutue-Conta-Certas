@@ -193,31 +193,30 @@
               class="nav-link"
               :class="{
                 active:
-                  $page.component == 'Contas/Index',
+                  $page.component == 'Movimentos/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Movimentos</p>
             </Link>
           </li>
-
+          
           <li
             class="nav-item"
-            title="Balancetes"
+            title="Movimentos"
           >
             <Link
-              href="/balancetes"
+              href="/movimentos"
               class="nav-link"
               :class="{
                 active:
-                  $page.component == 'SubContas/Index',
+                  $page.component == 'Contas/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
-              <p>Balancetes</p>
+              <p>Apuramento de Resultados</p>
             </Link>
           </li>
-
 
         </ul>
       </li>
@@ -228,13 +227,9 @@
           class="nav-link"
           :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
         >
-          <i class="fas fa-credit-card"></i>
-        
+          <i class="nav-icon fas fa-credit-card"></i> 
           <p>
-            
-          <!-- Gestão de relatorios  -->
-          
-            Gestão de Relatorios
+             Gestão de Relatorios
             <i class="right fas fa-angle-left"></i>
           </p>
         </a>
@@ -258,6 +253,23 @@
           
           <li
             class="nav-item"
+            title="Balancetes"
+          >
+            <Link
+              href="/balancetes"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'SubContas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Balancetes</p>
+            </Link>
+          </li>
+          
+          <!-- <li
+            class="nav-item"
             title="Movimentos"
           >
             <Link
@@ -271,7 +283,7 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Balacentes</p>
             </Link>
-          </li>
+          </li> -->
 
           <li
             class="nav-item"
@@ -285,8 +297,8 @@
           :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
         >
         <p>
-        <i class="fas fa-credit-card"></i>
-        Extratos</p>
+        <i class="nav-icon fas fa-credit-card"></i>
+          Extratos</p>
           <!-- Gestão de relatorios  -->
             <i class="right fas fa-angle-left"></i>
         </a>

@@ -12,7 +12,11 @@
           </li>
         </ul>
 
-        <div class="mx-auto"></div>
+        <div class="mx-auto">
+          <div v-if="sessions">
+            <h5 class="text-success">EMPRESA ACTIVA: {{ sessions.nome }}</h5>
+          </div>
+        </div>
 
         <div class="ml-auto">
           <ul class="navbar-nav">

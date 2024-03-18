@@ -121,30 +121,6 @@
                     <div class="card-body">
                       <div class="row">
                       
-                        <div class="col-12 col-md-3 mb-4">
-                          <label for="rua" class="form-label">Rua</label>
-                          <input type="text" id="rua" v-model="form.rua" class="form-control" placeholder="Rua">
-                          <span class="text-danger" v-if="form.errors && form.errors.rua">{{ form.errors.rua }}</span>
-                        </div>
-                        
-                        <div class="col-12 col-md-3 mb-4">
-                          <label for="casa" class="form-label">Nº do Edifício</label>
-                          <input type="text" id="casa" v-model="form.casa" class="form-control" placeholder="Casa">
-                          <span class="text-danger" v-if="form.errors && form.errors.casa">{{ form.errors.casa }}</span>
-                        </div>
-                        
-                        <div class="col-12 col-md-3 mb-4">
-                          <label for="bairro" class="form-label">Bairro</label>
-                          <input type="text" id="bairro" v-model="form.bairro" class="form-control" placeholder="bairro">
-                          <span class="text-danger" v-if="form.errors && form.errors.bairro">{{ form.errors.bairro }}</span>
-                        </div>
-                      
-                        <div class="col-12 col-md-3 mb-4">
-                          <label for="codigo_postal" class="form-label">Código Postal</label>
-                          <input type="text" id="codigo_postal" v-model="form.codigo_postal" class="form-control" placeholder="Código Postal">
-                          <span class="text-danger" v-if="form.errors && form.errors.codigo_postal">{{ form.errors.codigo_postal }}</span>
-                        </div>
-                      
                         <div class="col-12 col-md-6 mb-4">
                           <label for="pais_id" class="form-label">País</label>
                           <Select2 v-model="form.pais_id"
@@ -181,6 +157,32 @@
                           <span class="text-danger" v-if="form.errors && form.errors.comuna_id">{{ form.errors.comuna_id }}</span>
                         </div>
                         
+                      
+                        <div class="col-12 col-md-3 mb-4">
+                          <label for="rua" class="form-label">Rua</label>
+                          <input type="text" id="rua" v-model="form.rua" class="form-control" placeholder="Rua">
+                          <span class="text-danger" v-if="form.errors && form.errors.rua">{{ form.errors.rua }}</span>
+                        </div>
+                        
+                        <div class="col-12 col-md-3 mb-4">
+                          <label for="casa" class="form-label">Nº do Edifício</label>
+                          <input type="text" id="casa" v-model="form.casa" class="form-control" placeholder="Casa">
+                          <span class="text-danger" v-if="form.errors && form.errors.casa">{{ form.errors.casa }}</span>
+                        </div>
+                        
+                        <div class="col-12 col-md-3 mb-4">
+                          <label for="bairro" class="form-label">Bairro</label>
+                          <input type="text" id="bairro" v-model="form.bairro" class="form-control" placeholder="bairro">
+                          <span class="text-danger" v-if="form.errors && form.errors.bairro">{{ form.errors.bairro }}</span>
+                        </div>
+                      
+                        <div class="col-12 col-md-3 mb-4">
+                          <label for="codigo_postal" class="form-label">Código Postal</label>
+                          <input type="text" id="codigo_postal" v-model="form.codigo_postal" class="form-control" placeholder="Código Postal">
+                          <span class="text-danger" v-if="form.errors && form.errors.codigo_postal">{{ form.errors.codigo_postal }}</span>
+                        </div>
+                      
+                      
                         
                       </div>
                     </div>
