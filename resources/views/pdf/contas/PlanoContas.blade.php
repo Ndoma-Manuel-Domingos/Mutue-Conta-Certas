@@ -77,17 +77,21 @@
             <table class="table table-hover text-nowrap">
                 <thead>
                     <tr class="btn-info">
-                        <th class="text-uppercase" style="color: white; background-color: #17a2b8; font-size: 20px">{{ $plano->classe->numero }} - {{ $plano->classe->designacao }}</th>
+                        <th class="text-uppercase" style="color: white; background-color: #17a2b8; font-size: 20px">
+                            {{ $plano->classe->numero }} - {{ $plano->classe->designacao }}</th>
                     </tr>
                 </thead>
                 @foreach ($plano->classe->contas_empresa as $conta)
                     <tbody>
                         <tr>
-                            <th><span style="margin-left: 35px; color: black; font-family: sans-serif; font-weight: bold; font-size: 16px;">{{ $conta->conta->numero }} - {{ $conta->conta->designacao }} </span></th>
+                            <th><span
+                                    style="margin-left: 35px; color: black; font-family: sans-serif; font-weight: bold; font-size: 16px;">{{ $conta->conta->numero }}
+                                    - {{ $conta->conta->designacao }} </span></th>
                         </tr>
                         @foreach ($conta->sub_contas_empresa as $sub_conta)
                             <tr>
-                                <td><span style="margin-left: 100px; font-size: 16px; color: black;"> {{ $sub_conta->numero }} - {{ $sub_conta->designacao }}</span></td>
+                                <td><span style="margin-left: 100px; font-size: 16px; color: black;">
+                                        {{ $sub_conta->numero }} - {{ $sub_conta->designacao }}</span></td>
                             </tr>
                         @endforeach
 
@@ -99,10 +103,10 @@
 
     </main>
 
-    <footer>
-        <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
+    <span style="text-align: center;">
+        <p style="font-size: 20px;">Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
             Inteligentes.</p>
-    </footer>
+    </span>
 
 </body>
 
@@ -112,11 +116,13 @@
     tr {
         background-color: red;
     }
-    tr th{
+
+    tr th {
         text-align: left;
         margin-left: 50px;
     }
-    tr td{
+
+    tr td {
         text-align: left;
         margin-top: 160px;
     }
