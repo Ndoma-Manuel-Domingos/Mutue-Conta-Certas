@@ -32,7 +32,7 @@
 <body>
     <header class="clearfix">
         <div id="logo">
-            <img src="images/log1.png">
+            <img src="images/log.png">
         </div>
         <div id="company">
             <h2 class="name">Mutue - Soluções Tecnológicas Inteligentes</h2>

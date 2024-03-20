@@ -16,6 +16,23 @@
       </div>
     </div>
 
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <button class="btn btn-sm btn-danger"  @click="imprimirPlano()">
+                <i class="fas fa-file pdf"></i> Imprimir Movimento
+              </button>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="content">
       <div class="container-fluid">
         <div class="row">
@@ -105,6 +122,9 @@ export default {
   },
   mounted() {},
   methods: {
+    imprimirPlano() {
+      window.open("imprimir-movimentos");
+    },
     formatValor(atual) {
       const valorFormatado = Intl.NumberFormat("pt-br", {
         style: "currency",

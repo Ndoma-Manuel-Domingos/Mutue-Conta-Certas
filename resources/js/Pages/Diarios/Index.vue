@@ -21,8 +21,11 @@
         <div class="row">
           <div class="col-12 col-md-12">
             <div class="card">
-              <div class="card-header"> 
+              <div class="card-header">
                 <a href="/diarios/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR DIÁRIO</a>
+                <button class="btn btn-sm btn-danger float-sm-right" @click="imprimirDiario()">
+                  <i class="fas fa-file pdf"></i> Imprimir Diário
+                </button>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -36,7 +39,7 @@
                         <th class="text-right">Ações</th>
                       </tr>
                     </thead>
-                    
+
                     <tbody>
                       <tr v-for="item in diarios.data" :key="item">
                         <td>#</td>
@@ -45,9 +48,12 @@
                         <td class="text-capitalize">{{ item.estado }}</td>
                         <td>
                           <div class="float-right">
-                            <a :href="`/diarios/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
+                            <a :href="`/diarios/${item.id}/edit`" class="btn btn-sm btn-success"><i
+                                class="fas fa-edit"></i> Editar</a>
+                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1"
+                              v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
+                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i
+                                class="fas fa-times"></i> Desctivar</a>
                           </div>
                         </td>
                       </tr>
@@ -55,16 +61,11 @@
                   </table>
                 </div>
               </div>
-              
+
               <div class="card-footer">
                 <Link href="" class="text-secondary">
-                  Total Registro: {{ diarios.total }}</Link
-                >
-                <Paginacao
-                  :links="diarios.links"
-                  :prev="diarios.prev_page_url"
-                  :next="diarios.next_page_url"
-                />
+                Total Registro: {{ diarios.total }}</Link>
+                <Paginacao :links="diarios.links" :prev="diarios.prev_page_url" :next="diarios.next_page_url" />
               </div>
             </div>
           </div>
@@ -73,7 +74,7 @@
     </div>
   </MainLayouts>
 </template>
-  
+
 <script>
 
 import Paginacao from "../../components/Paginacao.vue";
@@ -83,7 +84,7 @@ export default {
   props: [
     'diarios'
   ],
-  components:{
+  components: {
     Paginacao,
   },
   computed: {
@@ -97,8 +98,11 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() { },
   methods: {
+    imprimirDiario() {
+      window.open("imprimir-diario");
+    },
     mudar_estado(item) {
       this.$Progress.start();
 
@@ -114,11 +118,11 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-      
+
           window.location.reload();
         })
         .catch((error) => {
-          
+
           this.$Progress.fail();
           Swal.fire({
             toast: true,
@@ -129,11 +133,9 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-          
+
         });
     },
   },
 };
 </script>
-  
-  

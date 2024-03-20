@@ -32,7 +32,7 @@
   <body>
     <header class="clearfix">
       <div id="logo">
-        <img src="images/log1.png">
+        <img src="images/log.png">
       </div>
       <div id="company">
       <h2 class="name">Mutue - Soluções Tecnológicas Inteligentes</h2>
@@ -79,9 +79,10 @@
 
     </main>
     
-    <footer>
-     <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas Inteligentes.</p> 
-    </footer> 
+    <span style="text-align: center; font-size: 16px;">
+      <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
+          Inteligentes.</p>
+  </span> 
 
   </body>
 </html>

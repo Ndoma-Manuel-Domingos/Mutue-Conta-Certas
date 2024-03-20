@@ -16,7 +16,7 @@ class Municipio extends Model
         'provincias_id',
     ];
                     
-    public function pais()
+    public function provincia()
     {
         return $this->belongsTo(Provincia::class, 'provincias_id', 'id');
     }  
