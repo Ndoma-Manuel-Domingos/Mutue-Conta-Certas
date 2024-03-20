@@ -16,7 +16,7 @@
           <p>Dashboard</p>
         </Link>
       </li>
-      
+
       <li class="nav-item">
         <a
           href="#"
@@ -30,23 +30,18 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
-          <li
-            class="nav-item"
-            title="EMPRESAS"
-          >
+          <li class="nav-item" title="EMPRESAS">
             <Link
               href="/empresas"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'Empresas/Index',
+                active: $page.component == 'Empresas/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Listagem</p>
             </Link>
           </li>
-
         </ul>
       </li>
 
@@ -63,52 +58,38 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
-          
-          <li
-            class="nav-item"
-            title="PGC"
-          >
+          <li class="nav-item" title="PGC">
             <Link
               href="/plano-geral-contas"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'PlanoGeralConta/Index',
+                active: $page.component == 'PlanoGeralConta/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>PGC</p>
             </Link>
           </li>
-        
-        
-          <li
-            class="nav-item"
-            title="CLASSES"
-          >
+
+          <li class="nav-item" title="CLASSES">
             <Link
               href="/classes"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'Classes/Index',
+                active: $page.component == 'Classes/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Classes</p>
             </Link>
           </li>
-          
-          <li
-            class="nav-item"
-            title="CONTAS"
-          >
+
+          <li class="nav-item" title="CONTAS">
             <Link
               href="/contas"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'Contas/Index',
+                active: $page.component == 'Contas/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
@@ -116,24 +97,18 @@
             </Link>
           </li>
 
-          <li
-            class="nav-item"
-            title="SUBCONTAS"
-          >
+          <li class="nav-item" title="SUBCONTAS">
             <Link
               href="/sub-contas"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'SubContas/Index',
+                active: $page.component == 'SubContas/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Sub-Contas</p>
             </Link>
           </li>
-
-
         </ul>
       </li>
 
@@ -150,74 +125,57 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
-          <li
-            class="nav-item"
-            title="DIÁRIOS"
-          >
+          <li class="nav-item" title="DIÁRIOS">
             <Link
               href="/diarios"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'Diarios/Index',
+                active: $page.component == 'Diarios/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Diários</p>
             </Link>
           </li>
-          
-          <li
-            class="nav-item"
-            title="TIPOS DE DOCUMENTOS"
-          >
+
+          <li class="nav-item" title="TIPOS DE DOCUMENTOS">
             <Link
               href="/tipos-documentos"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'TipoDocumentos/Index',
+                active: $page.component == 'TipoDocumentos/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Tipos de Documentos</p>
             </Link>
           </li>
-          
-          <li
-            class="nav-item"
-            title="Movimentos"
-          >
+
+          <li class="nav-item" title="Movimentos">
             <Link
               href="/movimentos"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'Movimentos/Index',
+                active: $page.component == 'Movimentos/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Movimentos</p>
             </Link>
           </li>
-          
-          <li
-            class="nav-item"
-            title="Movimentos"
-          >
+
+          <li class="nav-item" title="Movimentos">
             <Link
               href="/movimentos"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'Contas/Index',
+                active: $page.component == 'Contas/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Apuramento de Resultados</p>
             </Link>
           </li>
-
         </ul>
       </li>
 
@@ -227,128 +185,109 @@
           class="nav-link"
           :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
         >
-          <i class="nav-icon fas fa-credit-card"></i> 
+          <i class="nav-icon fas fa-credit-card"></i>
           <p>
-             Gestão de Relatorios
+            Gestão de Relatorios
             <i class="right fas fa-angle-left"></i>
           </p>
         </a>
         <ul class="nav nav-treeview">
-          <li
-            class="nav-item"
-            title="CLASSES"
-          >
+          <li class="nav-item" title="CLASSES">
             <Link
               href="/diarios"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'Classes/Index',
+                active: $page.component == 'Classes/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Balanços</p>
             </Link>
           </li>
-          
-          <li
-            class="nav-item"
-            title="Balancetes"
-          >
+
+          <li class="nav-item" title="Balancetes">
             <Link
               href="/balancetes"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'SubContas/Index',
+                active: $page.component == 'SubContas/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Balancetes</p>
             </Link>
           </li>
-          
 
-          <li
-            class="nav-item"
-            title="Balancetes"
-          >
-            
-            <li class="nav-item">
-              <a
-                href="#"
-                class="nav-link"
-                :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
-              >
-              <p>
-              <i class="nav-icon fas fa-credit-card"></i>
-                Extratos</p>
-                <!-- Gestão de relatorios  -->
-                  <i class="right fas fa-angle-left"></i>
-              </a>
-              <ul class="nav nav-treeview">
-                <li
-                  class="nav-item"
-                  title="CLASSES"
-                >
-                  <Link
-                    href="/diarios"
-                    class="nav-link"
-                    :class="{
-                      active:
-                        $page.component == 'Classes/Index',
-                    }"
-                  >
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Diário</p>
-                  </Link>
-                </li>
-                
-                <li
-                  class="nav-item"
-                  title="Movimentos"
-                >
-                  <Link
-                    href="/movimentos"
-                    class="nav-link"
-                    :class="{
-                      active:
-                        $page.component == 'Contas/Index',
-                    }"
-                  >
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Semanal</p>
-                  </Link>
-                </li>
-      
-                <li
-                  class="nav-item"
-                  title="Balancetes"
-                >
-                  <Link
-                    href="/balancetes"
-                    class="nav-link"
-                    :class="{
-                      active:
-                        $page.component == 'SubContas/Index',
-                    }"
-                  >
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Anual</p>
-                  </Link>
-                </li>
-      
-      
-              </ul>
-            </li>
-           
+          <li class="nav-item" title="Movimentos">
+            <Link
+              href="/movimentos"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Contas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Balacentes</p>
+            </Link>
           </li>
-
-
         </ul>
       </li>
-      
+
       <li class="nav-item" v-if="sessions">
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+          <i class="nav-icon fas fa-file-pdf"></i>
+          <p>
+            <i class="right fas fa-angle-left"></i>
+            Extratos
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item" title="Exercicios">
+            <Link
+              href="/exercicios"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Exercicios/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Exercícios</p>
+            </Link>
+          </li>
+
+          <li class="nav-item" title="Movimentos">
+            <Link
+              href="/movimentos"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Contas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Semanal</p>
+            </Link>
+          </li>
+
+          <li class="nav-item" title="Periodos">
+            <Link
+              href="/periodos"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Periodos/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Períodos</p>
+            </Link>
+          </li>
+        </ul>
+      </li>
+
+      <li class="nav-item">
         <a
           href="#"
           class="nav-link"
@@ -356,81 +295,80 @@
         >
           <i class="nav-icon fas fa-cog"></i>
           <p>
-            Gestão
+            Tabelas de Apoio
             <i class="right fas fa-angle-left"></i>
           </p>
         </a>
         <ul class="nav nav-treeview">
-          <li
-            class="nav-item"
-            title="Exercicios"
-          >
+          <li class="nav-item" title="EMPRESAS">
             <Link
-              href="/exercicios"
+              href="/regime-empresa"
               class="nav-link"
               :class="{
-                active:
-                  $page.component == 'Exercicios/Index',
+                active: $page.component == 'Regime/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
-              <p>Exercícios</p>
+              <p>Novo Regime de Empresa</p>
             </Link>
-          </li>
-          
-          <li
-            class="nav-item"
-            title="Periodos"
-          >
-            <Link
-              href="/periodos"
-              class="nav-link"
-              :class="{
-                active:
-                  $page.component == 'Periodos/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Períodos</p>
-            </Link>
-          </li>
 
+            <Link
+              href="/moeda"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Moeda/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Nova Moeda de Operação</p>
+            </Link>
+
+            <Link
+              href="/paises"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Paises/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Novo País</p>
+            </Link>
+
+            <Link
+              href="/provincia"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Provincia/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Nova Provincia</p>
+            </Link>
+
+            <Link
+              href="/municipio"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Municipio/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Novo Município</p>
+            </Link>
+
+            <Link
+              href="/comuna"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Comuna/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Nova Comuna</p>
+            </Link>
+          </li>
         </ul>
       </li>
-      
-      <li class="nav-item">
-        <a
-          href="#"
-          class="nav-link"
-          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
-        >
-          <i class="nav-icon fas fa-users"></i>
-          <p>
-            Operadores
-            <i class="right fas fa-angle-left"></i>
-          </p>
-        </a>
-        <ul class="nav nav-treeview">
-          <li
-            class="nav-item"
-            title="Operadores"
-          >
-            <Link
-              href="/utilizadores"
-              class="nav-link"
-              :class="{
-                active:
-                  $page.component == 'Utilizadores/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Utilizadores</p>
-            </Link>
-          </li>
-
-        </ul>
-      </li>
-
     </ul>
   </nav>
 </template>

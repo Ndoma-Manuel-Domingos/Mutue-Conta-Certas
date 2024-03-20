@@ -14,7 +14,13 @@ use App\Http\Controllers\{
     PlanoGeralContaController,
     SubContaController,
     TipoDocumentoController,
-    UtilizadorController
+    RegimeController,
+    MoedaController,
+    PaisesController,
+    MunicipioController,
+    ComunaController,
+    ProvinciaController,
+    UtilizadorController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -77,6 +83,16 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('imprimir-exercicios', [ExercicioController::class, 'imprimirExercicios']);
     Route::get('imprimir-periodos', [PeriodoController::class, 'imprimirPeriodo']); 
     Route::get('imprimir-plano', [PlanoGeralContaController::class, 'imprimirPlano']);
+    Route::get('imprimir-diario', [DiarioController::class, 'imprimirDiario']);
+    Route::get('imprimir-movimentos', [MovimentoController::class, 'imprimirMovimento']);
+
+    // Rotas Tabela de apoio
+    Route::resource('regime-empresa', RegimeController::class);
+    Route::resource('moeda', MoedaController::class);
+    Route::resource('paises', PaisesController::class);
+    Route::resource('municipio', MunicipioController::class);
+    Route::resource('provincia', ProvinciaController::class);
+    Route::resource('comuna', ComunaController::class);
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');
 

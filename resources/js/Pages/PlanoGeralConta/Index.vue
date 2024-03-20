@@ -16,22 +16,6 @@
       </div>
     </div>
 
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <button class="btn btn-sm btn-danger"  @click="imprimirPlano()">
-                <i class="fas fa-file pdf"></i> Imprimir PGC
-              </button>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="content">
       <div class="container-fluid">
@@ -40,9 +24,10 @@
             <div class="card">
             
               <div class="card-header">
-                <a href="/classes/create" class="btn-sm btn-primary btn float-left mx-1">Criar Classe</a>
-                <a href="/contas/create" class="btn-sm btn-primary btn float-left mx-1">Criar Conta</a>
-                <a href="/sub-contas/create" class="btn-sm btn-primary btn float-left mx-1">Criar Subconta</a>
+                <a href="/classes/create" class="btn-sm btn-primary btn float-left mx-1"><i class="fas fa-plus"></i> Criar Classe</a>
+                <a href="/contas/create" class="btn-sm btn-primary btn float-left mx-1"><i class="fas fa-plus"></i> Criar Conta</a>
+                <a href="/sub-contas/create" class="btn-sm btn-primary btn float-left mx-1"><i class="fas fa-plus"></i> Criar Subconta</a>
+                <a  @click="imprimirPlano()" class="btn-sm btn-danger btn float-left mx-1"><i class="fas fa-file-pdf"></i> Imprimir PGC</a>
                 <Link href="" class="text-secondary">
                   Total Registro: {{ plano.total }}</Link
                 >

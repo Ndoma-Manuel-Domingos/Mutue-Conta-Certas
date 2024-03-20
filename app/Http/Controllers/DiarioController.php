@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use PDF;
 
 class DiarioController extends Controller
 {
@@ -145,5 +146,13 @@ class DiarioController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+    }
+
+    public function imprimirDiario(){ 
+        // $data['diario_data'] = Diario::with(['empresa', 'classe.contas_empresa.conta', 'classe.contas_empresa.sub_contas_empresa'])->get(); //;->where('empresa_id', $users->empresa_id)->paginate(10);
+        $data['diarios'] = Diario::with(['empresa'])->get();
+        
+        $pdf = PDF::loadView('pdf.contas.Diario', $data)->setPaper('a3', 'landscape');
+        return $pdf->stream('Contas.pdf');
     }
 }

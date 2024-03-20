@@ -91,13 +91,8 @@
 
               <div class="card-footer">
                 <Link href="" class="text-secondary">
-                  Total Registro: {{ diarios.total }}</Link
-                >
-                <Paginacao
-                  :links="diarios.links"
-                  :prev="diarios.prev_page_url"
-                  :next="diarios.next_page_url"
-                />
+                Total Registro: {{ diarios.total }}</Link>
+                <Paginacao :links="diarios.links" :prev="diarios.prev_page_url" :next="diarios.next_page_url" />
               </div>
             </div>
           </div>
@@ -106,7 +101,7 @@
     </div>
   </MainLayouts>
 </template>
-  
+
 <script>
 import Paginacao from "../../components/Paginacao.vue";
 
@@ -202,5 +197,3 @@ export default {
   },
 };
 </script>
-  
-  

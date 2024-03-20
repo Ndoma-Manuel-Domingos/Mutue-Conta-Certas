@@ -18,9 +18,8 @@ class TipoDocumentoController extends Controller
     {
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-        // where('empresa_id', $users->empresa_id)->
 
-        $data['tipos_documentos'] = TipoDocumento::with(['empresa', 'diario'])->paginate(10);
+        $data['tipos_documentos'] = TipoDocumento::where('empresa_id', $this->empresaLogada())->with(['empresa', 'diario'])->paginate(10);
                
         return Inertia::render('TipoDocumentos/Index', $data);
     }
