@@ -268,95 +268,79 @@
             </Link>
           </li>
           
-          <!-- <li
-            class="nav-item"
-            title="Movimentos"
-          >
-            <Link
-              href="/movimentos"
-              class="nav-link"
-              :class="{
-                active:
-                  $page.component == 'Contas/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Balacentes</p>
-            </Link>
-          </li> -->
 
           <li
             class="nav-item"
             title="Balancetes"
           >
             
-      <li class="nav-item">
-        <a
-          href="#"
-          class="nav-link"
-          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
-        >
-        <p>
-        <i class="nav-icon fas fa-credit-card"></i>
-          Extratos</p>
-          <!-- Gestão de relatorios  -->
-            <i class="right fas fa-angle-left"></i>
-        </a>
-        <ul class="nav nav-treeview">
-          <li
-            class="nav-item"
-            title="CLASSES"
-          >
-            <Link
-              href="/diarios"
-              class="nav-link"
-              :class="{
-                active:
-                  $page.component == 'Classes/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Diário</p>
-            </Link>
-          </li>
-          
-          <li
-            class="nav-item"
-            title="Movimentos"
-          >
-            <Link
-              href="/movimentos"
-              class="nav-link"
-              :class="{
-                active:
-                  $page.component == 'Contas/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Semanal</p>
-            </Link>
-          </li>
-
-          <li
-            class="nav-item"
-            title="Balancetes"
-          >
-            <Link
-              href="/balancetes"
-              class="nav-link"
-              :class="{
-                active:
-                  $page.component == 'SubContas/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Anual</p>
-            </Link>
-          </li>
-
-
-        </ul>
-      </li>
+            <li class="nav-item">
+              <a
+                href="#"
+                class="nav-link"
+                :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+              >
+              <p>
+              <i class="nav-icon fas fa-credit-card"></i>
+                Extratos</p>
+                <!-- Gestão de relatorios  -->
+                  <i class="right fas fa-angle-left"></i>
+              </a>
+              <ul class="nav nav-treeview">
+                <li
+                  class="nav-item"
+                  title="CLASSES"
+                >
+                  <Link
+                    href="/diarios"
+                    class="nav-link"
+                    :class="{
+                      active:
+                        $page.component == 'Classes/Index',
+                    }"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Diário</p>
+                  </Link>
+                </li>
+                
+                <li
+                  class="nav-item"
+                  title="Movimentos"
+                >
+                  <Link
+                    href="/movimentos"
+                    class="nav-link"
+                    :class="{
+                      active:
+                        $page.component == 'Contas/Index',
+                    }"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Semanal</p>
+                  </Link>
+                </li>
+      
+                <li
+                  class="nav-item"
+                  title="Balancetes"
+                >
+                  <Link
+                    href="/balancetes"
+                    class="nav-link"
+                    :class="{
+                      active:
+                        $page.component == 'SubContas/Index',
+                    }"
+                  >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Anual</p>
+                  </Link>
+                </li>
+      
+      
+              </ul>
+            </li>
            
           </li>
 
@@ -413,44 +397,61 @@
 
         </ul>
       </li>
-
-      <!-- <div class="ml-auto">
-        <ul class="navbar-nav">
-          <li class="nav-item text-left">
+      
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+          <i class="nav-icon fas fa-users"></i>
+          <p>
+            Operadores
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li
+            class="nav-item"
+            title="Operadores"
+          >
             <Link
-              class="nav-link btn btn-link btn-danger text-white"
-              href="/logout"
-              method="post"
-              as="button"
-              type="button"
+              href="/utilizadores"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Utilizadores/Index',
+              }"
             >
-              <i class="fas fa-sign-out-alt"></i>
-              Sair
+              <i class="far fa-circle nav-icon"></i>
+              <p>Utilizadores</p>
             </Link>
           </li>
+
         </ul>
-      </div> -->
+      </li>
+
     </ul>
   </nav>
 </template>
 
 <script>
-
 import { Link } from "@inertiajs/inertia-vue3";
 export default {
-  
   components: {
-    Link
+    Link,
   },
 
-  data: () => ({
-  }),
+  data: () => ({}),
 
   computed: {
     user() {
       return this.$page.props.auth.user;
     },
     sessions() {
+      return this.$page.props.sessions.empresa_sessao;
+    },
+    sessions_exercicio() {
       return this.$page.props.sessions.empresa_sessao;
     },
   },

@@ -7,11 +7,11 @@ use App\Models\TipoDocumento;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class LancamentoController extends Controller
 {
+    use Config;
     //
     public function index()
     {
@@ -19,7 +19,7 @@ class LancamentoController extends Controller
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
 
-        $data['tipos_documentos'] = TipoDocumento::with(['empresa', 'diario'])->paginate(10);
+        $data['tipos_documentos'] = TipoDocumento::where('empresa_id', $this->empresaLogada())->with(['empresa', 'diario'])->paginate(10);
                
         return Inertia::render('TipoDocumentos/Index', $data);
     }
@@ -48,10 +48,8 @@ class LancamentoController extends Controller
         ]);
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-    
-        $empresa_sessao_global = Session::get('empresa_logada_mutue_contas_certas_2024');
-                
-        if($empresa_sessao_global){
+       
+        if($this->empresaLogada()){
             
             TipoDocumento::create([
                 'designacao' => $request->designacao,
@@ -59,7 +57,7 @@ class LancamentoController extends Controller
                 'numero' => $request->numero,
                 'estado' => $request->estado,
                 'created_by' => auth()->user()->id,
-                'empresa_id' => $empresa_sessao_global['id'],
+                'empresa_id' => $this->empresaLogada(),
             ]);
         
         }

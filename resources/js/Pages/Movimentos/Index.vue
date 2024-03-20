@@ -23,6 +23,8 @@
             <div class="card">
               <div class="card-header"> 
                 <a href="/movimentos/create" class="btn btn-info"> <i class="fas fa-plus"></i> LANÇAR MOVIMENTOS</a>
+                <a href="" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
+                <a href="" class="btn btn-sm mx-1 btn-success float-right"> <i class="fas fa-file-excel"></i> Exportar</a>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -53,7 +55,8 @@
                         <td>{{ item.criador.name }}</td>
                         <td>
                           <div class="float-right">
-                            <a :href="``" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
+                            <a :href="`/movimentos/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>
+                            <a :href="`/movimentos/${item.id}`" class="btn btn-sm btn-info mx-1"><i class="fas fa-info-circle"></i> Detalhe</a>
                           </div>
                         </td>
                       </tr>
@@ -96,8 +99,11 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-    sessions() {
+        sessions() {
       return this.$page.props.sessions.empresa_sessao;
+    },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
     },
   },
   data() {

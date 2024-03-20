@@ -97,15 +97,7 @@
                           <span class="text-danger" v-if="form.errors && form.errors.moeda_alternativa_id">{{ form.errors.moeda_alternativa_id }}</span>
                         </div>
                         
-                        <div class="col-12 col-md-3 mb-4">
-                          <label for="moeda_cambio_id" class="form-label">Moeda para Cambio</label>
-                          <Select2 v-model="form.moeda_cambio_id"
-                            id="moeda_cambio_id" class="col-12 col-md-12"
-                            :options="moedas" :settings="{ width: '100%' }" 
-                          />
-                          <span class="text-danger" v-if="form.errors && form.errors.moeda_cambio_id">{{ form.errors.moeda_cambio_id }}</span>
-                        </div>
-                        
+                     
                       </div>
                     </div>
   
@@ -120,31 +112,7 @@
                     
                     <div class="card-body">
                       <div class="row">
-                      
-                        <div class="col-12 col-md-3 mb-4">
-                          <label for="rua" class="form-label">Rua</label>
-                          <input type="text" id="rua" v-model="form.rua" class="form-control" placeholder="Rua">
-                          <span class="text-danger" v-if="form.errors && form.errors.rua">{{ form.errors.rua }}</span>
-                        </div>
-                        
-                        <div class="col-12 col-md-3 mb-4">
-                          <label for="casa" class="form-label">Nº Casa</label>
-                          <input type="text" id="casa" v-model="form.casa" class="form-control" placeholder="Casa">
-                          <span class="text-danger" v-if="form.errors && form.errors.casa">{{ form.errors.casa }}</span>
-                        </div>
-                        
-                        <div class="col-12 col-md-3 mb-4">
-                          <label for="bairro" class="form-label">Bairro</label>
-                          <input type="text" id="bairro" v-model="form.bairro" class="form-control" placeholder="bairro">
-                          <span class="text-danger" v-if="form.errors && form.errors.bairro">{{ form.errors.bairro }}</span>
-                        </div>
-                      
-                        <div class="col-12 col-md-3 mb-4">
-                          <label for="codigo_postal" class="form-label">Código Postal</label>
-                          <input type="text" id="codigo_postal" v-model="form.codigo_postal" class="form-control" placeholder="Código Postal">
-                          <span class="text-danger" v-if="form.errors && form.errors.codigo_postal">{{ form.errors.codigo_postal }}</span>
-                        </div>
-                      
+                                      
                         <div class="col-12 col-md-6 mb-4">
                           <label for="pais_id" class="form-label">País</label>
                           <Select2 v-model="form.pais_id"
@@ -181,6 +149,31 @@
                           <span class="text-danger" v-if="form.errors && form.errors.comuna_id">{{ form.errors.comuna_id }}</span>
                         </div>
                         
+                              
+                        <div class="col-12 col-md-3 mb-4">
+                          <label for="rua" class="form-label">Rua</label>
+                          <input type="text" id="rua" v-model="form.rua" class="form-control" placeholder="Rua">
+                          <span class="text-danger" v-if="form.errors && form.errors.rua">{{ form.errors.rua }}</span>
+                        </div>
+                        
+                        <div class="col-12 col-md-3 mb-4">
+                          <label for="casa" class="form-label">Nº Casa</label>
+                          <input type="text" id="casa" v-model="form.casa" class="form-control" placeholder="Casa">
+                          <span class="text-danger" v-if="form.errors && form.errors.casa">{{ form.errors.casa }}</span>
+                        </div>
+                        
+                        <div class="col-12 col-md-3 mb-4">
+                          <label for="bairro" class="form-label">Bairro</label>
+                          <input type="text" id="bairro" v-model="form.bairro" class="form-control" placeholder="bairro">
+                          <span class="text-danger" v-if="form.errors && form.errors.bairro">{{ form.errors.bairro }}</span>
+                        </div>
+                      
+                        <div class="col-12 col-md-3 mb-4">
+                          <label for="codigo_postal" class="form-label">Código Postal</label>
+                          <input type="text" id="codigo_postal" v-model="form.codigo_postal" class="form-control" placeholder="Código Postal">
+                          <span class="text-danger" v-if="form.errors && form.errors.codigo_postal">{{ form.errors.codigo_postal }}</span>
+                        </div>
+                        
                         
                       </div>
                     </div>
@@ -215,8 +208,11 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-    sessions() {
+        sessions() {
       return this.$page.props.sessions.empresa_sessao;
+    },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
     },
   },
   data() {
@@ -228,28 +224,31 @@ export default {
       
       form: {
       
-        nome_empresa: this.empresa.nome_empresa,
-        codigo_empresa: this.empresa.codigo_empresa,
-        descricao_empresa: this.empresa.descricao_empresa,
-        estado_empresa_id: this.empresa.estado_empresa_id,
-        regime_empresa_id: this.empresa.regime_empresa_id,
+        nome_empresa: this.empresa ? this.empresa.nome_empresa : "" ,
+        codigo_empresa: this.empresa ? this.empresa.codigo_empresa : "" ,
+        descricao_empresa: this.empresa ? this.empresa.descricao_empresa : "" ,
+        estado_empresa_id: this.empresa ? this.empresa.estado_empresa_id : "" ,
+        regime_empresa_id: this.empresa ? this.empresa.regime_empresa_id : "" ,
         
-        moeda_base_id: this.empresa.moeda.moeda_base_id,
-        moeda_alternativa_id: this.empresa.moeda.moeda_alternativa_id,
-        moeda_cambio_id: this.empresa.moeda.moeda_cambio_id,
+        moeda_base_id: this.empresa ? (this.empresa.moeda ? this.empresa.moeda.moeda_base_id : "") : "",
+        moeda_alternativa_id: this.empresa ? (this.empresa.moeda ? this.empresa.moeda.moeda_alternativa_id : "") : "",
         
-        rua: this.empresa.endereco.rua,
-        casa: this.empresa.endereco.casa,
-        bairro: this.empresa.endereco.bairro,
-        codigo_postal: this.empresa.endereco.codigo_postal,
-        pais_id: this.empresa.endereco.pais_id,
-        provincia_id: this.empresa.endereco.provincia_id,
-        municipio_id: this.empresa.endereco.municipio_id,
-        comuna_id: this.empresa.endereco.comuna_id,
+        rua: this.empresa ? (this.empresa.endereco ? this.empresa.endereco.rua : "") : "" ,
+        casa: this.empresa ? (this.empresa.endereco ? this.empresa.endereco.casa : "") : "" ,
+        bairro: this.empresa ? (this.empresa.endereco ? this.empresa.endereco.bairro : "") : "" ,
+        codigo_postal: this.empresa ? (this.empresa.endereco ? this.empresa.endereco.codigo_postal : "") : "" ,
+        pais_id: this.empresa ? (this.empresa.endereco ? this.empresa.endereco.pais_id : "") : "" ,
+        provincia_id: this.empresa ? (this.empresa.endereco ? this.empresa.endereco.provincia_id : "") : "" ,
+        municipio_id: this.empresa ? (this.empresa.endereco ? this.empresa.endereco.municipio_id : "") : "" ,
+        comuna_id: this.empresa ? (this.empresa.endereco ? this.empresa.endereco.comuna_id : "") : "" ,
         
-        itemId: this.empresa.id,
-        itemIdEnderco: this.empresa.endereco.id,
-        itemIdMoeda: this.empresa.moeda.id,
+        itemId: this.empresa ? this.empresa.id : "" ,
+        itemIdMoeda: this.empresa ? (this.empresa.moeda ? this.empresa.moeda.id : "") : "",
+        itemIdEnderco: this.empresa ? (this.empresa.endereco ? this.empresa.endereco.id : "") : "" ,
+        
+        // itemId: this.empresa.id,
+        // itemIdEnderco: this.empresa.endereco.id,
+        // itemIdMoeda: this.empresa.moeda.id,
         
       },
     };

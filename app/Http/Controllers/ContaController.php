@@ -15,6 +15,7 @@ use PDF;
 
 class ContaController extends Controller
 {
+    use Config;
     //
     public function index()
     {
@@ -22,7 +23,7 @@ class ContaController extends Controller
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['contas'] = ContaEmpresa::with(['empresa', 'conta', 'classe'])->where('empresa_id', $users->empresa_id)->paginate(10);
+        $data['contas'] = ContaEmpresa::with(['empresa', 'conta', 'classe'])->where('empresa_id', $this->empresaLogada())->paginate(10);
                
         return Inertia::render('Contas/Index', $data);
     }
@@ -45,24 +46,30 @@ class ContaController extends Controller
         $request->validate([
             "classe_id" => "required",
             "conta_id" => "required",
+            "tipo" => "required",
             "numero" => "required",
             "estado" => "required",
         ], 
         [
             "classe_id.required" => "Campo Obrigatório",
             "conta_id.required" => "Campo Obrigatório",
+            "tipo.required" => "Campo Obrigatório",
             "numero.required" => "Campo Obrigatório",
             "estado.required" => "Campo Obrigatório",
         ]);
         
-        $classes =  ContaEmpresa::create([
-            'classe_id' => $request->classe_id,
-            'conta_id' => $request->conta_id,
-            'numero' => $request->numero,
-            'estado' => $request->estado,
-            'created_by' => auth()->user()->id,
-            'empresa_id' => auth()->user()->empresa_id,
-        ]);
+        
+        if($this->empresaLogada()){
+            $classes =  ContaEmpresa::create([
+                'classe_id' => $request->classe_id,
+                'conta_id' => $request->conta_id,
+                'tipo' => $request->tipo,
+                'numero' => $request->numero,
+                'estado' => $request->estado,
+                'created_by' => auth()->user()->id,
+                'empresa_id' => $this->empresaLogada(),
+            ]);
+        }
         
         // return redirect()->route('classes.index');
         
@@ -122,12 +129,14 @@ class ContaController extends Controller
         $request->validate([
             "estado" => "required",
             "classe_id" => "required",
+            "tipo" => "required",
             "conta_id" => "required",
             "numero" => "required",
         ], 
         [
             "estado.required" => "Campo Obrigatório",
             "classe_id.required" => "Campo Obrigatório",
+            "tipo.required" => "Campo Obrigatório",
             "conta_id.required" => "Campo Obrigatório",
             "numero.required" => "Campo Obrigatório",
         ]);
@@ -137,6 +146,7 @@ class ContaController extends Controller
         $classe->classe_id = $request->classe_id;
         $classe->conta_id = $request->conta_id;
         $classe->numero = $request->numero;
+        $classe->tipo = $request->tipo;
         $classe->estado = $request->estado;
         $classe->update();
         

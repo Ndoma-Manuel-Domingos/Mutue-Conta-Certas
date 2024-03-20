@@ -9,7 +9,7 @@
             <div class="login-box">        
                 <div class="card card-outline">
                     <div class=" text-center mb-1 pt-5">
-                        <img src="images/logo.jpg"  alt="MUTUE CONTAS CERTAS" class="elevation-0" style="opacity: 0.8;width: 200px;height: 100px;"/>
+                        <img src="images/logotipo_contas_centas.png"  alt="MUTUE CONTAS CERTAS" class="elevation-0" style="opacity: 0.8;width: 200px;height: 100px;"/>
                     </div>
 
                     <div class="card-body">
@@ -64,8 +64,8 @@
     import { getCurrentInstance } from 'vue'
 
     const form = useForm({
-        email: "",
-        password: ""
+        email: "mutue@gmail.com",
+        password: "12345678"
     })
 
     const internalInstance = getCurrentInstance();

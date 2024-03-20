@@ -40,7 +40,17 @@
                       >
                     </div>
                     
-                    <div class="col-12 col-md-6 mb-4">
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="tipo" class="form-label">Tipos</label>
+                      <Select2 v-model="form.tipo"
+                        id="tipo" class="col-12 col-md-12"
+                        :options="tipos" :settings="{ width: '100%' }" 
+                        @select="getSubContas($event)"
+                      />
+                      <span class="text-danger" v-if="form.errors && form.errors.tipo">{{ form.errors.tipo }}</span>
+                    </div>
+                    
+                    <div class="col-12 col-md-3 mb-4">
                       <label for="numero" class="form-label">Código de subConta</label>
                       <input type="text" id="numero" v-model="form.numero" class="form-control" placeholder="Ex: 1.1, 1.1.1">
                       <span class="text-danger" v-if="form.errors && form.errors.numero">{{ form.errors.numero }}</span>
@@ -89,8 +99,11 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-    sessions() {
+        sessions() {
       return this.$page.props.sessions.empresa_sessao;
+    },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
     },
   },
   data() {
@@ -100,11 +113,17 @@ export default {
         {'id': "desactivo", 'text': "Desactivo"},
       ],
       
+      tipos: [
+        {'id': "M", 'text': "Movimento"},
+        {'id': "E", 'text': "Entregadora"},
+      ],
+      
       form: {
         conta_id: this.subconta.conta_id ?? "",
         designacao: this.subconta.designacao ?? "",
         numero: this.subconta.numero ?? "",
         estado: this.subconta.estado ?? "",
+        tipo: this.tipo ?? "",
         itemId: this.subconta.id ?? "",
       },
     };

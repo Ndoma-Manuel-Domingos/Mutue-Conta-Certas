@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empresa;
 use App\Models\User;
+use App\Models\UserEmpresa;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
@@ -73,6 +74,12 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'empresa_id' => $empresa->id,
             'is_admin' => 1,
+        ]);
+        
+        $user_empresa = UserEmpresa::create([
+            'estado' => 1,
+            'empresa_id' => $empresa->id,
+            'user_id' => $user->id,
         ]);
 
         // event(new Registered($user));

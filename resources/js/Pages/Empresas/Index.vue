@@ -33,30 +33,27 @@
                         <th>Nome</th>
                         <th>Regime do IVA</th>
                         <th>Moeda Base</th>
-                        <!-- <th>Moeda Alternativo</th>
-                        <th>Moeda Cámbio</th> -->
+                        <th>Moeda Alternativo</th>
                         <th>Estado</th>
                         <th class="text-right">Ações</th>
                       </tr>
                     </thead>
-                     <!-- {{ sessions ?  }}  -->
                     <tbody>
                       
                       <tr v-for="item in empresas.data" :key="item" :style="{ backgroundColor: verificar_sessao_empresa(item) ? '#D3D3D3' : '' }" >
                         <td class="text-uppercase">{{ item.codigo_empresa }}</td>
                         <td class="text-uppercase">{{ item.nome_empresa }}</td>
                         <td>{{ item.regime.designacao }}</td>
-                        <td>{{ item.moeda.base.designacao }} - {{ item.moeda.base.sigla }}</td>
-                        <!-- <td>{{ item.moeda.alternativa.designacao }} - {{ item.moeda.alternativa.sigla }}</td>
-                        <td>{{ item.moeda.cambio.designacao }} - {{ item.moeda.cambio.sigla }}</td> -->
+                        <td>{{ item.moeda ? (item.moeda.base ? (item.moeda.base ? item.moeda.base.designacao : "") : "") : "" }} - {{ item.moeda ? (item.moeda.base ? (item.moeda.base ? item.moeda.base.sigla : "") : "") : "" }}</td>
+                        <td>{{ item.moeda ? (item.moeda.base ? (item.moeda.alternativa ? item.moeda.alternativa.designacao : "") : "") : "" }} - {{ item.moeda ? (item.moeda.alternativa ? (item.moeda.alternativa ? item.moeda.alternativa.sigla : "") : "") : "" }}</td>
                         <td class="text-capitalize">{{ item.estado_empresa_id == 1 ? 'Activo': 'Desactivo' }}</td>
                         <td>
                                               
                           <div class="float-right">
-                            <a :href="`/empresas/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
+                            <a :href="`/empresas/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>
                             <a @click="mudar_estado_empresa(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado_empresa_id == 2"><i class="fas fa-check"></i> Activar</a>
                             <a @click="mudar_estado_empresa(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
-                            <a @click="iniciar_sessao_empresa(item)" class="btn btn-sm btn-secondary"><i class="fas fa-cog"></i> Operar</a>
+                            <a @click="iniciar_sessao_empresa(item)" class="btn btn-sm btn-secondary mx-1"><i class="fas fa-cog"></i> Operar</a>
                           </div>
                         </td>
                       </tr>
@@ -101,6 +98,9 @@ export default {
     },
     sessions() {
       return this.$page.props.sessions.empresa_sessao;
+    },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
     },
   },
   data() {
@@ -166,7 +166,7 @@ export default {
           Swal.fire({
             toast: true,
             icon: "danger",
-            title: "Correu um erro ao Estado Alterado com sucesso!",
+            title: "Sem permissão para operar com está empresa!",
             animation: false,
             position: "top-end",
             showConfirmButton: false,

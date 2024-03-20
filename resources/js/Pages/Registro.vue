@@ -2,14 +2,14 @@
     <body class="hold-transition login-page" >
         <AuthLayouts>
 
-            <video autoplay muted loop id="myVideo">
+            <!-- <video autoplay muted loop id="myVideo">
               <source src="images/pexels-rodnae-productions-7821854 (1080p).mp4" type="video/mp4">
-            </video>
+            </video> -->
 
             <div class="login-box">        
                 <div class="card card-outline">
                     <div class=" text-center mb-1 pt-5">
-                        <img src="images/logo.jpg"  alt="MUTUE CONTAS CERTAS" class="elevation-0" style="opacity: 0.8;width: 200px;height: 100px;"/>
+                        <img src="images/logotipo_contas_centas.png"  alt="MUTUE CONTAS CERTAS" class="elevation-0" style="opacity: 0.8;width: 200px;height: 100px;"/>
                     </div>
 
                     <div class="card-body">

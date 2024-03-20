@@ -13,16 +13,15 @@ use PDF;
 
 class PeriodoController extends Controller
 {
+    use Config;
     //
     public function index()
     {
         // Retorna a lista de posts
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-        
-        $empresa_sessao_global = Session::get('empresa_logada_mutue_contas_certas_2024');
-        
-        $data['periodos'] = Periodo::where('empresa_id', $empresa_sessao_global['id'] ?? "")->with(['empresa', 'exercicio'])->paginate(15);
+                
+        $data['periodos'] = Periodo::where('empresa_id', $this->empresaLogada())->with(['empresa', 'exercicio'])->paginate(15);
                
         return Inertia::render('Periodos/Index', $data);
     }
@@ -48,15 +47,13 @@ class PeriodoController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        
-        $empresa_sessao_global = Session::get('empresa_logada_mutue_contas_certas_2024');
-        
-        if($empresa_sessao_global){
+       
+        if($this->empresaLogada()){
         
             Periodo::create([
                 'designacao' => $request->designacao,
                 'exercicio_id' => $request->exercicio_id,
-                'empresa_id' => $empresa_sessao_global['id'],
+                'empresa_id' => $this->empresaLogada(),
                 'estado' => $request->estado,
             ]);
         }

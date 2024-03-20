@@ -17,6 +17,7 @@ class SubConta extends Model
         'descricao',
         'estado',
         'controle_conta_id',
+        'tipo',
         'conta_id',
         'empresa_id',
         'created_by',

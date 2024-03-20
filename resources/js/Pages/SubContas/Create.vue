@@ -45,8 +45,18 @@
                         >{{ form.errors.conta_id }}</span
                       >
                     </div>
+                    
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="tipo" class="form-label">Tipos</label>
+                      <Select2 v-model="form.tipo"
+                        id="tipo" class="col-12 col-md-12"
+                        :options="tipos" :settings="{ width: '100%' }" 
+                        @select="getSubContas($event)"
+                      />
+                      <span class="text-danger" v-if="form.errors && form.errors.tipo">{{ form.errors.tipo }}</span>
+                    </div>
 
-                    <div class="col-12 col-md-6 mb-4">
+                    <div class="col-12 col-md-3 mb-4">
                       <label for="numero" class="form-label"
                         >Código da SubConta</label
                       >
@@ -122,6 +132,7 @@
                         <th>ID</th>
                         <th>Código</th>
                         <th>Conta</th>
+                        <th>Tipo</th>
                       </tr>
                     </thead>
 
@@ -130,6 +141,7 @@
                         <td>#</td>
                         <td>{{ item.numero }}</td>
                         <td>{{ item.designacao }}</td>
+                        <td>{{ item.tipo == "M" ? "Movimento" : "Entregadora" }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -164,6 +176,9 @@ export default {
     sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
+    },
   },
   data() {
     return {
@@ -174,11 +189,17 @@ export default {
       
       subcontas: [
       ],
+      
+      tipos: [
+        {'id': "M", 'text': "Movimento"},
+        {'id': "E", 'text': "Entregadora"},
+      ],
 
       form: {
         conta_id: "",
         designacao: "",
         numero: "",
+        tipo: "",
         estado: "activo",
       },
     };
@@ -187,7 +208,7 @@ export default {
    
   },
   methods: {
-    getSubContas({ id, text }) {
+    getSubContas() {
       axios
         .get(`/get-conta/${this.form.conta_id}`)
         .then((response) => {
@@ -208,6 +229,8 @@ export default {
           // this.form.reset();
           this.$Progress.finish();
 
+          this.getSubContas();
+          
           Swal.fire({
             toast: true,
             icon: "success",
@@ -217,9 +240,9 @@ export default {
             showConfirmButton: false,
             timer: 4000,
           });
-
-          window.location.reload();
-          console.log("Resposta da requisição POST:", response.data);
+          
+          // window.location.reload();
+          // console.log("Resposta da requisição POST:", response.data);
         })
         .catch((error) => {
           // sweetError("Ocorreu um erro ao actualizar Instituição!");

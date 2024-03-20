@@ -14,13 +14,14 @@ use PDF;
 
 class SubContaController extends Controller
 {
+    use Config;
     //
     public function index()
     {
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['subcontas'] = SubConta::with(['empresa', 'conta'])->where('empresa_id', $users->empresa_id)->paginate(7);
+        $data['subcontas'] = SubConta::with(['empresa', 'conta'])->where('empresa_id', $this->empresaLogada())->paginate(7);
                
         return Inertia::render('SubContas/Index', $data);
     }
@@ -30,7 +31,7 @@ class SubContaController extends Controller
         // Exibe o formulário para criar um novo post
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['contas'] = ContaEmpresa::where('empresa_id', $users->empresa_id)->join('contas', 'controle_conta_empresas.conta_id' , '=', 'contas.id')
+        $data['contas'] = ContaEmpresa::where('empresa_id', $this->empresaLogada())->join('contas', 'controle_conta_empresas.conta_id' , '=', 'contas.id')
         ->select('contas.id', 'designacao As d', DB::raw('CONCAT(contas.numero, " - ", contas.designacao) AS text'))
         ->get();
                 
@@ -47,20 +48,24 @@ class SubContaController extends Controller
             "conta_id" => "required",
             "designacao" => "required",
             "numero" => "required",
+            "tipo" => "required",
             "estado" => "required",
         ], 
         [
             "conta_id.required" => "Campo Obrigatório",
             "designacao.required" => "Campo Obrigatório",
             "numero.required" => "Campo Obrigatório",
+            "tipo.required" => "Campo Obrigatório",
             "estado.required" => "Campo Obrigatório",
         ]);
         
-        $classes =  SubConta::create([
+        $subconta =  SubConta::create([
             'conta_id' => $request->conta_id,
             'designacao' => $request->designacao,
+            'descricao' => $request->designacao,
             'numero' => $request->numero,
             'estado' => $request->estado,
+            'tipo' => $request->tipo,
             'empresa_id' => auth()->user()->empresa_id,
         ]);
         
@@ -81,7 +86,7 @@ class SubContaController extends Controller
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['contas'] = ContaEmpresa::where('empresa_id', $users->empresa_id)
+        $data['contas'] = ContaEmpresa::where('empresa_id', $this->empresaLogada())
         ->join('contas', 'controle_conta_empresas.conta_id' , '=', 'contas.id')
         ->select('contas.id', 'designacao As d', DB::raw('CONCAT(contas.numero, " - ", contas.designacao) AS text'))
         // ->select('contas.id', 'contas.designacao AS text')
@@ -97,12 +102,14 @@ class SubContaController extends Controller
             "conta_id" => "required",
             "designacao" => "required",
             "numero" => "required",
+            "tipo" => "required",
         ], 
         [
             "estado.required" => "Campo Obrigatório",
             "conta_id.required" => "Campo Obrigatório",
             "designacao.required" => "Campo Obrigatório",
             "numero.required" => "Campo Obrigatório",
+            "tipo.required" => "Campo Obrigatório",
         ]);
         
 
@@ -113,6 +120,7 @@ class SubContaController extends Controller
         $classe->designacao = $request->designacao;
         $classe->numero = $request->numero;
         $classe->estado = $request->estado;
+        $classe->tipo = $request->tipo;
         $classe->update();
         
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);

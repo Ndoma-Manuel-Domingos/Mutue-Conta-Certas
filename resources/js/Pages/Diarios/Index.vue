@@ -21,8 +21,27 @@
         <div class="row">
           <div class="col-12 col-md-12">
             <div class="card">
-              <div class="card-header"> 
-                <a href="/diarios/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR DIÁRIO</a>
+              <div class="card-header">
+                <h3 class="card-title">
+                  <a href="/diarios/create" class="btn btn-info">
+                    <i class="fas fa-plus"></i> CRIAR DIÁRIO</a
+                  >
+                </h3>
+                <div class="card-tools">
+                  <div class="input-group input-group" style="width: 450px">
+                    <input
+                      type="text"
+                      v-model="input_busca_diarios"
+                      class="form-control float-right"
+                      placeholder="Informe a campo"
+                    />
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -36,7 +55,7 @@
                         <th class="text-right">Ações</th>
                       </tr>
                     </thead>
-                    
+
                     <tbody>
                       <tr v-for="item in diarios.data" :key="item">
                         <td>#</td>
@@ -45,9 +64,23 @@
                         <td class="text-capitalize">{{ item.estado }}</td>
                         <td>
                           <div class="float-right">
-                            <a :href="`/diarios/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
+                            <a
+                              :href="`/diarios/${item.id}/edit`"
+                              class="btn btn-sm btn-success"
+                              ><i class="fas fa-edit"></i> Editar</a
+                            >
+                            <a
+                              @click="mudar_estado(item)"
+                              class="btn btn-sm btn-info mx-1"
+                              v-if="item.estado == 'desactivo'"
+                              ><i class="fas fa-check"></i> Activar</a
+                            >
+                            <a
+                              @click="mudar_estado(item)"
+                              class="btn btn-sm btn-danger mx-1"
+                              v-else
+                              ><i class="fas fa-times"></i> Desctivar</a
+                            >
                           </div>
                         </td>
                       </tr>
@@ -55,7 +88,7 @@
                   </table>
                 </div>
               </div>
-              
+
               <div class="card-footer">
                 <Link href="" class="text-secondary">
                   Total Registro: {{ diarios.total }}</Link
@@ -75,15 +108,11 @@
 </template>
   
 <script>
-
 import Paginacao from "../../components/Paginacao.vue";
 
 export default {
-
-  props: [
-    'diarios'
-  ],
-  components:{
+  props: ["diarios"],
+  components: {
     Paginacao,
   },
   computed: {
@@ -93,16 +122,55 @@ export default {
     sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
+    },
   },
   data() {
-    return {};
+    return {
+      input_busca_diarios: "",
+      params: {},
+    };
   },
   mounted() {},
+  watch: {
+    options: function (val) {
+      this.params.page = val.page;
+      this.params.page_size = val.itemsPerPage;
+      if (val.sortBy.length != 0) {
+        this.params.sort_by = val.sortBy[0];
+        this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+      } else {
+        this.params.sort_by = null;
+        this.params.order_by = null;
+      }
+      this.updateData();
+    },
+    
+    input_busca_diarios: function (val) {
+      this.params.input_busca_diarios = val;
+      this.updateData();
+    },
+
+  },
   methods: {
+    
+    updateData() {
+      this.$Progress.start();
+      this.$inertia.get("/diarios", this.params, {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          this.$Progress.finish();
+        },
+      });
+    },
+    
     mudar_estado(item) {
       this.$Progress.start();
 
-      axios.get(`/diarios/${item.id}`)
+      axios
+        .get(`/diarios/${item.id}`)
         .then((response) => {
           this.$Progress.finish();
           Swal.fire({
@@ -112,13 +180,12 @@ export default {
             animation: false,
             position: "top-end",
             showConfirmButton: false,
-            timer: 4000
-          })
-      
+            timer: 4000,
+          });
+
           window.location.reload();
         })
         .catch((error) => {
-          
           this.$Progress.fail();
           Swal.fire({
             toast: true,
@@ -127,11 +194,11 @@ export default {
             animation: false,
             position: "top-end",
             showConfirmButton: false,
-            timer: 4000
-          })
-          
+            timer: 4000,
+          });
         });
     },
+    
   },
 };
 </script>

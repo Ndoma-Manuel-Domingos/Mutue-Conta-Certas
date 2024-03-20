@@ -39,7 +39,6 @@ class DashboardController extends Controller
         
         // dd("finish");
     
-        $sua_sessao_global = Session::get('empresa_logada_mutue_contas_certas_2024');
         
         $data = [];        
        

@@ -93,8 +93,11 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-    sessions() {
+        sessions() {
       return this.$page.props.sessions.empresa_sessao;
+    },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
     },
   },
   data() {

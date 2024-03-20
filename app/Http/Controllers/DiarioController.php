@@ -14,15 +14,24 @@ use Inertia\Inertia;
 
 class DiarioController extends Controller
 {
+    
+    use Config;
+
     //
-    public function index()
+    public function index(Request $request)
     {
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
         $data['exercicios'] = Exercicio::get();
         
-        $data['diarios'] = Diario::with(['empresa'])->paginate(10);
+        $data['diarios'] = Diario::when($request->input_busca_diarios, function($query, $value){
+            $query->where('designacao', 'like', "%".$value."%");
+            $query->orWhere('numero', $value);
+        })
+        ->with(['empresa'])
+        ->where('empresa_id', $this->empresaLogada())
+        ->paginate(10);
                
         return Inertia::render('Diarios/Index', $data);
     }
@@ -36,7 +45,6 @@ class DiarioController extends Controller
 
     public function store(Request $request)
     {
- 
         $request->validate([
             "designacao" => "required",
             "numero" => "required",
@@ -49,17 +57,15 @@ class DiarioController extends Controller
         ]);
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-    
-        $empresa_sessao_global = Session::get('empresa_logada_mutue_contas_certas_2024');
-                
-        if($empresa_sessao_global){
+            
+        if($this->empresaLogada()){
             
             Diario::create([
                 'designacao' => $request->designacao,
                 'numero' => $request->numero,
                 'estado' => $request->estado,
                 'created_by' => auth()->user()->id,
-                'empresa_id' => $empresa_sessao_global['id'],
+                'empresa_id' => $this->empresaLogada(),
             ]);
         
         }

@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\Config;
+use App\Models\Empresa;
+use App\Models\Exercicio;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Session;
@@ -9,6 +12,8 @@ use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+
+    use Config;
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -43,7 +48,8 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sessions' => [
-                'empresa_sessao' => Session::get('empresa_logada_mutue_contas_certas_2024'),
+                'empresa_sessao' => Empresa::find($this->empresaLogada()), // Session::get('empresa_logada_mutue_contas_certas_2024'),
+                'exercicio_sessao' =>Exercicio::find($this->exercicioActivo()), //  Session::get('exercicio_logada_mutue_contas_certas_2024'),
             ],
             'flash' => function () use ($request) {
                 return [

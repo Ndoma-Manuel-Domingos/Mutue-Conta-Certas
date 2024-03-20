@@ -13,7 +13,8 @@ use App\Http\Controllers\{
     PeriodoController,
     PlanoGeralContaController,
     SubContaController,
-    TipoDocumentoController
+    TipoDocumentoController,
+    UtilizadorController
 };
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +43,8 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('classes', ClasseController::class);
     Route::resource('plano-geral-contas', PlanoGeralContaController::class);
     Route::resource('exercicios', ExercicioController::class);
+    Route::get('/exercicios/iniciar-sessão/{id}', [ExercicioController::class, 'iniciar_sessao']);
+    Route::post('/logout-exercicios', [ExercicioController::class, 'logout_exercicio'])->name('mf.logout_exercicio');
     Route::resource('periodos', PeriodoController::class);
     Route::resource('contas', ContaController::class);
     Route::get('/get-conta/{id}', [ContaController::class, 'get_conta']);
@@ -63,7 +66,8 @@ Route::group(["middleware" => "auth"], function () {
     // Route::get('/alterar-descricao-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_descricao_conta_movimento']);
     // Route::get('/movimentos', [OperacaoController::class, 'movimentos']);
     Route::get('/balancetes', [OperacaoController::class, 'balancetes']);
-
+    
+    Route::resource('utilizadores', UtilizadorController::class);
 
 
     // Rotas de impressao de documentos-Ednilson

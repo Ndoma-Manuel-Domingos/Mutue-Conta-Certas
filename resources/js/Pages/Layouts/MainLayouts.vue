@@ -14,7 +14,7 @@
 
         <div class="mx-auto">
           <div v-if="sessions">
-            <h5 class="text-success">EMPRESA ACTIVA: {{ sessions.nome }}</h5>
+            <h5 class="text-success text-uppercase">EMPRESA ACTIVA: {{ sessions.nome_empresa ?? '' }}<span v-if="sessions_exercicio"> - ({{ sessions_exercicio.designacao ?? '' }})</span> </h5>
           </div>
         </div>
 
@@ -86,7 +86,7 @@
         <!-- Brand Logo -->
         <a href="index3.html" class="brand-link">
           <img
-            src="~admin-lte/dist/img/AdminLTELogo.png"
+            src="images/logotipo_contas_centas.png"
             alt="AdminLTE Logo"
             class="brand-image img-circle elevation-3"
             style="opacity: 0.8"
@@ -139,6 +139,10 @@ export default {
     sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
+    },
+
   },
   methods: {
     logout() {

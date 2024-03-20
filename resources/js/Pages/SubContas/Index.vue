@@ -38,6 +38,7 @@
                         <th>Código</th>
                         <th>Nome</th>
                         <th>Conta</th>
+                        <th>Tipo</th>
                         <th>Estado</th>
                         <th class="text-right">Ações</th>
                       </tr>
@@ -49,6 +50,7 @@
                         <td>{{ item.numero }}</td>
                         <td>{{ item.designacao }}</td>
                         <td>{{ item.conta.numero }} - {{ item.conta.designacao }}</td>
+                        <td>{{ item.tipo == "M" ? "Movimento" : "Entregadora" }}</td>
                         <td class="text-capitalize">{{ item.estado }}</td>
                         <td>
                           <div class="float-right">
@@ -96,8 +98,11 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-    sessions() {
+        sessions() {
       return this.$page.props.sessions.empresa_sessao;
+    },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
     },
   },
   data() {

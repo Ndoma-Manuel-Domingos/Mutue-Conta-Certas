@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ano;
-use App\Models\Classe;
-use App\Models\ClasseEmpresa;
 use App\Models\Exercicio;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -16,6 +13,8 @@ use PDF;
 
 class ExercicioController extends Controller
 {
+
+    use Config;
     //
     public function index()
     {
@@ -23,9 +22,7 @@ class ExercicioController extends Controller
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $empresa_sessao_global = Session::get('empresa_logada_mutue_contas_certas_2024');
-        
-        $data['exercicios'] = Exercicio::where('empresa_id', $empresa_sessao_global['id'] ?? "")->with(['empresa'])->paginate(7);
+        $data['exercicios'] = Exercicio::where('empresa_id', $this->empresaLogada())->with(['empresa'])->paginate(7);
                
         return Inertia::render('Exercicios/Index', $data);
     }
@@ -51,13 +48,11 @@ class ExercicioController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
         
-        $empresa_sessao_global = Session::get('empresa_logada_mutue_contas_certas_2024');
-        
-        if($empresa_sessao_global){
+        if($this->empresaLogada()){
         
             Exercicio::create([
                 'designacao' => $request->designacao,
-                'empresa_id' => $empresa_sessao_global['id'],
+                'empresa_id' => $this->empresaLogada(),
                 'estado' => $request->estado,
             ]);
         }
@@ -70,9 +65,23 @@ class ExercicioController extends Controller
         // Salva um novo post no banco de dados
     }
 
+
     public function show($id)
     {
-        // Exibe um post específico
+        $empresa = Exercicio::findOrFail($id);
+        
+        $estado = "";
+        
+        if($empresa->estado == '1'){
+            $estado = '2';
+        }
+        if($empresa->estado == '2'){
+            $estado = '1';
+        }
+        
+        $empresa->estado = $estado;
+        $empresa->update();
+        
     }
 
     public function edit($id)
@@ -116,4 +125,47 @@ class ExercicioController extends Controller
         $pdf = PDF::loadView('pdf.contas.Exercicio', $data)->setPaper('a4', 'landscape');
         return $pdf->stream('Contas.pdf');
     }
+    
+        
+    public function iniciar_sessao($id)
+    {
+        
+        if($this->empresaLogada()){
+        
+            $exercicios = Exercicio::where('empresa_id', $this->empresaLogada())->get();
+            foreach ($exercicios as $item) {
+                $update = Exercicio::findOrFail($item->id);
+                $update->estado = 2;
+                $update->update();
+            }
+            
+            $exercicio_a_operar = Exercicio::with('empresa')->findOrFail($id);
+            $exercicio_a_operar->estado = 1;
+            $exercicio_a_operar->update();
+            
+            Session::forget('exercicio_logada_mutue_contas_certas_2024');
+            
+            $exercicio = Exercicio::findOrFail($id);
+            
+            $exercicio_array = [
+                'id' => $exercicio->id,
+                'nome' => $exercicio->designacao,
+            ];
+            
+            // Colocar um novo valor na sessão global
+            Session::put('exercicio_logada_mutue_contas_certas_2024', $exercicio_array);
+        }
+        
+  
+        return response()->json(['message' => "Dados salvos com sucesso!"], 200);
+    }
+    
+    public function logout_exercicio(Request $request)
+    {
+    
+        Session::forget('exercicio_logada_mutue_contas_certas_2024');
+
+        return redirect('/exercicios');
+
+    } 
 }

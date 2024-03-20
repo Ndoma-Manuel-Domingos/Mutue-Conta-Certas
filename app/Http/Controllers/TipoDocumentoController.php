@@ -12,6 +12,7 @@ use Inertia\Inertia;
 
 class TipoDocumentoController extends Controller
 {
+    use Config;
     //
     public function index()
     {
@@ -48,10 +49,8 @@ class TipoDocumentoController extends Controller
         ]);
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-    
-        $empresa_sessao_global = Session::get('empresa_logada_mutue_contas_certas_2024');
-                
-        if($empresa_sessao_global){
+       
+        if($this->empresaLogada()){
             
             TipoDocumento::create([
                 'designacao' => $request->designacao,
@@ -59,7 +58,7 @@ class TipoDocumentoController extends Controller
                 'numero' => $request->numero,
                 'estado' => $request->estado,
                 'created_by' => auth()->user()->id,
-                'empresa_id' => $empresa_sessao_global['id'],
+                'empresa_id' => $this->empresaLogada(),
             ]);
         
         }

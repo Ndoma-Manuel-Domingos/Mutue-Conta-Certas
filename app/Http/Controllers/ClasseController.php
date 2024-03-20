@@ -14,6 +14,7 @@ use PDF;
 
 class ClasseController extends Controller
 {
+    use Config;
     //
     public function index()
     {
@@ -21,7 +22,7 @@ class ClasseController extends Controller
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['classes'] = ClasseEmpresa::with(['empresa', 'classe'])->where('estado', '!=', 'inactivo')->paginate(7);
+        $data['classes'] = ClasseEmpresa::where('empresa_id', $this->empresaLogada())->with(['empresa', 'classe'])->where('estado', '!=', 'inactivo')->paginate(7);
                
         return Inertia::render('Classes/Index', $data);
     }
@@ -51,7 +52,7 @@ class ClasseController extends Controller
         $classes =  ClasseEmpresa::create([
             'classe_id' => $request->classe_id,
             'estado' => $request->estado,
-            'empresa_id' => auth()->user()->empresa_id,
+            'empresa_id' => $this->empresaLogada(),
             'created_by' => auth()->user()->id,
             'updated_by' => auth()->user()->id,
             'deleted_by' => auth()->user()->id,

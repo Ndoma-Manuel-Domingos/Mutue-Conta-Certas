@@ -52,8 +52,7 @@
                       />
                       <span class="text-danger" v-if="form.errors && form.errors.conta_id">{{ form.errors.conta_id }}</span>
                     </div>
-
-                  
+                                      
                     <div class="col-12 col-md-6 mb-4">
                       <label for="numero" class="form-label">Código Conta</label>
                       <input type="text" id="numero" v-model="form.numero" class="form-control" placeholder="Ex: 1.1, 1.1.1">
@@ -97,8 +96,11 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-    sessions() {
+        sessions() {
       return this.$page.props.sessions.empresa_sessao;
+    },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
     },
   },
   data() {
@@ -108,10 +110,16 @@ export default {
         {'id': "desactivo", 'text': "Desactivo"},
       ],
       
+      tipos: [
+        {'id': "M", 'text': "Movimento"},
+        {'id': "E", 'text': "Entregadora"},
+      ],
+      
       form: {
         classe_id: this.conta.classe_id ?? "",
         conta_id: this.conta.conta_id ?? "",
         numero: this.conta.numero ?? "",
+        tipo: this.conta.tipo ?? "",
         estado: this.conta.estado ?? "",
         itemId: this.conta.id ?? "",
       },

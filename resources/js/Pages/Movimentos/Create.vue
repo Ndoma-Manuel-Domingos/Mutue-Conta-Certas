@@ -29,19 +29,35 @@
                             <div class="card-body">
                               <div class="row">
                               
-                                <div class="col-12 col-md-3 mb-4">
+                                <div class="col-12 col-md-2 mb-4">
                                   <label for="exercicio_id" class="form-label">Exercícios</label>
-                                    <Select2 v-model="form.exercicio_id" id="exercicio_id"
+                                    <Select2 v-model="form.exercicio_id" id="exercicio_id" disabled
                                       :options="exercicios" :settings="{ width: '100%' }" 
                                     />
                                   <span class="text-danger" v-if="form.errors && form.errors.exercicio_id">{{ form.errors.exercicio_id }}</span>
                                 </div>
                                 
-                                <div class="col-12 col-md-3 mb-4">
+                                <div class="col-12 col-md-2 mb-4">
+                                  <label for="mes_id" class="form-label">Mês</label>
+                                    <Select2 v-model="form.mes_id" id="mes_id"
+                                      :options="meses" :settings="{ width: '100%' }" 
+                                    />
+                                  <span class="text-danger" v-if="form.errors && form.errors.mes_id">{{ form.errors.mes_id }}</span>
+                                </div>
+                                
+                                <div class="col-12 col-md-2 mb-4">
+                                  <label for="dia_id" class="form-label">Dia</label>
+                                    <Select2 v-model="form.dia_id" id="dia_id"
+                                      :options="dias" :settings="{ width: '100%' }" 
+                                    />
+                                  <span class="text-danger" v-if="form.errors && form.errors.dia_id">{{ form.errors.dia_id }}</span>
+                                </div>
+                                
+                                <!-- <div class="col-12 col-md-2 mb-4">
                                   <label for="data_lancamento" class="form-label">Data</label>
                                   <input type="date" id="data_lancamento" v-model="form.data_lancamento" class="form-control" >
                                   <span class="text-danger" v-if="form.errors && form.errors.data_lancamento">{{ form.errors.data_lancamento }}</span>
-                                </div>
+                                </div> -->
                                 
                                 <div class="col-12 col-md-6 mb-4">
                                   <label for="lancamento_atual" class="form-label">Lançamento Actual</label>
@@ -74,6 +90,11 @@
                                     />
                                   <span class="text-danger" v-if="form.errors && form.errors.sub_conta_id">{{ form.errors.sub_conta_id }}</span>
                                 </div>
+                                
+                                <div class="col-12 col-md-12 mb-4">
+                                  <label for="sub_conta_id" class="form-label">Descrição</label>
+                                  <textarea v-model="form.descricao" class="form-control" id="" cols="30" rows="2"></textarea>
+                                </div>
                               
                               </div>
                             </div>
@@ -86,9 +107,9 @@
                         </div>
                       </div>
                       <div class="col-12 col-md-6">
-                        <div class="card">
+                        <div class="card" style="height: 590px;">
                           <div class="card-header"></div>
-                          <div class="card-body">
+                          <div class="card-body" style="overflow-y: scroll; height: 470px;">
                             <table class="table" style="width: 100%;">
                               <thead>
                                 <tr>
@@ -96,31 +117,33 @@
                                   <th>Debito</th>
                                   <th>Crédito</th>
                                   <th>IVA</th>
-                                  <th>Descrição</th>
                                   <th></th>
                                 </tr>
                               </thead>
                               <tbody>
+                                <!-- <div>
+                                </div> -->
                                 <tr v-for="item in item_movimentos" :key="item">
                                   <td width="200px">{{ item.subconta.numero }} - {{ item.subconta.designacao }}</td>
                                   <td><input type="number" class="form-control" style="border: none" v-model="item.debito" @keydown.enter="input_valor_debito(item)"></td>
                                   <td><input type="number" class="form-control" style="border: none" v-model="item.credito" @keydown.enter="input_valor_credito(item)"></td>
                                   <td><input type="text" class="form-control" style="border: none"  value="0"></td>
-                                  <td><input type="text" class="form-control" style="border: none" value="0" ></td>
                                   <td width="2px"><a @click="remover_item_movimento(item)" class="text-danger"><i class="fas fa-times"></i></a></td>
                                 </tr>
                               </tbody>
                               
-                              <tfoot>
-                                <tr>
-                                  <th>Total</th>
-                                  <th>{{ formatValor(resultados.total_debito ?? 0) }}</th>
-                                  <th>{{ formatValor(resultados.total_credito ?? 0) }}</th>
-                                  <th></th>
-                                  <th></th>
-                                  <th></th>
-                                </tr>
-                              </tfoot>
+                            </table>
+                          </div>
+                          <div class="card-footer">
+                            <table class="table">
+                                  <tr>
+                                    <th class="">Total</th>
+                                    <th>{{ formatValor(resultados.total_debito ?? 0) }}</th>
+                                    <th>{{ formatValor(resultados.total_credito ?? 0) }}</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                  </tr>
                             </table>
                           </div>
                           
@@ -153,6 +176,9 @@ export default {
     sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
+    sessions_exercicio() {
+      return this.$page.props.sessions.exercicio_sessao;
+    },
   },
   data() {
     return {
@@ -162,23 +188,82 @@ export default {
         {'id': "desactivo", 'text': "Desactivo"},
       ],
       
+      meses: [
+        {'id': "1", 'text': "1"},
+        {'id': "2", 'text': "2"},
+        {'id': "3", 'text': "3"},
+        {'id': "4", 'text': "4"},
+        {'id': "5", 'text': "5"},
+        {'id': "6", 'text': "6"},
+        {'id': "7", 'text': "7"},
+        {'id': "8", 'text': "8"},
+        {'id': "9", 'text': "9"},
+        {'id': "10", 'text': "10"},
+        {'id': "11", 'text': "11"},
+        {'id': "12", 'text': "12"},
+      ],
+      
+      dias: [
+        {'id': "1", 'text': "1"},
+        {'id': "2", 'text': "2"},
+        {'id': "3", 'text': "3"},
+        {'id': "4", 'text': "4"},
+        {'id': "5", 'text': "5"},
+        {'id': "6", 'text': "6"},
+        {'id': "7", 'text': "7"},
+        {'id': "8", 'text': "8"},
+        {'id': "9", 'text': "9"},
+        {'id': "10", 'text': "10"},
+        {'id': "11", 'text': "11"},
+        {'id': "12", 'text': "12"},
+        {'id': "13", 'text': "13"},
+        {'id': "14", 'text': "14"},
+        {'id': "15", 'text': "15"},
+        {'id': "16", 'text': "16"},
+        {'id': "17", 'text': "17"},
+        {'id': "18", 'text': "18"},
+        {'id': "19", 'text': "19"},
+        {'id': "20", 'text': "20"},
+        {'id': "21", 'text': "21"},
+        {'id': "22", 'text': "22"},
+        {'id': "23", 'text': "23"},
+        {'id': "24", 'text': "24"},
+        {'id': "25", 'text': "25"},
+        {'id': "26", 'text': "26"},
+        {'id': "27", 'text': "27"},
+        {'id': "28", 'text': "28"},
+        {'id': "29", 'text': "29"},
+        {'id': "30", 'text': "30"},
+        {'id': "31", 'text': "31"},
+      ],
+      
       debito: 0,
       credito: 0,
+      
+      dataAtual: new Date(),
       
       tipo_documentos: [],
       item_movimentos: [],
       resultados: [],
       
-      form: {
+      form: this.$inertia.form({
         exercicio_id: "",
-        data_lancamento: "",
+        mes_id: "",
+        dia_id: "",
         lancamento_atual: this.ultimo_movimento + 1,
         diario_id: "",
         tipo_documento_id: "",
-      },
+        descricao: "",
+      }),
     };
   },
-  mounted() {},
+  mounted() {
+    this.form.exercicio_id = this.sessions_exercicio ? this.sessions_exercicio.id : "";
+    
+    this.form.dia_id = this.dataAtual.getDate();
+    this.form.mes_id = this.dataAtual.getMonth() + 1;
+    
+  },
   methods: {
 
     getDiario({ id, text }) {
@@ -222,18 +307,39 @@ export default {
     },    
 
     input_valor_debito(item) {
-      axios
-        .get(`/alterar-debito-conta-movimento/${item.id}/${item.debito}`)
-        .then((response) => {
-          
-          this.item_movimentos = [];
-          this.item_movimentos = response.data.item_movimentos;
-          this.resultados = response.data.resultados;
-          
-        })
-        .catch((error) => {});
+      
+      if(item.subconta.tipo == "E"){
+        Swal.fire({
+          toast: true,
+          icon: "error",
+          title: "Não é permitido fazer débito nesta conta!",
+          animation: false,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 4000
+        });
         
-        event.preventDefault();
+        item.debito = 0;
+        return 
+      }else {
+      
+        axios
+          .get(`/alterar-debito-conta-movimento/${item.id}/${item.debito}`)
+          .then((response) => {
+            
+            this.item_movimentos = [];
+            this.item_movimentos = response.data.item_movimentos;
+            this.resultados = response.data.resultados;
+            
+          })
+          .catch((error) => {});
+                    
+          event.preventDefault();
+          
+        }
+        
+      event.preventDefault();
+      
     },
     
     input_valor_credito(item) {
@@ -247,6 +353,8 @@ export default {
           
         })
         .catch((error) => {});
+        
+        item.credito = formatValor(item.credito);
         
         event.preventDefault();
     },
@@ -286,12 +394,44 @@ export default {
     submit() {
       this.$Progress.start();
       
+      // if(this.form.exercicio_id == ""){
+        
+      //   Swal.fire({
+      //     toast: true,
+      //     icon: "error",
+      //     title: "Preenche o Exercícios!",
+      //     animation: false,
+      //     position: "top-end",
+      //     showConfirmButton: false,
+      //     timer: 4000
+      //   })
+        
+      //   this.$Progress.fail();
+      //   return;
+      // }
+      
+      // if(this.form.mes_id == ""){
+        
+      //   Swal.fire({
+      //     toast: true,
+      //     icon: "error",
+      //     title: "Preenche o Exercícios!",
+      //     animation: false,
+      //     position: "top-end",
+      //     showConfirmButton: false,
+      //     timer: 4000
+      //   })
+        
+      //   this.$Progress.fail();
+      //   return;
+      // }
+      
       if(this.resultados.total_debito != this.resultados.total_credito){
         
         Swal.fire({
           toast: true,
           icon: "error",
-          title: "infelizmente não podemos concluir este lançamento, Porque o valor do Débito é diferente do Crédito!",
+          title: "Infelizmente não podemos concluir este lançamento, Porque o valor do Débito é diferente do Crédito!",
           animation: false,
           position: "top-end",
           showConfirmButton: false,
@@ -302,15 +442,10 @@ export default {
         return;
       }
       
-      alert("passa");
-      return ;
-
-      
-
-      axios.post(route('movimentos.store'), this.form)
-        .then((response) => {
-          // this.form.reset();
-          this.$Progress.finish();
+      this.form.post(route("movimentos.store"), {
+        preverseScroll: true,
+        onSuccess: () => {
+          this.form.reset();
           
           Swal.fire({
             toast: true,
@@ -321,14 +456,13 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-   
-          window.location.reload();
-          console.log("Resposta da requisição POST:", response.data);
-        })
-        .catch((error) => {
           
-          // sweetError("Ocorreu um erro ao actualizar Instituição!");
-          this.$Progress.fail();
+          window.location.reload();
+          
+          this.$Progress.finish();
+        },
+        onError: (errors) => {
+          
           Swal.fire({
             toast: true,
             icon: "danger",
@@ -337,10 +471,14 @@ export default {
             position: "top-end",
             showConfirmButton: false,
             timer: 4000
-          })
+          });
           
-          console.error("Erro ao fazer requisição POST:", error);
-        });
+          this.$Progress.fail();
+          
+          console.error("Erro ao fazer requisição POST:", errors);
+        },
+      });
+
     },
     
     formatValor(atual) {
