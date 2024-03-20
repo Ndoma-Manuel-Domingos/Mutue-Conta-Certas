@@ -65,6 +65,8 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/remover-conta-movimento/{id}', [MovimentoController::class, 'remover_conta_movimento']);
     Route::get('/alterar-debito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_debito_conta_movimento']);
     Route::get('/alterar-credito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_credito_conta_movimento']);
+    // Route::get('/alterar-iva-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_iva_conta_movimento']);
+    // Route::get('/alterar-descricao-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_descricao_conta_movimento']);
     // Route::get('/movimentos', [OperacaoController::class, 'movimentos']);
     Route::get('/balancetes', [OperacaoController::class, 'balancetes']);
 

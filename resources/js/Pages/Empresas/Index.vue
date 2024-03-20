@@ -43,8 +43,8 @@
                     <tbody>
                       
                       <tr v-for="item in empresas.data" :key="item" :style="{ backgroundColor: verificar_sessao_empresa(item) ? '#D3D3D3' : '' }" >
-                        <td>{{ item.codigo_empresa }}</td>
-                        <td>{{ item.nome_empresa }}</td>
+                        <td class="text-uppercase">{{ item.codigo_empresa }}</td>
+                        <td class="text-uppercase">{{ item.nome_empresa }}</td>
                         <td>{{ item.regime.designacao }}</td>
                         <td>{{ item.moeda.base.designacao }} - {{ item.moeda.base.sigla }}</td>
                         <!-- <td>{{ item.moeda.alternativa.designacao }} - {{ item.moeda.alternativa.sigla }}</td>

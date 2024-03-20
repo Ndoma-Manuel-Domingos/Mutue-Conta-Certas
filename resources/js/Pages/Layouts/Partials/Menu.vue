@@ -94,72 +94,140 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
-          <li class="nav-item" title="DIÁRIOS">
-            <Link href="/diarios" class="nav-link" :class="{
-          active:
-            $page.component == 'Diarios/Index',
-        }">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Diários</p>
+          <li
+            class="nav-item"
+            title="DIÁRIOS"
+          >
+            <Link
+              href="/diarios"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Diarios/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Diários</p>
             </Link>
           </li>
-
-          <li class="nav-item" title="TIPOS DE DOCUMENTOS">
-            <Link href="/tipos-documentos" class="nav-link" :class="{
-          active:
-            $page.component == 'TipoDocumentos/Index',
-        }">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Tipos de Documentos</p>
+          
+          <li
+            class="nav-item"
+            title="TIPOS DE DOCUMENTOS"
+          >
+            <Link
+              href="/tipos-documentos"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'TipoDocumentos/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Tipos de Documentos</p>
             </Link>
           </li>
-
-          <li class="nav-item" title="Movimentos">
-            <Link href="/movimentos" class="nav-link" :class="{
-          active:
-            $page.component == 'Contas/Index',
-        }">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Movimentos</p>
+          
+          <li
+            class="nav-item"
+            title="Movimentos"
+          >
+            <Link
+              href="/movimentos"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Movimentos/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Movimentos</p>
             </Link>
           </li>
-
-          <li class="nav-item" title="Balancetes">
-            <Link href="/balancetes" class="nav-link" :class="{
-          active:
-            $page.component == 'SubContas/Index',
-        }">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Balancetes</p>
+          
+          <li
+            class="nav-item"
+            title="Movimentos"
+          >
+            <Link
+              href="/movimentos"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Contas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Apuramento de Resultados</p>
             </Link>
           </li>
-
 
         </ul>
       </li>
 
       <li class="nav-item">
-        <a href="#" class="nav-link" :class="{ active: $page.component.startsWith('AreaFinanceira/') }">
-          <i class="fas fa-credit-card"></i>
-
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+          <i class="nav-icon fas fa-credit-card"></i> 
           <p>
-
-            <!-- Gestão de relatorios  -->
-
-            Gestão de Relatorios
+             Gestão de Relatorios
             <i class="right fas fa-angle-left"></i>
           </p>
         </a>
         <ul class="nav nav-treeview">
-          <li class="nav-item" title="CLASSES">
-            <Link href="/diarios" class="nav-link" :class="{
-          active:
-            $page.component == 'Classes/Index',
-        }">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Balanços</p>
+          <li
+            class="nav-item"
+            title="CLASSES"
+          >
+            <Link
+              href="/diarios"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Classes/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Balanços</p>
             </Link>
           </li>
+          
+          <li
+            class="nav-item"
+            title="Balancetes"
+          >
+            <Link
+              href="/balancetes"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'SubContas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Balancetes</p>
+            </Link>
+          </li>
+          
+          <!-- <li
+            class="nav-item"
+            title="Movimentos"
+          >
+            <Link
+              href="/movimentos"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Contas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Balacentes</p>
+            </Link>
+          </li> -->
 
           <li class="nav-item" title="Movimentos">
             <Link href="/movimentos" class="nav-link" :class="{
@@ -227,20 +295,45 @@
       <a href="#" class="nav-link" :class="{ active: $page.component.startsWith('AreaFinanceira/') }">
         <i class="nav-icon fas fa-cog"></i>
         <p>
-          Gestão
-          <i class="right fas fa-angle-left"></i>
-        </p>
-      </a>
-      <ul class="nav nav-treeview">
-        <li class="nav-item" title="Exercicios">
-          <Link href="/exercicios" class="nav-link" :class="{
-          active:
-            $page.component == 'Exercicios/Index',
-        }">
-          <i class="far fa-circle nav-icon"></i>
-          <p>Exercícios</p>
-          </Link>
-        </li>
+        <i class="nav-icon fas fa-credit-card"></i>
+          Extratos</p>
+          <!-- Gestão de relatorios  -->
+            <i class="right fas fa-angle-left"></i>
+        </a>
+        <ul class="nav nav-treeview">
+          <li
+            class="nav-item"
+            title="CLASSES"
+          >
+            <Link
+              href="/diarios"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Classes/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Diário</p>
+            </Link>
+          </li>
+          
+          <li
+            class="nav-item"
+            title="Movimentos"
+          >
+            <Link
+              href="/movimentos"
+              class="nav-link"
+              :class="{
+                active:
+                  $page.component == 'Contas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Semanal</p>
+            </Link>
+          </li>
 
         <li class="nav-item" title="Periodos">
           <Link href="/periodos" class="nav-link" :class="{

@@ -105,8 +105,8 @@
                                   <td width="200px">{{ item.subconta.numero }} - {{ item.subconta.designacao }}</td>
                                   <td><input type="number" class="form-control" style="border: none" v-model="item.debito" @keydown.enter="input_valor_debito(item)"></td>
                                   <td><input type="number" class="form-control" style="border: none" v-model="item.credito" @keydown.enter="input_valor_credito(item)"></td>
-                                  <td><input type="text" class="form-control" style="border: none" value="0"></td>
-                                  <td><input type="text" class="form-control" style="border: none" value="0"></td>
+                                  <td><input type="text" class="form-control" style="border: none"  value="0"></td>
+                                  <td><input type="text" class="form-control" style="border: none" value="0" ></td>
                                   <td width="2px"><a @click="remover_item_movimento(item)" class="text-danger"><i class="fas fa-times"></i></a></td>
                                 </tr>
                               </tbody>
@@ -114,8 +114,8 @@
                               <tfoot>
                                 <tr>
                                   <th>Total</th>
-                                  <th>{{ resultados.total_debito }}</th>
-                                  <th>{{ resultados.total_credito }}</th>
+                                  <th>{{ formatValor(resultados.total_debito ?? 0) }}</th>
+                                  <th>{{ formatValor(resultados.total_credito ?? 0) }}</th>
                                   <th></th>
                                   <th></th>
                                   <th></th>
@@ -143,6 +143,7 @@ export default {
     "tipo_documentos",
     "contas",
     "item_movimentos",
+    "ultimo_movimento",
     "resultados",
   ],
   computed: {
@@ -171,7 +172,7 @@ export default {
       form: {
         exercicio_id: "",
         data_lancamento: "",
-        lancamento_atual: "001",
+        lancamento_atual: this.ultimo_movimento + 1,
         diario_id: "",
         tipo_documento_id: "",
       },
@@ -201,7 +202,6 @@ export default {
           this.item_movimentos = [];
           this.item_movimentos = response.data.item_movimentos;
           this.resultados = response.data.resultados;
-          
           
         })
         .catch((error) => {});
@@ -250,9 +250,62 @@ export default {
         
         event.preventDefault();
     },
+    
+    // input_valor_iva(item) {
+    //   axios
+    //     .get(`/alterar-iva-conta-movimento/${item.id}/${item.iva}`)
+    //     .then((response) => {
+          
+    //       this.item_movimentos = [];
+    //       this.item_movimentos = response.data.item_movimentos;
+    //       this.resultados = response.data.resultados;
+          
+    //     })
+    //     .catch((error) => {});
+        
+    //     event.preventDefault();
+    // },
+    
+    
+    // input_valor_descricao(item) {
+    //   axios
+    //     .get(`/alterar-descricao-conta-movimento/${item.id}/${item.descricao}`)
+    //     .then((response) => {
+          
+    //       this.item_movimentos = [];
+    //       this.item_movimentos = response.data.item_movimentos;
+    //       this.resultados = response.data.resultados;
+          
+    //     })
+    //     .catch((error) => {});
+        
+    //     event.preventDefault();
+    // },
+
         
     submit() {
       this.$Progress.start();
+      
+      if(this.resultados.total_debito != this.resultados.total_credito){
+        
+        Swal.fire({
+          toast: true,
+          icon: "error",
+          title: "infelizmente não podemos concluir este lançamento, Porque o valor do Débito é diferente do Crédito!",
+          animation: false,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 4000
+        })
+        
+        this.$Progress.fail();
+        return;
+      }
+      
+      alert("passa");
+      return ;
+
+      
 
       axios.post(route('movimentos.store'), this.form)
         .then((response) => {
@@ -288,6 +341,14 @@ export default {
           
           console.error("Erro ao fazer requisição POST:", error);
         });
+    },
+    
+    formatValor(atual) {
+      const valorFormatado = Intl.NumberFormat("pt-br", {
+        style: "currency",
+        currency: "AOA",
+      }).format(atual);
+      return valorFormatado;
     },
     
   },
