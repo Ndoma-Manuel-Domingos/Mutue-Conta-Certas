@@ -23,7 +23,7 @@
             <div class="card">
               <div class="card-header"> 
                 <a href="/movimentos/create" class="btn btn-info"> <i class="fas fa-plus"></i> LANÇAR MOVIMENTOS</a>
-                <a @click="imprimirPlano()" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
+                <a @click="imprimirMovimentos()" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
                 <a href="" class="btn btn-sm mx-1 btn-success float-right"> <i class="fas fa-file-excel"></i> Exportar</a>
               </div>
               <div class="card-body">
@@ -111,7 +111,7 @@ export default {
   },
   mounted() {},
   methods: {
-    imprimirPlano() {
+    imprimirMovimentos() {
       window.open("imprimir-movimentos");
     },
     formatValor(atual) {

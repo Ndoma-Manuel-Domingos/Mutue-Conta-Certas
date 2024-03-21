@@ -103,10 +103,48 @@
 
     </main>
 
-    <span style="text-align: center;">
-        <p style="font-size: 20px;">Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
-            Inteligentes.</p>
-    </span>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <span style="text-align: center; font-size: 16px; align-content: bottom;">
+      <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
+          Inteligentes.</p>
+  </span>
 
 </body>
 

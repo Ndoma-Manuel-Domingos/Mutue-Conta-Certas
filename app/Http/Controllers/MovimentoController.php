@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use PDF;
+use TCPDF;
 
 class MovimentoController extends Controller
 {
@@ -292,11 +293,10 @@ class MovimentoController extends Controller
     }
 
     public function imprimirMovimento(){
-        $users = User::with('empresa')->findOrFail(auth()->user()->id);
-        $session = Session::get('empresa_logada_mutue_contas_certas_2024');
-        $data['movimentos_data'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $session['id'])->get();
-    
-        $pdf = PDF::loadView('pdf.contas.Movimentos', $data)->setPaper('a3', 'landscape');
+        
+        $data['movimentos_data'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $this->empresaLogada())->get();
+        
+        $pdf = PDF::loadView('pdf.contas.Movimentos', $data)->setPaper('a4', 'landscape');
         return $pdf->stream('Contas.pdf');
     }
 
