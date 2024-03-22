@@ -22,9 +22,9 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header">
-                <a href="/classes/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR CLASSES</a>
+                <a href="/classes/create" class="btn btn-info mx-1 btn-sm"> <i class="fas fa-plus"></i> CRIAR CLASSES</a>
 
-                <button class="btn btn-sm float-right btn-danger " @click="imprimirContas()">
+                <button class="btn btn-sm mx-1 btn-danger " @click="imprimirContas()">
                   <i class="fas fa-save"></i> Imprimir Contas
                 </button>
               </div>
@@ -42,6 +42,19 @@
                     </thead>
 
                     <tbody>
+                      
+                      <tr>
+                        <td></td>
+                        <td style="width: 250px;">
+                          <input type="text" class="form-control" placeholder="Número ou Código" v-model="classes_numero">
+                        </td>
+                        <td style="width: 250px;">
+                          <input type="text" class="form-control" placeholder="Designação" v-model="classes_designacao">
+                        </td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    
                       <tr v-for="item in classes.data" :key="item">
                         <td>#</td>
                         <td>{{ item.classe.numero }}</td>
@@ -109,7 +122,7 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-        sessions() {
+    sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
     sessions_exercicio() {
@@ -120,10 +133,55 @@ export default {
     return {
       dialog: false,
       id_delete: null,
+      
+      classes_numero: "",
+      classes_designacao: "",
+      params: {},
+      
     };
   },
+  
+  watch: {
+    options: function (val) {
+      this.params.page = val.page;
+      this.params.page_size = val.itemsPerPage;
+      if (val.sortBy.length != 0) {
+        this.params.sort_by = val.sortBy[0];
+        this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+      } else {
+        this.params.sort_by = null;
+        this.params.order_by = null;
+      }
+      this.updateData();
+    },
+    
+    classes_numero: function (val) {
+      this.params.classes_numero = val;
+      this.updateData();
+    },
+    
+    classes_designacao: function (val) {
+      this.params.classes_designacao = val;
+      this.updateData();
+    },
+ 
+  },
+  
   mounted() { },
   methods: {
+  
+    updateData() {
+      this.$Progress.start();
+      this.$inertia.get("/classes", this.params, {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          this.$Progress.finish();
+        },
+      });
+    },
+    
+  
     imprimirContas() {
       // window.open("/estudante/lista-avaliacao/" + btoa(btoa(btoa(this.usuario))) + '/' +  btoa(btoa(btoa(this.ano_lectivo))) + '/' + btoa(btoa(btoa(this.query.id_semestre))));
       window.open("imprimir-classes");

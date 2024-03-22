@@ -9,6 +9,7 @@ use App\Models\DocumentoEmpresa;
 use App\Models\Empresa;
 use App\Models\EnderecoEmpresa;
 use App\Models\Exercicio;
+use App\Models\GrupoEmpresa;
 use App\Models\Moeda;
 use App\Models\MoedaEmpresa;
 use App\Models\Municipio;
@@ -17,6 +18,7 @@ use App\Models\Provincia;
 use App\Models\Regime;
 use App\Models\TipoContactoEmpresa;
 use App\Models\TipoDocumentoEmpresa;
+use App\Models\TipoEmpresa;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use App\Models\UserEmpresa;
@@ -29,12 +31,18 @@ use Inertia\Inertia;
 class EmpresaController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
         // Retorna a lista de posts
         $user = User::with('empresa')->findOrFail(auth()->user()->id);
          
-        $data['empresas'] = Empresa::with(['endereco', 'regime', 'moeda.base', 'moeda.alternativa', 'moeda.cambio'])->where('user_id', $user->id)->paginate(7);
+        $data['empresas'] = Empresa::when($request->input_busca_empresas, function($query, $value){
+            $query->where('nome_empresa', 'like', "%".$value."%");
+            $query->orWhere('codigo_empresa', $value);
+        })
+        ->with(['endereco', 'regime', 'moeda.base', 'moeda.alternativa', 'moeda.cambio', 'tipo', 'grupo'])
+        ->where('user_id', $user->id)
+        ->paginate(7);
     
         return Inertia::render('Empresas/Index', $data);
     }
@@ -48,6 +56,8 @@ class EmpresaController extends Controller
         $data['municipios'] = Municipio::select('id', 'designacao As text')->get();
         $data['comunas'] = Comuna::select('id', 'designacao As text')->get();
         $data['regimes'] = Regime::select('id', 'designacao As text')->get();
+        $data['tipos_empresas'] = TipoEmpresa::select('id', 'designacao As text')->get();
+        $data['grupos_empresas'] = GrupoEmpresa::select('id', 'designacao As text')->get();
         $data['tipos_documentos_empresa'] = TipoDocumentoEmpresa::select('id', 'designacao As text')->get();
         $data['tipos_contactos_empresa'] = TipoContactoEmpresa::select('id', 'designacao As text')->get();
         $data['moedas'] = Moeda::select('id', 'designacao As d', DB::raw('CONCAT(sigla, " - ", designacao) AS text'))->get();
@@ -83,6 +93,8 @@ class EmpresaController extends Controller
                 'logotipo_da_empresa' => "",
                 'estado_empresa_id' => $request->estado_empresa_id,
                 'regime_empresa_id' => $request->regime_empresa_id,
+                'tipo_empresa_id' => $request->tipo_empresa_id,
+                'grupo_empresa_id' => $request->grupo_empresa_id,
                 'user_id' => auth()->user()->id,
                 'created_by' => auth()->user()->id,
             ]);
@@ -155,6 +167,14 @@ class EmpresaController extends Controller
 
     public function show($id)
     {
+        $data['empresa'] = Empresa::with(['contactos.contacto', 'documentos.documento', 'endereco.pais', 'endereco.provincia', 'endereco.municipio', 'endereco.comuna', 'regime', 'moeda.base', 'moeda.alternativa', 'moeda.cambio', 'tipo', 'grupo'])->findOrFail($id);
+        
+        return Inertia::render('Empresas/Show', $data);
+    }
+    
+
+    public function mudar_estado($id)
+    {
     
         $empresa = Empresa::with(['endereco', 'regime', 'moeda.base', 'moeda.alternativa', 'moeda.cambio'])->findOrFail($id);
         
@@ -172,7 +192,8 @@ class EmpresaController extends Controller
         
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
-
+    
+    
     public function edit($id)
     {
         // Exibe o formulário para editar um post
@@ -183,6 +204,8 @@ class EmpresaController extends Controller
         $data['comunas'] = Comuna::select('id', 'designacao As text')->get();
         $data['regimes'] = Regime::select('id', 'designacao As text')->get();
         $data['moedas'] = Moeda::select('id', 'designacao As d', DB::raw('CONCAT(sigla, " - ", designacao) AS text'))->get();
+        $data['tipos_empresas'] = TipoEmpresa::select('id', 'designacao As text')->get();
+        $data['grupos_empresas'] = GrupoEmpresa::select('id', 'designacao As text')->get();
         
         $data['empresa'] = Empresa::with(['endereco', 'regime', 'moeda.base', 'moeda.alternativa', 'moeda.cambio'])->findOrFail($id);
                        
@@ -208,6 +231,9 @@ class EmpresaController extends Controller
         $empresa->descricao_empresa = $request->descricao_empresa;
         $empresa->estado_empresa_id = $request->estado_empresa_id;
         $empresa->regime_empresa_id = $request->regime_empresa_id;
+        $empresa->tipo_empresa_id = $request->tipo_empresa_id;
+        $empresa->grupo_empresa_id = $request->grupo_empresa_id;
+            
         $empresa->updated_by = auth()->user()->id;
         $empresa->update();
         

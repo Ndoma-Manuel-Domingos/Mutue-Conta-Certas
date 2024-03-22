@@ -19,7 +19,7 @@ class Movimento extends Model
         'iva',
         'descricao',
         'exercicio_id',
-        'mes_id',
+        'periodo_id',
         'dia_id',
         'data_lancamento',
         'lancamento_atual',

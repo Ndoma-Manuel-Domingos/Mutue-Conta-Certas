@@ -27,6 +27,23 @@
                 <button class="btn btn-danger btn-sm mx-1" @click="imprimirContas()">
                   <i class="fas fa-save"></i> Imprimir Contas
                 </button>
+                
+                <div class="card-tools">
+                  <div class="input-group input-group" style="width: 450px">
+                    <input
+                      type="text"
+                      v-model="input_busca_exercicios"
+                      class="form-control float-right"
+                      placeholder="Informe a campo"
+                    />
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -101,10 +118,48 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      input_busca_exercicios: "",
+      params: {},
+    };
   },
+
   mounted() {},
-  methods: {
+  
+  watch: {
+    options: function (val) {
+      this.params.page = val.page;
+      this.params.page_size = val.itemsPerPage;
+      if (val.sortBy.length != 0) {
+        this.params.sort_by = val.sortBy[0];
+        this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+      } else {
+        this.params.sort_by = null;
+        this.params.order_by = null;
+      }
+      this.updateData();
+    },
+    
+    input_busca_exercicios: function (val) {
+      this.params.input_busca_exercicios = val;
+      this.updateData();
+    },
+
+  },
+  
+  methods: {   
+  
+    updateData() {
+      this.$Progress.start();
+      this.$inertia.get("/exercicios", this.params, {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          this.$Progress.finish();
+        },
+      });
+    },
+      
     mudar_estado_exercicio(item) {
       this.$Progress.start();
 

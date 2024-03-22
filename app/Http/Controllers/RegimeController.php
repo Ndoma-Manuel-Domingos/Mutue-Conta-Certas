@@ -13,9 +13,12 @@ class RegimeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Regime::all();
+        $data = Regime::when($request->input_busca_regimes, function($query, $value){
+            $query->where('designacao', 'like', "%".$value."%");
+        })
+        ->paginate(10);
         
         return Inertia::render('Regime/index', ['regimes' => $data]);
     }
@@ -29,7 +32,7 @@ class RegimeController extends Controller
     {
         $data['regime'] = [];
 
-        return Inertia::render('Regime/create', ['vazio' => $data]);
+        return Inertia::render('Regime/Create', ['vazio' => $data]);
     }
 
     /**
@@ -42,19 +45,15 @@ class RegimeController extends Controller
     {
         $request->validate([
             "designacao" => "required",
-            "estado" => "required",
         ], 
         [
             "designacao.required" => "Campo Obrigatório",
-            "estado.required" => "Campo Obrigatório",
         ]);
 
         try {
             $data = Regime::create([
                 'designacao' => $request->designacao,
-                'estado' => $request->estado
             ]);
-
             return response()->json(['message' => "Dados salvos com sucesso!"], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => "Não foi possível salvar os dados!"], 201);

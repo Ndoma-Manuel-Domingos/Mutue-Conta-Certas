@@ -22,11 +22,27 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header"> 
-                <a href="/sub-contas/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR SUBCONTAS</a>
+                <a href="/sub-contas/create" class="btn btn-info btn-sm mx-1"> <i class="fas fa-plus"></i> CRIAR SUBCONTAS</a>
 
-                <button class="btn btn-danger float-right btn-sm" @click="imprimirContas()">
+                <button class="btn btn-danger mx-1 btn-sm" @click="imprimirContas()">
                   <i class="fas fa-save"></i> Imprimir Contas
                 </button>
+                
+                <div class="card-tools">
+                  <div class="input-group input-group" style="width: 450px">
+                    <input
+                      type="text"
+                      v-model="input_busca_subconta"
+                      class="form-control float-right"
+                      placeholder="Informe a campo"
+                    />
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
               </div>
               <div class="card-body">
@@ -35,9 +51,9 @@
                     <thead>
                       <tr>
                         <th>ID</th>
-                        <th>Código</th>
-                        <th>Nome</th>
-                        <th>Conta</th>
+                        <th @click="order_by_codigo" style="cursor: pointer;">Código</th>
+                        <th @click="order_by_nome" style="cursor: pointer;">Nome</th>
+                        <th @click="order_by_conta" style="cursor: pointer;">Conta</th>
                         <th>Tipo</th>
                         <th>Estado</th>
                         <th class="text-right">Ações</th>
@@ -50,12 +66,13 @@
                         <td>{{ item.numero }}</td>
                         <td>{{ item.designacao }}</td>
                         <td>{{ item.conta.numero }} - {{ item.conta.designacao }}</td>
-                        <td>{{ item.tipo == "M" ? "Movimento" : "Entregadora" }}</td>
+                        <td>{{ item.tipo }}</td>
                         <td class="text-capitalize">{{ item.estado }}</td>
                         <td>
                           <div class="float-right">
                             <a :href="`/sub-contas/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
-                            <a href="" class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i> Apagar</a>
+                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
+                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
                           </div>
                         </td>
                       </tr>
@@ -98,7 +115,7 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-        sessions() {
+    sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
     sessions_exercicio() {
@@ -106,10 +123,95 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      input_busca_subconta: "",
+      params: {},
+    };
   },
   mounted() {},
+  watch: {
+    options: function (val) {
+      this.params.page = val.page;
+      this.params.page_size = val.itemsPerPage;
+      if (val.sortBy.length != 0) {
+        this.params.sort_by = val.sortBy[0];
+        this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+      } else {
+        this.params.sort_by = null;
+        this.params.order_by = null;
+      }
+      this.updateData();
+    },
+    
+    input_busca_subconta: function (val) {
+      this.params.input_busca_subconta = val;
+      this.updateData();
+    },
+
+  },
   methods: {
+  
+    order_by_codigo(){
+      this.params.order_by = "numero";
+      this.updateData();
+    },    
+    
+    order_by_nome(){
+      this.params.order_by = "designacao";
+      this.updateData();
+    }, 
+    
+    order_by_conta(){
+      this.params.order_by = "conta";
+      this.updateData();
+    },  
+  
+    updateData() {
+      this.$Progress.start();
+      this.$inertia.get("/sub-contas", this.params, {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          this.$Progress.finish();
+        },
+      });
+    },
+    
+    
+    mudar_estado(item) {
+      this.$Progress.start();
+
+      axios.get(`/sub-contas/${item.id}`)
+        .then((response) => {
+          this.$Progress.finish();
+          Swal.fire({
+            toast: true,
+            icon: "success",
+            title: "Estado Alterado com sucesso!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+      
+          window.location.reload();
+        })
+        .catch((error) => {
+          
+          this.$Progress.fail();
+          Swal.fire({
+            toast: true,
+            icon: "danger",
+            title: "Correu um erro ao Estado Alterado com sucesso!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+          
+        });
+    },
+  
     imprimirContas() {
       window.open("imprimir-sub-contas");
     },

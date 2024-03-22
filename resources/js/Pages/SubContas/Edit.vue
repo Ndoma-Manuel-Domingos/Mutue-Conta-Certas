@@ -114,8 +114,9 @@ export default {
       ],
       
       tipos: [
+        {'id': "R", 'text': "Geral"},
         {'id': "M", 'text': "Movimento"},
-        {'id': "E", 'text': "Entregadora"},
+        {'id': "I", 'text': "Intregadora"},
       ],
       
       form: {

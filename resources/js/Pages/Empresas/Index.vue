@@ -22,7 +22,27 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header"> 
-                <a href="/empresas/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR EMPRESA</a>
+                <a href="/empresas/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR EMPRESA</a>
+                <button class="btn btn-danger btn-sm mx-1" >
+                  <i class="fas fa-file-pdf"></i> Imprimir
+                </button>
+                
+                <div class="card-tools">
+                  <div class="input-group input-group" style="width: 450px">
+                    <input
+                      type="text"
+                      v-model="input_busca_empresas"
+                      class="form-control float-right"
+                      placeholder="Informe a campo"
+                    />
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -34,6 +54,8 @@
                         <th>Regime do IVA</th>
                         <th>Moeda Base</th>
                         <th>Moeda Alternativo</th>
+                        <th>Tipo</th>
+                        <th>Grupo</th>
                         <th>Estado</th>
                         <th class="text-right">Ações</th>
                       </tr>
@@ -41,11 +63,14 @@
                     <tbody>
                       
                       <tr v-for="item in empresas.data" :key="item" :style="{ backgroundColor: verificar_sessao_empresa(item) ? '#D3D3D3' : '' }" >
-                        <td class="text-uppercase">{{ item.codigo_empresa }}</td>
+                        <td class="text-uppercase"><a :href="`/empresas/${item.id}`">{{ item.codigo_empresa }}</a></td>
                         <td class="text-uppercase">{{ item.nome_empresa }}</td>
                         <td>{{ item.regime.designacao }}</td>
                         <td>{{ item.moeda ? (item.moeda.base ? (item.moeda.base ? item.moeda.base.designacao : "") : "") : "" }} - {{ item.moeda ? (item.moeda.base ? (item.moeda.base ? item.moeda.base.sigla : "") : "") : "" }}</td>
                         <td>{{ item.moeda ? (item.moeda.base ? (item.moeda.alternativa ? item.moeda.alternativa.designacao : "") : "") : "" }} - {{ item.moeda ? (item.moeda.alternativa ? (item.moeda.alternativa ? item.moeda.alternativa.sigla : "") : "") : "" }}</td>
+                        
+                        <td>{{ item.tipo ? item.tipo.designacao : "" }}</td>
+                        <td>{{ item.grupo ? item.grupo.designacao : "" }}</td>
                         <td class="text-capitalize">{{ item.estado_empresa_id == 1 ? 'Activo': 'Desactivo' }}</td>
                         <td>
                                               
@@ -104,14 +129,52 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      input_busca_empresas: "",
+      params: {},
+    };
   },
+  
+  watch: {
+    options: function (val) {
+      this.params.page = val.page;
+      this.params.page_size = val.itemsPerPage;
+      if (val.sortBy.length != 0) {
+        this.params.sort_by = val.sortBy[0];
+        this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+      } else {
+        this.params.sort_by = null;
+        this.params.order_by = null;
+      }
+      this.updateData();
+    },
+    
+    input_busca_empresas: function (val) {
+      this.params.input_busca_empresas = val;
+      this.updateData();
+    },
+
+  },
+  
   mounted() {},
   methods: {
+  
+    updateData() {
+      this.$Progress.start();
+      this.$inertia.get("/empresas", this.params, {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          this.$Progress.finish();
+        },
+      });
+    },
+      
+    
     mudar_estado_empresa(item) {
       this.$Progress.start();
 
-      axios.get(`/empresas/${item.id}`)
+      axios.get(`/empresas-mudar-estado/${item.id}`)
         .then((response) => {
           this.$Progress.finish();
           Swal.fire({

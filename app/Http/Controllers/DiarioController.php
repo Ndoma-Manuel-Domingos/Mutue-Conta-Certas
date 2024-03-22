@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ContaEmpresa;
 use App\Models\Diario;
 use App\Models\Exercicio;
 use App\Models\TipoDocumento;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use PDF;
 

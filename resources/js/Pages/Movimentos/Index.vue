@@ -22,7 +22,7 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header"> 
-                <a href="/movimentos/create" class="btn btn-info"> <i class="fas fa-plus"></i> LANÇAR MOVIMENTOS</a>
+                <a href="/movimentos/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> LANÇAR MOVIMENTOS</a>
                 <a @click="imprimirPlano()" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
                 <a href="" class="btn btn-sm mx-1 btn-success float-right"> <i class="fas fa-file-excel"></i> Exportar</a>
               </div>
@@ -31,9 +31,9 @@
                   <table class="table table-hover text-nowrap">
                     <thead>
                       <tr>
-                        <th>Nº</th>
-                        <th>Diário</th>
-                        <th>Documento</th>
+                        <th @click="order_by_codigo" style="cursor: pointer;">Nº</th>
+                        <th @click="order_by_diario" style="cursor: pointer;">Diário</th>
+                        <th @click="order_by_documento" style="cursor: pointer;">Documento</th>
                         <th>Débito</th>
                         <th>Crédito</th>
                         <th>Data</th>
@@ -44,6 +44,25 @@
                     </thead>
                     
                     <tbody>
+                      
+                      <tr>
+                        <td></td>
+                        <td style="width: 250px;">
+                          <input type="text" class="form-control" placeholder="Nº ou Designação" v-model="tipo_diario">
+                        </td>
+                        <td style="width: 250px;">
+                          <input type="text" class="form-control" placeholder="Nº ou Designação" v-model="tipo_documento">
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="width: 250px;">
+                          <input type="text" class="form-control" placeholder="Nome" v-model="operador_id">
+                        </td>
+                        
+                      </tr>
+                      
                       <tr v-for="item in movimentos.data" :key="item">
                         <td>{{ item.id }}</td>
                         <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td>
@@ -99,7 +118,7 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-        sessions() {
+    sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
     sessions_exercicio() {
@@ -107,10 +126,73 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      operador_id: "",
+      tipo_diario: "",
+      tipo_documento: "",
+      params: {},
+    };
   },
   mounted() {},
+    
+  watch: {
+    options: function (val) {
+      this.params.page = val.page;
+      this.params.page_size = val.itemsPerPage;
+      if (val.sortBy.length != 0) {
+        this.params.sort_by = val.sortBy[0];
+        this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+      } else {
+        this.params.sort_by = null;
+        this.params.order_by = null;
+      }
+      this.updateData();
+    },
+    
+    tipo_diario: function (val) {
+      this.params.tipo_diario = val;
+      this.updateData();
+    },
+            
+    tipo_documento: function (val) {
+      this.params.tipo_documento = val;
+      this.updateData();
+    },
+          
+    operador_id: function (val) {
+      this.params.operador_id = val;
+      this.updateData();
+    },
+  },
+  
   methods: {
+    updateData() {
+      this.$Progress.start();
+      this.$inertia.get("/movimentos", this.params, {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          this.$Progress.finish();
+        },
+      });
+    },
+    
+      
+    order_by_codigo(){
+      this.params.order_by = "numero";
+      this.updateData();
+    },    
+    
+    order_by_diario(){
+      this.params.order_by = "diario";
+      this.updateData();
+    }, 
+    
+    order_by_documento(){
+      this.params.order_by = "documento";
+      this.updateData();
+    },  
+  
     imprimirPlano() {
       window.open("imprimir-movimentos");
     },

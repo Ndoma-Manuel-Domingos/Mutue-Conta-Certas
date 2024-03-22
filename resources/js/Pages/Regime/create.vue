@@ -26,20 +26,12 @@
 
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-12 col-md-6 mb-4">
+                                        <div class="col-12 col-md-12 mb-4">
                                             <label for="numero" class="form-label">Descrição do Regime</label>
-                                            <input type="text" id="numero" v-model="form.designacao" class="form-control">
-                                            <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{
-                            form.errors.classe_id }}</span>
+                                            <input type="text" id="numero" v-model="form.designacao" class="form-control" placeholder="Informe a designação">
+                                            <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{ form.errors.classe_id }}</span>
                                         </div>
 
-                                        <div class="col-12 col-md-6 mb-4">
-                                            <label for="estado" class="form-label">Estado</label>
-                                            <Select2 v-model="form.estado" id="estado" class="col-12 col-md-12"
-                                                :options="estados" :settings="{ width: '100%' }" />
-                                            <span class="text-danger" v-if="form.errors && form.errors.estado">{{
-                                                form.errors.estado }}</span>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -72,12 +64,6 @@ export default {
     },
     data() {
         return {
-
-            estados: [
-                { 'id': "activo", 'text': "Activo" },
-                { 'id': "desactivo", 'text': "Desactivo" },
-            ],
-
             form: {
                 designacao: "",
                 estado: "",
@@ -92,7 +78,6 @@ export default {
             axios.post(route('regime-empresa.store'), this.form)
                 .then((response) => {
                     
-                    // this.form.reset();
                     this.$Progress.finish();
 
                     Swal.fire({
@@ -109,8 +94,7 @@ export default {
                     console.log("Resposta da requisição POST:", response.data);
                 })
                 .catch((error) => {
-
-                    // sweetError("Ocorreu um erro ao actualizar Instituição!");
+    
                     this.$Progress.fail();
                     Swal.fire({
                         toast: true,
@@ -127,4 +111,4 @@ export default {
         },
     },
 };
-</script>
+</script>./Create.vue

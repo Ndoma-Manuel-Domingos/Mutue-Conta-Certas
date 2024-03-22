@@ -179,60 +179,6 @@
         </ul>
       </li>
 
-      <li class="nav-item">
-        <a
-          href="#"
-          class="nav-link"
-          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
-        >
-          <i class="nav-icon fas fa-credit-card"></i>
-          <p>
-            Gestão de Relatorios
-            <i class="right fas fa-angle-left"></i>
-          </p>
-        </a>
-        <ul class="nav nav-treeview">
-          <li class="nav-item" title="CLASSES">
-            <Link
-              href="/diarios"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Classes/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Balanços</p>
-            </Link>
-          </li>
-
-          <li class="nav-item" title="Balancetes">
-            <Link
-              href="/balancetes"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'SubContas/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Balancetes</p>
-            </Link>
-          </li>
-
-          <li class="nav-item" title="Movimentos">
-            <Link
-              href="/movimentos"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Contas/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Balacentes</p>
-            </Link>
-          </li>
-        </ul>
-      </li>
-
       <li class="nav-item" v-if="sessions">
         <a
           href="#"
@@ -242,7 +188,7 @@
           <i class="nav-icon fas fa-file-pdf"></i>
           <p>
             <i class="right fas fa-angle-left"></i>
-            Extratos
+            Gestão
           </p>
         </a>
         <ul class="nav nav-treeview">
@@ -259,19 +205,6 @@
             </Link>
           </li>
 
-          <li class="nav-item" title="Movimentos">
-            <Link
-              href="/movimentos"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Contas/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Semanal</p>
-            </Link>
-          </li>
-
           <li class="nav-item" title="Periodos">
             <Link
               href="/periodos"
@@ -284,6 +217,61 @@
               <p>Períodos</p>
             </Link>
           </li>
+        </ul>
+      </li>
+
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+          <i class="nav-icon fas fa-credit-card"></i>
+          <p>
+            Gestão de Relatorios
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item" title="BALANÇO">
+            <Link
+              href="/balancos"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Balancos/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Balanço</p>
+            </Link>
+          </li>
+
+          <li class="nav-item" title="BALANCETE">
+            <Link
+              href="/balancetes"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Balancetes/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Balancete</p>
+            </Link>
+          </li>
+          
+          <li class="nav-item" title="Extrato de contas">
+            <Link
+              href="/extratos-contas"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'ExtratoContas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Extrato de Conta</p>
+            </Link>
+          </li>
+        
         </ul>
       </li>
 
@@ -309,7 +297,29 @@
               }"
             >
               <i class="far fa-circle nav-icon"></i>
-              <p>Novo Regime de Empresa</p>
+              <p>Regime de Empresa</p>
+            </Link>
+            
+            <Link
+              href="/tipos-empresas"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'TipoEmpresas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Tipos de Empresas</p>
+            </Link>
+            
+            <Link
+              href="/grupos-empresas"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'GrupoEmpresas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Grupos de Empresas</p>
             </Link>
 
             <Link
@@ -320,7 +330,7 @@
               }"
             >
               <i class="far fa-circle nav-icon"></i>
-              <p>Nova Moeda de Operação</p>
+              <p>Moedas de Operação</p>
             </Link>
 
             <Link
@@ -331,7 +341,7 @@
               }"
             >
               <i class="far fa-circle nav-icon"></i>
-              <p>Novo País</p>
+              <p>Países</p>
             </Link>
 
             <Link
@@ -342,7 +352,7 @@
               }"
             >
               <i class="far fa-circle nav-icon"></i>
-              <p>Nova Provincia</p>
+              <p>Provincias</p>
             </Link>
 
             <Link
@@ -353,7 +363,7 @@
               }"
             >
               <i class="far fa-circle nav-icon"></i>
-              <p>Novo Município</p>
+              <p>Municípios</p>
             </Link>
 
             <Link

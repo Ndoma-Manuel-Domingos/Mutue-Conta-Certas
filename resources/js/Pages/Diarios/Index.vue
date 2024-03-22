@@ -23,9 +23,12 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
-                  <a href="/diarios/create" class="btn btn-info">
+                  <a href="/diarios/create" class="btn btn-sm btn-info mx-1">
                     <i class="fas fa-plus"></i> CRIAR DIÁRIO</a
                   >
+                  <button class="btn btn-sm float-right btn-danger mx-1">
+                    <i class="fas fa-file-pd"></i> Imprimir
+                  </button>
                 </h3>
                 <div class="card-tools">
                   <div class="input-group input-group" style="width: 450px">

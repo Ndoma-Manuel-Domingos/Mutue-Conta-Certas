@@ -13,9 +13,15 @@ class MoedaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data['moeda'] = Moeda::all();
+ 
+        $data['moeda'] = Moeda::when($request->input_busca_moedas, function($query, $value){
+            $query->where('designacao', 'like', "%".$value."%");
+            $query->orWhere('sigla', 'like', "%".$value."%");
+            $query->orWhere('pais', 'like', "%".$value."%");
+        })
+        ->paginate(10);
 
         return Inertia::render('Moeda/Index', $data);
     }
@@ -76,7 +82,6 @@ class MoedaController extends Controller
         try {
 
             $data['moeda'] = Moeda::findOrFail($id);
-
             return Inertia::render('Moeda/Edit', $data);
 
         } catch (\Throwable $th) {
@@ -95,7 +100,6 @@ class MoedaController extends Controller
     public function update(Request $request, $id)
     {
         try {
-
             $moeda = Moeda::findOrFail($id);
             
             $moeda->designacao = $request->designacao;

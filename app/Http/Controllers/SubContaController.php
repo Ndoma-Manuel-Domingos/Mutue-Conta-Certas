@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Conta;
 use App\Models\ContaEmpresa;
 use App\Models\SubConta;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use PDF;
@@ -16,12 +14,27 @@ class SubContaController extends Controller
 {
     use Config;
     //
-    public function index()
+    public function index(Request $request)
     {
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['subcontas'] = SubConta::with(['empresa', 'conta'])->where('empresa_id', $this->empresaLogada())->paginate(7);
+        $data['subcontas'] = SubConta::when($request->order_by, function($query, $value){
+            if($value == "conta"){
+                $query->orderBy('conta_id', 'asc');
+            }else if($value == "numero"){
+                $query->orderBy('numero', 'asc');
+            }else if($value == "designacao"){
+                $query->orderBy('designacao', 'asc');
+            }
+        })
+        ->when($request->input_busca_subconta, function($query, $value){
+            $query->where('designacao', 'like', "%".$value."%");
+            $query->orWhere('numero', 'like', "%".$value."%");
+        })
+        ->with(['empresa', 'conta'])
+        ->where('empresa_id', $this->empresaLogada())
+        ->paginate(7);
                
         return Inertia::render('SubContas/Index', $data);
     }
@@ -76,7 +89,22 @@ class SubContaController extends Controller
 
     public function show($id)
     {
-        // Exibe um post específico
+    
+        $empresa = SubConta::findOrFail($id);
+        
+        $estado = "";
+        
+        if($empresa->estado == "activo"){
+            $estado = "desactivo";
+        }
+        if($empresa->estado == "desactivo"){
+            $estado = "activo";
+        }
+        
+        $empresa->estado = $estado;
+        $empresa->update();
+        
+        return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
 
     public function edit($id)

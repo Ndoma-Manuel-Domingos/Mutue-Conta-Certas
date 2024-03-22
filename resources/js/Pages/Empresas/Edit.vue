@@ -88,7 +88,7 @@
                           <span class="text-danger" v-if="form.errors && form.errors.moeda_base_id">{{ form.errors.moeda_base_id }}</span>
                         </div>
                         
-                        <div class="col-12 col-md-3 mb-4">
+                        <div class="col-12 col-md-2 mb-4">
                           <label for="moeda_alternativa_id" class="form-label">Moeda Alternativa</label>
                           <Select2 v-model="form.moeda_alternativa_id"
                             id="moeda_alternativa_id" class="col-12 col-md-12"
@@ -97,6 +97,43 @@
                           <span class="text-danger" v-if="form.errors && form.errors.moeda_alternativa_id">{{ form.errors.moeda_alternativa_id }}</span>
                         </div>
                         
+                          
+                        <div class="col-12 col-md-2 mb-4">
+                          <label for="tipo_empresa_id" class="form-label"
+                            >Tipos</label
+                          >
+                          <Select2
+                            v-model="form.tipo_empresa_id"
+                            id="tipo_empresa_id"
+                            class="col-12 col-md-12"
+                            :options="tipos_empresas"
+                            :settings="{ width: '100%' }"
+                          />
+                          <span
+                            class="text-danger"
+                            v-if="form.errors && form.errors.tipo_empresa_id"
+                            >{{ form.errors.tipo_empresa_id }}</span
+                          >
+                        </div>
+                        
+                        <div class="col-12 col-md-2 mb-4">
+                          <label for="grupo_empresa_id" class="form-label"
+                            >Grupos</label
+                          >
+                          <Select2
+                            v-model="form.grupo_empresa_id"
+                            id="grupo_empresa_id"
+                            class="col-12 col-md-12"
+                            :options="grupos_empresas"
+                            :settings="{ width: '100%' }"
+                          />
+                          <span
+                            class="text-danger"
+                            v-if="form.errors && form.errors.grupo_empresa_id"
+                            >{{ form.errors.grupo_empresa_id }}</span
+                          >
+                        </div>
+                          
                      
                       </div>
                     </div>
@@ -203,6 +240,8 @@ export default {
     "moedas",
     "regimes",
     "empresa",
+    "tipos_empresas",
+    "grupos_empresas",
   ],
   computed: {
     user() {
@@ -229,6 +268,8 @@ export default {
         descricao_empresa: this.empresa ? this.empresa.descricao_empresa : "" ,
         estado_empresa_id: this.empresa ? this.empresa.estado_empresa_id : "" ,
         regime_empresa_id: this.empresa ? this.empresa.regime_empresa_id : "" ,
+        tipo_empresa_id: this.empresa ? this.empresa.tipo_empresa_id : "" ,
+        grupo_empresa_id: this.empresa ? this.empresa.grupo_empresa_id : "" ,
         
         moeda_base_id: this.empresa ? (this.empresa.moeda ? this.empresa.moeda.moeda_base_id : "") : "",
         moeda_alternativa_id: this.empresa ? (this.empresa.moeda ? this.empresa.moeda.moeda_alternativa_id : "") : "",
