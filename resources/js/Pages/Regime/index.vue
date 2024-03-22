@@ -22,11 +22,12 @@
                     <div class="col-12 col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="/regime-empresa/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR
+                                <a href="/regime-empresa/create" class="btn btn-info btn-sm"> <i
+                                        class="fas fa-plus"></i> CRIAR
                                     PERÍODO</a>
 
-                                <button class="btn btn-danger btn-sm-float-right" @click="imprimirPeriodos()">
-                                    <i class="fas fa-save"></i> Imprimir Contas
+                                <button class="btn btn-danger btn-sm float-right" @click="imprimirPeriodos()">
+                                    <i class="fas fa-save"></i> Visualizar
                                 </button>
                             </div>
                             <div class="card-body">
@@ -42,7 +43,7 @@
                                         </thead>
 
                                         <tbody>
-                                            <tr v-for="item in regimes" :key="item">
+                                            <tr v-for="item in regimes.data" :key="item">
                                                 <td>#</td>
                                                 <td>{{ item.id }}</td>
                                                 <td>{{ item.designacao }}</td>
@@ -65,11 +66,11 @@
                             <div class="card-footer">
                                 <Link href="" class="text-secondary">
                                 Total Registro: {{ regimes.total }}</Link>
-                                <!-- <Paginacao
-                    :links="periodos.links"
-                    :prev="periodos.prev_page_url"
-                    :next="periodos.next_page_url"
-                  /> -->
+                                <Paginacao 
+                                    :links="regimes.links" 
+                                    :prev="regimes.prev_page_url"
+                                    :next="regimes.next_page_url"
+                                />
                             </div>
                         </div>
                     </div>

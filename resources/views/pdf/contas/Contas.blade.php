@@ -27,7 +27,7 @@
             color: orange;
         }
 
-        .footer {
+        /* .footer {
             font-size: 0.875rem;
             padding: 1rem;
             background-color: rgb(255, 255, 255);
@@ -35,7 +35,7 @@
             position: fixed;
             width: 90%;
             text-align: center;
-        }
+        } */
     </style>
 </head>
 
@@ -89,7 +89,41 @@
         </table>
 
     </main>
-
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <div class="footer margin-top">
         <hr>
         <p style="text-align:right">Data: {{ date('Y-m-d H:i:s') }} </p>

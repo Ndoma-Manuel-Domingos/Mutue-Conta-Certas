@@ -15,7 +15,7 @@ class RegimeController extends Controller
      */
     public function index()
     {
-        $data = Regime::all();
+        $data = Regime::paginate(10);
         
         return Inertia::render('Regime/index', ['regimes' => $data]);
     }

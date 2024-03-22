@@ -25,7 +25,7 @@
                 <a href="/classes/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR CLASSES</a>
 
                 <button class="btn btn-sm float-right btn-danger " @click="imprimirContas()">
-                  <i class="fas fa-save"></i> Imprimir Contas
+                  <i class="fas fa-save"></i> Visualizar
                 </button>
               </div>
               <div class="card-body">
