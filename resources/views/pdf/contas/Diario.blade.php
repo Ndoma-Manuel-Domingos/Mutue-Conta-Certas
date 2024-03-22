@@ -26,6 +26,16 @@
         .orange-text {
             color: orange;
         }
+
+        .footer {
+            font-size: 0.875rem;
+            padding: 1rem;
+            background-color: rgb(255, 255, 255);
+            bottom: 0;
+            position: fixed;
+            width: 90%;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -71,10 +81,15 @@
         </table>
     </main>
 
-    <span style="text-align: center; font-size: 16px;">
-        <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
-            Inteligentes.</p>
-    </span>
+    <div class="footer margin-top">
+        <hr>
+        <p style="text-align:right">Data: {{ date('Y-m-d H:i:s') }} </p>
+
+        <div align="center"> Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue -
+            Soluções Tecnológicas
+            Inteligentes.</div>
+
+    </div>
 </body>
 
 </html>

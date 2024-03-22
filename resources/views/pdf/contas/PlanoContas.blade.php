@@ -141,10 +141,11 @@
     <br>
     <br>
     <hr>
-    <span style="text-align: center; font-size: 16px; align-content: bottom;">
-      <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
-          Inteligentes.</p>
-  </span>
+    <span style="text-align: center; font-size: 12px; align-content: bottom;">
+        <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
+            Inteligentes.</p>
+    </span>
+
 
 </body>
 
@@ -163,5 +164,11 @@
     tr td {
         text-align: left;
         margin-top: 160px;
+    }
+
+    .footer {
+        font-size: 0.875rem;
+        padding: 1rem;
+        background-color: rgb(255, 255, 255);
     }
 </style>

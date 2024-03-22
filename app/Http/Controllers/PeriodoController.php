@@ -113,7 +113,7 @@ class PeriodoController extends Controller
     public function imprimirPeriodo(){
         $data['periodo_data'] = Periodo::with(['empresa', 'exercicio'])->get();     
         
-        $pdf = PDF::loadView('pdf.contas.Periodo', $data)->setPaper('a4', 'landscape');
+        $pdf = PDF::loadView('pdf.contas.Periodo', $data)->setPaper('a3', 'landscape');
         return $pdf->stream('Contas.pdf');
     }
 }

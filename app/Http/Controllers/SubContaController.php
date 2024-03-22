@@ -134,7 +134,7 @@ class SubContaController extends Controller
     public function imprimirSubContas(){
         $data['subConta_data'] = SubConta::with(['empresa', 'conta', 'empresa_conta'])->get();     
         
-        $pdf = PDF::loadView('pdf.contas.SubConta', $data)->setPaper('a4', 'landscape');
+        $pdf = PDF::loadView('pdf.contas.SubConta', $data)->setPaper('a3', 'landscape');
         return $pdf->stream('Contas.pdf');
     }
 }
