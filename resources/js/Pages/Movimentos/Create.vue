@@ -297,7 +297,7 @@ export default {
 
     input_valor_debito(item) {
       
-      if(item.subconta.tipo == "E"){
+      if(item.subconta.tipo == "I"){
         Swal.fire({
           toast: true,
           icon: "error",
