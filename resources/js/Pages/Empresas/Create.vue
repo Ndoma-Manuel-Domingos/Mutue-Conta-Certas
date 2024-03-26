@@ -103,7 +103,7 @@
 
               <div class="card">
                 <div class="card-header">
-                  <h5>Regime do IVA/Moeda de Operação</h5>
+                  <h5>Regime do IVA/Moeda de Operação/Tipos e Grupos</h5>
                 </div>
 
                 <div class="card-body">
@@ -144,7 +144,7 @@
                       >
                     </div>
 
-                    <div class="col-12 col-md-3 mb-4">
+                    <div class="col-12 col-md-2 mb-4">
                       <label for="moeda_alternativa_id" class="form-label"
                         >Moeda Alternativa</label
                       >
@@ -161,6 +161,44 @@
                         >{{ form.errors.moeda_alternativa_id }}</span
                       >
                     </div>
+                    
+                    
+                    <div class="col-12 col-md-2 mb-4">
+                      <label for="tipo_empresa_id" class="form-label"
+                        >Tipos</label
+                      >
+                      <Select2
+                        v-model="form.tipo_empresa_id"
+                        id="tipo_empresa_id"
+                        class="col-12 col-md-12"
+                        :options="tipos_empresas"
+                        :settings="{ width: '100%' }"
+                      />
+                      <span
+                        class="text-danger"
+                        v-if="form.errors && form.errors.tipo_empresa_id"
+                        >{{ form.errors.tipo_empresa_id }}</span
+                      >
+                    </div>
+                    
+                    <div class="col-12 col-md-2 mb-4">
+                      <label for="grupo_empresa_id" class="form-label"
+                        >Grupos</label
+                      >
+                      <Select2
+                        v-model="form.grupo_empresa_id"
+                        id="grupo_empresa_id"
+                        class="col-12 col-md-12"
+                        :options="grupos_empresas"
+                        :settings="{ width: '100%' }"
+                      />
+                      <span
+                        class="text-danger"
+                        v-if="form.errors && form.errors.grupo_empresa_id"
+                        >{{ form.errors.grupo_empresa_id }}</span
+                      >
+                    </div>
+                                        
                   </div>
                 </div>
 
@@ -435,6 +473,8 @@ export default {
     "regimes",
     "tipos_documentos_empresa",
     "tipos_contactos_empresa",
+    "tipos_empresas",
+    "grupos_empresas",
   ],
   computed: {
     user() {
@@ -463,6 +503,9 @@ export default {
         moeda_alternativa_id: "",
         regime_empresa_id: "",
         moeda_cambio_id: "",
+        
+        tipo_empresa_id: "",
+        grupo_empresa_id: "",
         
         contactos_empresa: [
           { tipo_contacto_empresa_id: "", tipo_contacto_empresa_designacao: "" }

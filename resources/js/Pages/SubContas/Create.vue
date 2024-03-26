@@ -141,7 +141,7 @@
                         <td>#</td>
                         <td>{{ item.numero }}</td>
                         <td>{{ item.designacao }}</td>
-                        <td>{{ item.tipo == "M" ? "Movimento" : "Entregadora" }}</td>
+                        <td>{{ item.tipo == "M" }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -191,8 +191,9 @@ export default {
       ],
       
       tipos: [
+        {'id': "R", 'text': "Geral"},
         {'id': "M", 'text': "Movimento"},
-        {'id': "E", 'text': "Entregadora"},
+        {'id': "I", 'text': "Intregadora"},
       ],
 
       form: {

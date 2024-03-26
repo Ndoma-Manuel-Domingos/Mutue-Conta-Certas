@@ -16,13 +16,25 @@ class ClasseController extends Controller
 {
     use Config;
     //
-    public function index()
+    public function index(Request $request)
     {
         // Retorna a lista de posts
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-        
-        $data['classes'] = ClasseEmpresa::where('empresa_id', $this->empresaLogada())->with(['empresa', 'classe'])->where('estado', '!=', 'inactivo')->paginate(7);
+         
+        $data['classes'] = ClasseEmpresa::with(['empresa', 'classe'])
+        ->whereHas('classe', function($query) use($request){
+            $query->when($request->classes_numero, function($query, $value){
+                $query->orWhere('numero', $value);
+            }); 
+        })
+        ->whereHas('classe', function($query) use($request){
+            $query->when($request->classes_designacao, function($query, $value){
+                $query->where('designacao', 'like', "%".$value."%");
+            }); 
+        })
+        ->where('empresa_id', $this->empresaLogada())
+        ->where('estado', '!=', 'inactivo')->paginate(7);
                
         return Inertia::render('Classes/Index', $data);
     }

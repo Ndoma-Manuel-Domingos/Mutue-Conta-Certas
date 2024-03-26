@@ -8,7 +8,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/regime-empresa">Listagem</a></li>
+                            <li class="breadcrumb-item"><a href="/moeda">Listagem</a></li>
                             <li class="breadcrumb-item active">Criar Moeda</li>
                         </ol>
                     </div>
@@ -26,34 +26,24 @@
 
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-12 col-md-6 mb-4">
+                                        <div class="col-12 col-md-4 mb-4">
                                             <label for="numero" class="form-label">Descrição da Moeda</label>
-                                            <input type="text" id="numero" v-model="form.designacao" class="form-control">
-                                            <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{
-                            form.errors.classe_id }}</span>
+                                            <input type="text" id="numero" v-model="form.designacao" placeholder="Informe a designação" class="form-control">
+                                            <span class="text-danger" v-if="form.errors && form.errors.designacao">{{ form.errors.designacao }}</span>
                                         </div>
 
-                                        <div class="col-12 col-md-6 mb-4">
+                                        <div class="col-12 col-md-4 mb-4">
                                             <label for="numero" class="form-label">País</label>
-                                            <input type="text" id="numero" v-model="form.pais" class="form-control">
-                                            <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{
-                            form.errors.classe_id }}</span>
+                                            <input type="text" id="numero" v-model="form.pais" placeholder="Informe o país" class="form-control">
+                                            <span class="text-danger" v-if="form.errors && form.errors.pais">{{  form.errors.pais }}</span>
                                         </div>
 
-                                        <div class="col-12 col-md-6 mb-4">
+                                        <div class="col-12 col-md-4 mb-4">
                                             <label for="numero" class="form-label">Sigla</label>
-                                            <input type="text" id="numero" v-model="form.sigla" class="form-control">
-                                            <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{
-                            form.errors.classe_id }}</span>
+                                            <input type="text" id="numero" v-model="form.sigla" placeholder="Informe a sigla" class="form-control">
+                                            <span class="text-danger" v-if="form.errors && form.errors.sigla">{{ form.errors.sigla }}</span>
                                         </div>
 
-                                        <div class="col-12 col-md-6 mb-4">
-                                            <label for="estado" class="form-label">Estado</label>
-                                            <Select2 v-model="form.estado" id="estado" class="col-12 col-md-12"
-                                                :options="estados" :settings="{ width: '100%' }" />
-                                            <span class="text-danger" v-if="form.errors && form.errors.estado">{{
-                                                form.errors.estado }}</span>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -86,17 +76,10 @@ export default {
     },
     data() {
         return {
-
-            estados: [
-                { 'id': "activo", 'text': "Activo" },
-                { 'id': "desactivo", 'text': "Desactivo" },
-            ],
-
             form: {
                 designacao: "",
                 pais: "",
                 sigla: "",
-                estado: "",
             },
         };
     },

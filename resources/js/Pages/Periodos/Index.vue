@@ -22,11 +22,29 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header"> 
-                <a href="/periodos/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR PERÍODO</a>
                 
-                <button class="btn btn-danger" @click="imprimirPeriodos()">
+                <div class="card-tools">
+                  <div class="input-group input-group" style="width: 450px">
+                    <input
+                      type="text"
+                      v-model="input_busca_periodos"
+                      class="form-control float-right"
+                      placeholder="Informe a campo"
+                    />
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                        
+                <a href="/periodos/create" class="btn btn-info btn-sm mx-1"> <i class="fas fa-plus"></i> CRIAR PERÍODO</a>
+                <button class="btn btn-danger btn-sm mx-1" @click="imprimirPeriodos()">
                   <i class="fas fa-save"></i> Imprimir Contas
                 </button>
+                
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -50,7 +68,8 @@
                         <td>
                           <div class="float-right">
                             <a :href="`/periodos/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
-                            <a @click="deleteItem(item)" class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i> Apagar</a>
+                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
+                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
                           </div>
                         </td>
                       </tr>
@@ -93,7 +112,7 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-        sessions() {
+    sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
     sessions_exercicio() {
@@ -101,13 +120,80 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      input_busca_periodos: "",
+      params: {},
+    };
   },
   mounted() {},
-  methods: {
-    deleteItem(item) {
-      console.log(item.id)
+  watch: {
+    options: function (val) {
+      this.params.page = val.page;
+      this.params.page_size = val.itemsPerPage;
+      if (val.sortBy.length != 0) {
+        this.params.sort_by = val.sortBy[0];
+        this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+      } else {
+        this.params.sort_by = null;
+        this.params.order_by = null;
+      }
+      this.updateData();
     },
+    
+    input_busca_periodos: function (val) {
+      this.params.input_busca_periodos = val;
+      this.updateData();
+    },
+
+  },
+  methods: {
+      
+    updateData() {
+      this.$Progress.start();
+      this.$inertia.get("/periodos", this.params, {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          this.$Progress.finish();
+        },
+      });
+    },
+    
+  
+    mudar_estado(item) {
+      this.$Progress.start();
+
+      axios.get(`/periodos/${item.id}`)
+        .then((response) => {
+          this.$Progress.finish();
+          Swal.fire({
+            toast: true,
+            icon: "success",
+            title: "Estado Alterado com sucesso!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+      
+          window.location.reload();
+        })
+        .catch((error) => {
+          
+          this.$Progress.fail();
+          Swal.fire({
+            toast: true,
+            icon: "danger",
+            title: "Correu um erro ao Estado Alterado com sucesso!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+          
+        });
+    },
+    
     imprimirPeriodos() {
       window.open("imprimir-periodos");
     },

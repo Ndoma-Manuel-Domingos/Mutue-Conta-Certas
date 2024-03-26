@@ -37,7 +37,20 @@
                   :next="plano.next_page_url"
                 />
               </div>
-            
+              
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-12 col-md-4">
+                    <input type="text" class="form-control" placeholder="Pesquisar pela classe: " v-model="classe_designacao">
+                  </div>
+                  <div class="col-12 col-md-4">
+                    <input type="text" class="form-control" placeholder="Pesquisar pela conta:" v-model="conta_designacao">
+                  </div>
+                  <div class="col-12 col-md-4">
+                    <input type="text" class="form-control" placeholder="Pesquisar pela sub conta:" v-model="subconta_designacao">
+                  </div>
+                </div>
+              </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
                   <table class="table table-sm table-hover text-nowrap" v-for="plan in plano.data" :key="plan">
@@ -47,6 +60,7 @@
                         <th class="text-uppercase">{{ plan.classe.numero }} - {{ plan.classe.designacao }}</th>
                       </tr>
                     </thead>
+               
                     <tbody v-for="conta in plan.classe.contas_empresa" :key="conta">
                       <tr class="btn-light">
                         <th style="padding-left: 60px;">{{ conta.conta.numero }} - {{ conta.conta.designacao }}</th>
@@ -55,7 +69,6 @@
                       <tr v-for="sub_conta in conta.sub_contas_empresa" :key="sub_conta">
                         <td style="padding-left: 120px;">{{ sub_conta.numero }} - {{ sub_conta.designacao }} </td>
                       </tr>
-
                     </tbody>
                   </table>
                 </div>
@@ -103,11 +116,59 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      classe_designacao: "",
+      conta_designacao: "",
+      subconta_designacao: "",
+      params: {},
+    };
   },
+  
+  watch: {
+    options: function (val) {
+      this.params.page = val.page;
+      this.params.page_size = val.itemsPerPage;
+      if (val.sortBy.length != 0) {
+        this.params.sort_by = val.sortBy[0];
+        this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+      } else {
+        this.params.sort_by = null;
+        this.params.order_by = null;
+      }
+      this.updateData();
+    },
+    
+    classe_designacao: function (val) {
+      this.params.classe_designacao = val;
+      this.updateData();
+    },
+     
+    conta_designacao: function (val) {
+      this.params.conta_designacao = val;
+      this.updateData();
+    },   
+     
+    subconta_designacao: function (val) {
+      this.params.subconta_designacao = val;
+      this.updateData();
+    },   
+  },
+  
   mounted() { },
   methods: {
-
+    
+    updateData() {
+      this.$Progress.start();
+      
+      this.$inertia.get("/plano-geral-contas", this.params, {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          this.$Progress.finish();
+        },
+      });
+    },
+  
     deleteItem(item) {
       console.log(item.id)
     },

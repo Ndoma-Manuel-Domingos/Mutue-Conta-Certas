@@ -19,6 +19,7 @@
     <div class="content">
       <div class="container-fluid">
         <div class="row">
+
             <div class="col-12 col-md-12">
                 <form @submit.prevent="submit">
                     <div class="row">
@@ -38,11 +39,11 @@
                                 </div>
                                 
                                 <div class="col-12 col-md-2 mb-4">
-                                  <label for="mes_id" class="form-label">Mês</label>
-                                    <Select2 v-model="form.mes_id" id="mes_id"
-                                      :options="meses" :settings="{ width: '100%' }" 
+                                  <label for="periodo_id" class="form-label">Períodos</label>
+                                    <Select2 v-model="form.periodo_id" id="periodo_id"
+                                      :options="periodos" :settings="{ width: '100%' }" 
                                     />
-                                  <span class="text-danger" v-if="form.errors && form.errors.mes_id">{{ form.errors.mes_id }}</span>
+                                  <span class="text-danger" v-if="form.errors && form.errors.periodo_id">{{ form.errors.periodo_id }}</span>
                                 </div>
                                 
                                 <div class="col-12 col-md-2 mb-4">
@@ -110,25 +111,27 @@
                         <div class="card" style="height: 590px;">
                           <div class="card-header"></div>
                           <div class="card-body" style="overflow-y: scroll; height: 470px;">
-                            <table class="table" style="width: 100%;">
+                            <table class="table table-sm" style="width: 100%;">
                               <thead>
                                 <tr>
-                                  <th>Conta</th>
+                                  <th width="400px">Conta</th>
                                   <th>Debito</th>
                                   <th>Crédito</th>
                                   <th>IVA</th>
+                                  <th>Descrição</th>
                                   <th></th>
                                 </tr>
                               </thead>
-                              <tbody>
-                                <!-- <div>
-                                </div> -->
-                                <tr v-for="item in item_movimentos" :key="item">
-                                  <td width="200px">{{ item.subconta.numero }} - {{ item.subconta.designacao }}</td>
-                                  <td><input type="number" class="form-control" style="border: none" v-model="item.debito" @keydown.enter="input_valor_debito(item)"></td>
-                                  <td><input type="number" class="form-control" style="border: none" v-model="item.credito" @keydown.enter="input_valor_credito(item)"></td>
-                                  <td><input type="text" class="form-control" style="border: none"  value="0"></td>
-                                  <td width="2px"><a @click="remover_item_movimento(item)" class="text-danger"><i class="fas fa-times"></i></a></td>
+                              <tbody v-for="item in item_movimentos" :key="item">
+                                <tr>
+                                  <td class="pt-3">{{ item.subconta.numero }} - {{ item.subconta.designacao }}</td>
+                                  <td><input type="number" class="form-control border-0 py-0" v-model="item.debito" @keydown.enter="input_valor_debito(item)"></td>
+                                  <td><input type="number" class="form-control border-0" v-model="item.credito" @keydown.enter="input_valor_credito(item)"></td>
+                                  <td><input type="text" class="form-control border-0" v-model="item.iva" @keydown.enter="input_valor_iva(item)"></td>
+                                  <td><input type="text" class="form-control border-0" v-model="item.descricao" @keydown.enter="input_valor_descricao(item)" placeholder="Descrição"></td>
+                                  <td class="d-flex">
+                                    <a @click="remover_item_movimento(item)" class="text-danger pt-3"><i class="fas fa-times"></i></a>
+                                  </td>
                                 </tr>
                               </tbody>
                               
@@ -137,7 +140,7 @@
                           <div class="card-footer">
                             <table class="table">
                                   <tr>
-                                    <th class="">Total</th>
+                                    <th width="400px">Total</th>
                                     <th>{{ formatValor(resultados.total_debito ?? 0) }}</th>
                                     <th>{{ formatValor(resultados.total_credito ?? 0) }}</th>
                                     <th></th>
@@ -168,6 +171,7 @@ export default {
     "item_movimentos",
     "ultimo_movimento",
     "resultados",
+    "periodos"
   ],
   computed: {
     user() {
@@ -186,21 +190,6 @@ export default {
       estados: [
         {'id': "activo", 'text': "Activo"},
         {'id': "desactivo", 'text': "Desactivo"},
-      ],
-      
-      meses: [
-        {'id': "1", 'text': "1"},
-        {'id': "2", 'text': "2"},
-        {'id': "3", 'text': "3"},
-        {'id': "4", 'text': "4"},
-        {'id': "5", 'text': "5"},
-        {'id': "6", 'text': "6"},
-        {'id': "7", 'text': "7"},
-        {'id': "8", 'text': "8"},
-        {'id': "9", 'text': "9"},
-        {'id': "10", 'text': "10"},
-        {'id': "11", 'text': "11"},
-        {'id': "12", 'text': "12"},
       ],
       
       dias: [
@@ -248,7 +237,7 @@ export default {
       
       form: this.$inertia.form({
         exercicio_id: "",
-        mes_id: "",
+        periodo_id: "",
         dia_id: "",
         lancamento_atual: this.ultimo_movimento + 1,
         diario_id: "",
@@ -308,7 +297,7 @@ export default {
 
     input_valor_debito(item) {
       
-      if(item.subconta.tipo == "E"){
+      if(item.subconta.tipo == "I"){
         Swal.fire({
           toast: true,
           icon: "error",
@@ -323,8 +312,61 @@ export default {
         return 
       }else {
       
+        if(item.credito != 0){
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            title: "“Não podes Debitar nesta conta!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000
+          })
+          item.debito = 0;
+          event.preventDefault();      
+          
+        }else {
+          axios
+            .get(`/alterar-debito-conta-movimento/${item.id}/${item.debito}`)
+            .then((response) => {
+              
+              this.item_movimentos = [];
+              this.item_movimentos = response.data.item_movimentos;
+              this.resultados = response.data.resultados;
+              
+            })
+            .catch((error) => {});
+                      
+            event.preventDefault();
+        
+        }
+      
+        }
+        
+      event.preventDefault();
+      
+    },
+    
+    input_valor_credito(item) {
+      
+      if(item.debito != 0){
+        Swal.fire({
+          toast: true,
+          icon: "error",
+          title: "“Não podes Créditar nesta conta!",
+          animation: false,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 4000
+        })
+        
+        item.credito = 0;
+        
+        event.preventDefault();      
+        
+      }else{
         axios
-          .get(`/alterar-debito-conta-movimento/${item.id}/${item.debito}`)
+          .get(`/alterar-credito-conta-movimento/${item.id}/${item.credito}`)
           .then((response) => {
             
             this.item_movimentos = [];
@@ -333,18 +375,15 @@ export default {
             
           })
           .catch((error) => {});
-                    
-          event.preventDefault();
           
-        }
-        
-      event.preventDefault();
-      
+          event.preventDefault();      
+      }
+
     },
     
-    input_valor_credito(item) {
+    input_valor_iva(item) {
       axios
-        .get(`/alterar-credito-conta-movimento/${item.id}/${item.credito}`)
+        .get(`/alterar-iva-conta-movimento/${item.id}/${item.iva}`)
         .then((response) => {
           
           this.item_movimentos = [];
@@ -354,42 +393,23 @@ export default {
         })
         .catch((error) => {});
         
-        item.credito = formatValor(item.credito);
-        
         event.preventDefault();
     },
     
-    // input_valor_iva(item) {
-    //   axios
-    //     .get(`/alterar-iva-conta-movimento/${item.id}/${item.iva}`)
-    //     .then((response) => {
+    input_valor_descricao(item) {
+      axios
+        .get(`/alterar-descricao-conta-movimento/${item.id}/${item.descricao}`)
+        .then((response) => {
           
-    //       this.item_movimentos = [];
-    //       this.item_movimentos = response.data.item_movimentos;
-    //       this.resultados = response.data.resultados;
+          this.item_movimentos = [];
+          this.item_movimentos = response.data.item_movimentos;
+          this.resultados = response.data.resultados;
           
-    //     })
-    //     .catch((error) => {});
+        })
+        .catch((error) => {});
         
-    //     event.preventDefault();
-    // },
-    
-    
-    // input_valor_descricao(item) {
-    //   axios
-    //     .get(`/alterar-descricao-conta-movimento/${item.id}/${item.descricao}`)
-    //     .then((response) => {
-          
-    //       this.item_movimentos = [];
-    //       this.item_movimentos = response.data.item_movimentos;
-    //       this.resultados = response.data.resultados;
-          
-    //     })
-    //     .catch((error) => {});
-        
-    //     event.preventDefault();
-    // },
-
+        event.preventDefault();
+    },
         
     submit() {
       this.$Progress.start();
@@ -431,7 +451,7 @@ export default {
         Swal.fire({
           toast: true,
           icon: "error",
-          title: "Infelizmente não podemos concluir este lançamento, Porque o valor do Débito é diferente do Crédito!",
+          title: "“Impossível fazer lançamento!",
           animation: false,
           position: "top-end",
           showConfirmButton: false,

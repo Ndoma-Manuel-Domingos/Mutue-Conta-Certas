@@ -8,7 +8,6 @@ use App\Models\ContaEmpresa;
 use App\Models\SubConta;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use PDF;
@@ -17,13 +16,39 @@ class ContaController extends Controller
 {
     use Config;
     //
-    public function index()
+    public function index(Request $request)
     {
         // Retorna a lista de posts
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['contas'] = ContaEmpresa::with(['empresa', 'conta', 'classe'])->where('empresa_id', $this->empresaLogada())->paginate(10);
+        $data['contas'] = ContaEmpresa::whereHas('conta', function($query) use($request){
+            $query->when($request->input_busca_contas, function($query, $value){
+                $query->where('designacao', 'like', "%".$value."%");
+                $query->orWhere('numero', 'like', "%".$value."%");
+            }); 
+        })
+        ->whereHas('classe', function($query) use($request){
+            $query->when($request->input_busca_contas, function($query, $value){
+                $query->where('designacao', 'like', "%".$value."%");
+                $query->orWhere('numero', 'like', "%".$value."%");
+            }); 
+        })
+        
+        // ->when($request->order_by, function($query, $value){
+        //     if($value == "conta"){
+        //         $query->orderBy('conta_id', 'asc');
+        //     }else if($value == "numero"){
+        //         $query->orderBy('numero', 'asc');
+        //     }else if($value == "designacao"){
+        //         $query->orderBy('designacao', 'asc');
+        //     }
+        // })
+               
+        
+        ->with(['empresa', 'conta', 'classe'])->where('empresa_id', $this->empresaLogada())
+        // ->orderBy('numero', 'desc')
+        ->paginate(10);
                
         return Inertia::render('Contas/Index', $data);
     }

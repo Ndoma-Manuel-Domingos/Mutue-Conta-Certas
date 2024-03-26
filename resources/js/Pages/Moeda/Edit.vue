@@ -8,7 +8,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/classes">Listagem</a></li>
+                            <li class="breadcrumb-item"><a href="/moeda">Listagem</a></li>
                             <li class="breadcrumb-item active">Editar Moeda</li>
                         </ol>
                     </div>
@@ -26,7 +26,7 @@
 
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-12 col-md-6 mb-4">
+                                        <div class="col-12 col-md-4 mb-4">
                                             <label for="numero" class="form-label">Descrição da Moeda</label>
                                             <input type="text" id="numero" v-model="form.designacao"
                                                 class="form-control">
@@ -34,14 +34,14 @@
                             form.errors.classe_id }}</span>
                                         </div>
 
-                                        <div class="col-12 col-md-6 mb-4">
+                                        <div class="col-12 col-md-4 mb-4">
                                             <label for="numero" class="form-label">País</label>
                                             <input type="text" id="numero" v-model="form.pais" class="form-control">
                                             <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{
                             form.errors.classe_id }}</span>
                                         </div>
 
-                                        <div class="col-12 col-md-6 mb-4">
+                                        <div class="col-12 col-md-4 mb-4">
                                             <label for="numero" class="form-label">Sigla</label>
                                             <input type="text" id="numero" v-model="form.sigla" class="form-control">
                                             <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{

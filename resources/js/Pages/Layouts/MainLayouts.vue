@@ -14,7 +14,7 @@
 
         <div class="mx-auto">
           <div v-if="sessions">
-            <h5 class="text-success text-uppercase">EMPRESA ACTIVA: {{ sessions.nome_empresa ?? '' }}<span v-if="sessions_exercicio"> - ({{ sessions_exercicio.designacao ?? '' }})</span> </h5>
+            <h5 class="text-success text-uppercase">EMPRESA ACTIVA:{{ sessions.nome_empresa ?? '' }}<span v-if="sessions_exercicio"> - ({{ sessions_exercicio.designacao ?? '' }})</span> </h5>
           </div>
         </div>
 

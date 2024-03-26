@@ -4,11 +4,11 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">EDITAR CLASSES</h1>
+                        <h1 class="m-0">EDITAR REGIME</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/classes">Listagem</a></li>
+                            <li class="breadcrumb-item"><a href="/regime-empresa">Listagem</a></li>
                             <li class="breadcrumb-item active">Editar classes</li>
                         </ol>
                     </div>
@@ -30,17 +30,9 @@
                                             <label for="numero" class="form-label">Descrição do Regime</label>
                                             <input type="text" id="numero" v-model="form.designacao"
                                                 class="form-control">
-                                            <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{
-                            form.errors.classe_id }}</span>
+                                            <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{ form.errors.classe_id }}</span>
                                         </div>
 
-                                        <!-- <div class="col-12 col-md-6 mb-4">
-                                            <label for="estado" class="form-label">Estado</label>
-                                            <Select2 v-model="form.estado" id="estado" class="col-12 col-md-12"
-                                                :options="estados" :settings="{ width: '100%' }" />
-                                            <span class="text-danger" v-if="form.errors && form.errors.estado">{{
-                            form.errors.estado }}</span>
-                                        </div> -->
                                     </div>
                                 </div>
 

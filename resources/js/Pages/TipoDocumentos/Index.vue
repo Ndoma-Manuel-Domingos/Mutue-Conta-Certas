@@ -22,7 +22,11 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header"> 
-                <a href="/tipos-documentos/create" class="btn btn-info"> <i class="fas fa-plus"></i> CRIAR TIPO DE DOCUMENTO</a>
+                <a href="/tipos-documentos/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR TIPO DE DOCUMENTO</a>
+                
+                <button class="btn btn-sm btn-danger mx-1">
+                    <i class="fas fa-file-pdf"></i> Imprimir
+                  </button>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -39,6 +43,22 @@
                     </thead>
                     
                     <tbody>
+                      
+                      <tr>
+                        <td></td>
+                        <td style="width: 250px;">
+                          <input type="text" class="form-control" placeholder="Número ou Código" v-model="tipo_documento_numero">
+                        </td>
+                        <td style="width: 250px;">
+                          <input type="text" class="form-control" placeholder="Designação" v-model="tipo_documento_designacao">
+                        </td>
+                        <td style="width: 250px;">
+                          <input type="text" class="form-control" placeholder="Designação" v-model="tipo_diario">
+                        </td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      
                       <tr v-for="item in tipos_documentos.data" :key="item">
                         <td>#</td>
                         <td>{{ item.numero }}</td>
@@ -100,10 +120,58 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      tipo_documento_numero: "",
+      tipo_documento_designacao: "",
+      tipo_diario: "",
+      params: {},
+    };
   },
   mounted() {},
+  watch: {
+    options: function (val) {
+      this.params.page = val.page;
+      this.params.page_size = val.itemsPerPage;
+      if (val.sortBy.length != 0) {
+        this.params.sort_by = val.sortBy[0];
+        this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+      } else {
+        this.params.sort_by = null;
+        this.params.order_by = null;
+      }
+      this.updateData();
+    },
+    
+    tipo_documento_numero: function (val) {
+      this.params.tipo_documento_numero = val;
+      this.updateData();
+    },
+    
+    tipo_documento_designacao: function (val) {
+      this.params.tipo_documento_designacao = val;
+      this.updateData();
+    },
+    
+    tipo_diario: function (val) {
+      this.params.tipo_diario = val;
+      this.updateData();
+    },
+  },
+  
   methods: {
+  
+    updateData() {
+      this.$Progress.start();
+      this.$inertia.get("/tipos-documentos", this.params, {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          this.$Progress.finish();
+        },
+      });
+    },
+    
+  
     mudar_estado(item) {
       this.$Progress.start();
 

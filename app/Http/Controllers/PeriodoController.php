@@ -6,7 +6,6 @@ use App\Models\Exercicio;
 use App\Models\Periodo;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use PDF;
@@ -15,13 +14,15 @@ class PeriodoController extends Controller
 {
     use Config;
     //
-    public function index()
+    public function index(Request $request)
     {
         // Retorna a lista de posts
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
                 
-        $data['periodos'] = Periodo::where('empresa_id', $this->empresaLogada())->with(['empresa', 'exercicio'])->paginate(15);
+        $data['periodos'] = Periodo::when($request->input_busca_periodos, function($query, $value){
+            $query->where('designacao', 'like', "%".$value."%");
+        })->where('empresa_id', $this->empresaLogada())->with(['empresa', 'exercicio'])->paginate(15);
                
         return Inertia::render('Periodos/Index', $data);
     }
@@ -67,7 +68,21 @@ class PeriodoController extends Controller
 
     public function show($id)
     {
-        // Exibe um post específico
+        $diario = Periodo::findOrFail($id);
+        
+        $estado = "";
+        
+        if($diario->estado == "activo"){
+            $estado = "desactivo";
+        }
+        if($diario->estado == "desactivo"){
+            $estado = "activo";
+        }
+        
+        $diario->estado = $estado;
+        $diario->update();
+        
+        return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
 
     public function edit($id)

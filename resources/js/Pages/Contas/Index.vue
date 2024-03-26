@@ -22,11 +22,28 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header">
-                <a href="/contas/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR CONTAS</a>
+                <a href="/contas/create" class="btn btn-info btn-sm mx-1"> <i class="fas fa-plus"></i> CRIAR CONTAS</a>
 
                 <button class="btn float-right btn-danger btn-sm" @click="imprimirContas()">
                   <i class="fas fa-save"></i> Visualizar
                 </button>
+                
+                <div class="card-tools">
+                  <div class="input-group input-group" style="width: 450px">
+                    <input
+                      type="text"
+                      v-model="input_busca_contas"
+                      class="form-control float-right"
+                      placeholder="Informe a campo"
+                    />
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -34,9 +51,9 @@
                     <thead>
                       <tr>
                         <th>ID</th>
-                        <th>Código</th>
-                        <th>Conta</th>
-                        <th>Classe</th>
+                        <th @click="order_by_codigo" style="cursor: pointer;">Código</th>
+                        <th @click="order_by_conta" style="cursor: pointer;">Conta</th>
+                        <th @click="order_by_classe" style="cursor: pointer;">Classe</th>
                         <th>Estado</th>
                         <th class="text-right">Ações</th>
                       </tr>
@@ -95,7 +112,7 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-        sessions() {
+    sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
     sessions_exercicio() {
@@ -103,10 +120,61 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      input_busca_contas: "",
+      params: {},
+    };
+  },
+  watch: {
+    options: function (val) {
+      this.params.page = val.page;
+      this.params.page_size = val.itemsPerPage;
+      if (val.sortBy.length != 0) {
+        this.params.sort_by = val.sortBy[0];
+        this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+      } else {
+        this.params.sort_by = null;
+        this.params.order_by = null;
+      }
+      this.updateData();
+    },
+    
+    input_busca_contas: function (val) {
+      this.params.input_busca_contas = val;
+      this.updateData();
+    },
+
   },
   mounted() {},
   methods: {
+      
+    order_by_codigo(){
+      this.params.order_by = "numero";
+      this.updateData();
+    },    
+    
+    order_by_conta(){
+      this.params.order_by = "conta";
+      this.updateData();
+    }, 
+    
+    order_by_classe(){
+      this.params.order_by = "classe";
+      this.updateData();
+    },  
+  
+    updateData() {
+      this.$Progress.start();
+      this.$inertia.get("/contas", this.params, {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          this.$Progress.finish();
+        },
+      });
+    },
+  
+  
     imprimirContas() {
       // window.open("/estudante/lista-avaliacao/" + btoa(btoa(btoa(this.usuario))) + '/' +  btoa(btoa(btoa(this.ano_lectivo))) + '/' + btoa(btoa(btoa(this.query.id_semestre))));
       window.open("imprimir-contas");

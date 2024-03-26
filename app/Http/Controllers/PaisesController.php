@@ -107,4 +107,8 @@ class PaisesController extends Controller
     {
         //
     }
+
+    public function imprimirPaises(){
+        
+    }
 }

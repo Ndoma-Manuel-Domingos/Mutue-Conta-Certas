@@ -16,13 +16,15 @@ class ExercicioController extends Controller
 
     use Config;
     //
-    public function index()
+    public function index(Request $request)
     {
         // Retorna a lista de posts
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['exercicios'] = Exercicio::where('empresa_id', $this->empresaLogada())->with(['empresa'])->paginate(7);
+        $data['exercicios'] = Exercicio::when($request->input_busca_exercicios, function($query, $value){
+            $query->where('designacao', 'like', "%".$value."%");
+        })->where('empresa_id', $this->empresaLogada())->with(['empresa'])->paginate(7);
                
         return Inertia::render('Exercicios/Index', $data);
     }

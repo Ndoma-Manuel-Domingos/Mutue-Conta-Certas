@@ -22,7 +22,7 @@
                     <div class="col-12 col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="/provincia/create" class="btn btn-info"> <i class="fas fa-plus"></i>NOVA PROVÍNCIA </a>
+                                <a href="/provincia/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i>NOVA PROVÍNCIA </a>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive p-0">

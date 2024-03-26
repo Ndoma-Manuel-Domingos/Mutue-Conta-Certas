@@ -14,12 +14,26 @@ class TipoDocumentoController extends Controller
 {
     use Config;
     //
-    public function index()
+    public function index(Request $request)
     {
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
 
-        $data['tipos_documentos'] = TipoDocumento::where('empresa_id', $this->empresaLogada())->with(['empresa', 'diario'])->paginate(10);
+        $data['tipos_documentos'] = TipoDocumento::when($request->tipo_documento_designacao, function($query, $value){
+            $query->where('designacao', 'like', "%".$value."%");
+        })
+        ->when($request->tipo_documento_numero, function($query, $value){
+            $query->orWhere('numero', $value);
+        })
+        ->whereHas('diario', function($query) use($request){
+            $query->when($request->tipo_diario, function($query, $value){
+                $query->where('designacao', 'like', "%".$value."%");
+                $query->orWhere('numero', $value);
+            }); 
+        })
+        ->where('empresa_id', $this->empresaLogada())
+        ->with(['empresa', 'diario'])
+        ->paginate(10);
                
         return Inertia::render('TipoDocumentos/Index', $data);
     }

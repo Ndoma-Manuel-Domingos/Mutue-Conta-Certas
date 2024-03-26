@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\{
     AuthController,
+    BalanceteController,
+    BalancoController,
     ClasseController,
     ContaController,
     DashboardController,
@@ -19,7 +21,9 @@ use App\Http\Controllers\{
     PaisesController,
     MunicipioController,
     ComunaController,
+    GrupoEmpresaController,
     ProvinciaController,
+    TipoEmpresaController,
     UtilizadorController,
 };
 use Illuminate\Support\Facades\Route;
@@ -56,6 +60,8 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/get-conta/{id}', [ContaController::class, 'get_conta']);
     Route::resource('sub-contas', SubContaController::class);
     Route::resource('empresas', EmpresaController::class);
+    Route::get('/empresas-mudar-estado/{id}', [EmpresaController::class, 'mudar_estado']);
+    
     Route::get('/empresas/iniciar-sessão/{id}', [EmpresaController::class, 'iniciar_sessao']);
     Route::post('/logout-empresa', [EmpresaController::class, 'logout_empresa'])->name('mf.logout_empresa');
     Route::get('/escolher-empresa-operar', [EmpresaController::class, 'escolher_empresa_operar']);
@@ -64,14 +70,17 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/get-diario/{id}', [DiarioController::class, 'get_diario']);
     Route::resource('tipos-documentos', TipoDocumentoController::class);
     Route::resource('movimentos', MovimentoController::class);
+    Route::resource('balancetes', BalanceteController::class);
+    Route::resource('balancos', BalancoController::class);
     Route::get('/adicionar-conta-movimento/{id}', [MovimentoController::class, 'adicionar_conta_movimento']);
     Route::get('/remover-conta-movimento/{id}', [MovimentoController::class, 'remover_conta_movimento']);
     Route::get('/alterar-debito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_debito_conta_movimento']);
     Route::get('/alterar-credito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_credito_conta_movimento']);
-    // Route::get('/alterar-iva-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_iva_conta_movimento']);
-    // Route::get('/alterar-descricao-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_descricao_conta_movimento']);
+    Route::get('/alterar-iva-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_iva_conta_movimento']);
+    Route::get('/alterar-descricao-conta-movimento/{id}/{descricao}', [MovimentoController::class, 'alterar_descricao_conta_movimento']);
     // Route::get('/movimentos', [OperacaoController::class, 'movimentos']);
-    Route::get('/balancetes', [OperacaoController::class, 'balancetes']);
+    Route::resource('tipos-empresas', TipoEmpresaController::class);
+    Route::resource('grupos-empresas', GrupoEmpresaController::class);
     
     Route::resource('utilizadores', UtilizadorController::class);
 
@@ -85,6 +94,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('imprimir-plano', [PlanoGeralContaController::class, 'imprimirPlano']);
     Route::get('imprimir-diario', [DiarioController::class, 'imprimirDiario']);
     Route::get('imprimir-movimentos', [MovimentoController::class, 'imprimirMovimento']);
+    Route::get('imprimir-paises', [PaisesController::class, 'imprimirPaises']);
 
     // Rotas Tabela de apoio
     Route::resource('regime-empresa', RegimeController::class);
