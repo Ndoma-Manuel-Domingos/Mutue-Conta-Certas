@@ -83,11 +83,11 @@
           </tr>
           @foreach ($movimentos as $item)
           <tr>
-            <td>{{ $item->subconta->numero }}</td>
-            <td>{{ $item->subconta->designacao }}</td>
-            <td>{{ number_format($item->debito, 2, ',', '.') }}</td>
-            <td>{{ number_format($item->credito, 2, ',', '.') }}</td>
-            <td>{{ $item->movimento->data_lancamento }}</td>
+            <td style="text-align: left;">{{ $item->subconta->numero }}</td>
+            <td style="text-align: left;">{{ $item->subconta->designacao }}</td>
+            <td style="text-align: left;">{{ number_format($item->debito, 2, ',', '.') }}</td>
+            <td style="text-align: left;">{{ number_format($item->credito, 2, ',', '.') }}</td>
+            <td style="text-align: left;">{{ $item->movimento->data_lancamento }}</td>
           </tr>
           @endforeach
           
