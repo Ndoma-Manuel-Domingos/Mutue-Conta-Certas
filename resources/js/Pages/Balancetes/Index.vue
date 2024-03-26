@@ -27,8 +27,8 @@
                   <div class="row">
                   
                     <div class="col-12 col-md-4 mb-4">
-                        <label for="conta_id" class="form-label">Contas</label>
-                        <Select2  id="conta_id" v-model="conta_id"
+                        <label for="subconta_id" class="form-label">Contas</label>
+                        <Select2  id="subconta_id" v-model="subconta_id"
                           :options="contas" :settings="{ width: '100%' }" 
                         />
                     </div>
@@ -59,6 +59,9 @@
                    
                   </div>
                 </form>
+              </div>
+              <div class="card-footer">
+                <a href="/balancetes" class="d-block btn btn-primary text-uppercase"><i class="fas fa-broom"></i> Limpar a Pesquisa</a>
               </div>
             </div>
           </div>
@@ -160,7 +163,7 @@ export default {
       periodo_id: "",
       data_inicio: "",
       data_final: "",
-      conta_id: "",
+      subconta_id: "",
       
       params: {},
     };
@@ -192,8 +195,8 @@ export default {
       this.updateData();
     },
       
-    conta_id: function (val) {
-      this.params.conta_id = val;
+    subconta_id: function (val) {
+      this.params.subconta_id = val;
       this.updateData();
     },   
     

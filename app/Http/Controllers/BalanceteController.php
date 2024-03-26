@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 ;
 
 use App\Models\Exercicio;
-use App\Models\Movimento;
 use App\Models\MovimentoItem;
 use App\Models\Periodo;
 use App\Models\SubConta;
@@ -23,6 +22,16 @@ class BalanceteController extends Controller
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
+            
+        // $data['movimentos'] = MovimentoItem::join('sub_contas', 'movimento_items.subconta_id', '=', 'sub_contas.id')
+        // ->join('contas', 'sub_contas.conta_id', '=', 'contas.id')
+        // ->select('contas.designacao', 'sub_contas.conta_id', \DB::raw('SUM(credito) as total_credito'))
+        // ->with(['subconta', 'movimento', 'criador'])
+        // ->where('movimento_items.empresa_id', $this->empresaLogada())
+        // ->groupBy('sub_contas.conta_id')
+        // ->get();
+            
+        // dd($data['movimentos']);
             
         $data['movimentos'] = MovimentoItem::whereHas('movimento', function($query) use($request){
             $query->when($request->exercicio_id, function($query, $value){
@@ -44,12 +53,33 @@ class BalanceteController extends Controller
                 $query->whereDate('data_lancamento', "<=" ,$value);
             }); 
         })
-        ->when($request->conta_id, function($query, $value){
+        ->when($request->subconta_id, function($query, $value){
             $query->where('subconta_id', $value);
+        })
+        ->whereHas('subconta', function($query) use($request){
+            $query->when($request->data_final, function($query, $value){
+                $query->whereDate('conta_id', $value);
+            }); 
         })
         ->with(['subconta', 'movimento', 'criador'])
         ->where('empresa_id', $this->empresaLogada())
         ->orderBy('id', 'desc')->get();
+        
+        // dd($data['movimentos']);
+        
+        // Soma dos créditos agrupados por conta_id
+        // $somaPorConta = $data['movimentos']->groupBy('conta_id')->map(function ($group) {
+        //     return $group->sum('credito');
+        // });
+        
+        // $somaPorSubConta = $data['movimentos']->groupBy('subconta_id')->map(function ($group) {
+        //     return $group->sum('credito');
+        // });
+        
+        // dd([
+        //     'somaPorConta' => $somaPorConta,
+        //     'somaPorSubConta' => $somaPorSubConta,
+        // ]);
         
         $valores = [];
         

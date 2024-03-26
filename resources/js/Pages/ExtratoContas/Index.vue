@@ -97,7 +97,7 @@
               </form>
             </div>
             <div class="card-footer">
-              <a href="" class="d-block btn btn-primary">Limpar</a>
+              <a href="/extratos-contas" class="d-block btn btn-primary text-uppercase"><i class="fas fa-broom"></i> Limpar a Pesquisa</a>
             </div>
           </div>
         </div>
