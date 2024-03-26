@@ -23,73 +23,42 @@
             <div class="card">
               <div class="card-header"> 
                 <a href="/sub-contas/create" class="btn btn-info btn-sm mx-1"> <i class="fas fa-plus"></i> CRIAR SUBCONTAS</a>
-
-                <button class="btn btn-danger float-right btn-sm" @click="imprimirContas()">
-                  <i class="fas fa-save"></i> Visualizar
+                <button class="btn btn-danger mx-1 btn-sm" @click="imprimirContas()">
+                  <i class="fas fa-save"></i> Imprimir Contas
                 </button>
-                
-                <div class="card-tools">
-                  <div class="input-group input-group" style="width: 450px">
-                    <input
-                      type="text"
-                      v-model="input_busca_subconta"
-                      class="form-control float-right"
-                      placeholder="Informe a campo"
-                    />
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
               </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th @click="order_by_codigo" style="cursor: pointer;">Código</th>
-                        <th @click="order_by_nome" style="cursor: pointer;">Nome</th>
-                        <th @click="order_by_conta" style="cursor: pointer;">Conta</th>
-                        <th>Tipo</th>
-                        <th>Estado</th>
-                        <th class="text-right">Ações</th>
-                      </tr>
-                    </thead>
-                    
-                    <tbody>
-                      <tr v-for="item in subcontas.data" :key="item">
-                        <td>#</td>
-                        <td>{{ item.numero }}</td>
-                        <td>{{ item.designacao }}</td>
-                        <td>{{ item.conta.numero }} - {{ item.conta.designacao }}</td>
-                        <td>{{ item.tipo }}</td>
-                        <td class="text-capitalize">{{ item.estado }}</td>
-                        <td>
-                          <div class="float-right">
-                            <a :href="`/sub-contas/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ subcontas.total }}</Link
-                >
-                <Paginacao
-                  :links="subcontas.links"
-                  :prev="subcontas.prev_page_url"
-                  :next="subcontas.next_page_url"
-                />
+                <table class="table table-bordered table-hover" id="tabela_de_subcontas">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Código</th>
+                      <th>Nome</th>
+                      <th>Conta</th>
+                      <th>Tipo</th>
+                      <th>Estado</th>
+                      <th class="text-right" style="width: 200px;">Ações</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                    <tr v-for="item in subcontas" :key="item">
+                      <td>#</td>
+                      <td>{{ item.numero }}</td>
+                      <td>{{ item.designacao }}</td>
+                      <td>{{ item.conta.numero }} - {{ item.conta.designacao }}</td>
+                      <td>{{ item.tipo }}</td>
+                      <td class="text-capitalize">{{ item.estado }}</td>
+                      <td>
+                        <div class="float-right">
+                          <a :href="`/sub-contas/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
+                          <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
+                          <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -128,7 +97,11 @@ export default {
       params: {},
     };
   },
-  mounted() {},
+  mounted() {
+    $('#tabela_de_subcontas').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
   watch: {
     options: function (val) {
       this.params.page = val.page;
@@ -142,30 +115,8 @@ export default {
       }
       this.updateData();
     },
-    
-    input_busca_subconta: function (val) {
-      this.params.input_busca_subconta = val;
-      this.updateData();
-    },
-
   },
   methods: {
-  
-    order_by_codigo(){
-      this.params.order_by = "numero";
-      this.updateData();
-    },    
-    
-    order_by_nome(){
-      this.params.order_by = "designacao";
-      this.updateData();
-    }, 
-    
-    order_by_conta(){
-      this.params.order_by = "conta";
-      this.updateData();
-    },  
-  
     updateData() {
       this.$Progress.start();
       this.$inertia.get("/sub-contas", this.params, {
@@ -176,7 +127,6 @@ export default {
         },
       });
     },
-    
     
     mudar_estado(item) {
       this.$Progress.start();

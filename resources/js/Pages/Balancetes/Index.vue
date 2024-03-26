@@ -66,72 +66,57 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header"> 
-                <a @click="imprimirPlano()" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
+                <a @click="imprimirBalancete()" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
                 <a href="" class="btn btn-sm mx-1 btn-success float-right"> <i class="fas fa-file-excel"></i> Exportar</a>
               </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th @click="order_by_diario" style="cursor: pointer;">Conta</th>
-                        <th @click="order_by_documento" style="cursor: pointer;">Descrição</th>
-                        <th>Mov. Débito</th>
-                        <th>Mov. Crédito</th>
-                        <th>Saldo. Débito</th>
-                        <th>Saldo. Crédito</th>
-                        <th>Operador</th>
-                      </tr>
-                    </thead>
+                <table class="table table-bordered table-hover" id="tabela_de_balancetes">
+                  <thead>
+                    <tr>
+                      <th>Conta</th>
+                      <th>Descrição</th>
+                      <th>Mov. Débito</th>
+                      <th>Mov. Crédito</th>
+                      <th>Saldo. Débito</th>
+                      <th>Saldo. Crédito</th>
+                      <th>Operador</th>
+                    </tr>
                     
-                    <tbody>
-                      
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Soma Saldos</th>
-                        <th>{{ formatValor(0) }}</th>
-                        <th>{{ formatValor(0) }}</th>
-                        <th></th>
-                        <th></th>
-                      </tr>
-                      
-                      <tr>
-                        <th></th>
-                        <th class="text-right">Soma Líquida</th>
-                        <th>{{ formatValor(resultado.total_movimento_debito) }}</th>
-                        <th>{{ formatValor(resultado.total_movimento_credito) }}</th>
-                        <th>{{ formatValor(resultado.total_debito) }}</th>
-                        <th>{{ formatValor(resultado.total_credito) }}</th>
-                        <th></th>
-                        <th></th>
-                      </tr>
-                
-                      <tr v-for="item in movimentos.data" :key="item">
-                        <td>{{ item.subconta.numero }}</td>
-                        <td>{{ item.subconta.designacao }}</td>
-                        <td>{{ formatValor(item.debito) }}</td>
-                        <td>{{ formatValor(item.credito) }}</td>
-                        <td>{{ formatValor(item.debito == item.credito ? 0 : (item.debito > item.credito ? item.debito - item.credito : 0)) }}</td>
-                        <td>{{ formatValor(item.credito == item.debito ? item.credito - item.debito : (item.credito > item.debito ? item.credito - item.debito : 0)) }}</td>
-                        <td>{{ item.criador.name }}</td>
                     
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+                    <tr>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th>Soma Saldos</th>
+                      <th>{{ formatValor(0) }}</th>
+                      <th>{{ formatValor(0) }}</th>
+                    </tr>
+                    
+                    <tr>
+                      <th></th>
+                      <th class="text-right">Soma Líquida</th>
+                      <th>{{ formatValor(resultado.total_movimento_debito) }}</th>
+                      <th>{{ formatValor(resultado.total_movimento_credito) }}</th>
+                      <th>{{ formatValor(resultado.total_debito) }}</th>
+                      <th>{{ formatValor(resultado.total_credito) }}</th>
+                    </tr>
+                    
+                  </thead>
+                  
+                  <tbody>
               
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ movimentos.total }}</Link
-                >
-                <Paginacao
-                  :links="movimentos.links"
-                  :prev="movimentos.prev_page_url"
-                  :next="movimentos.next_page_url"
-                />
+                    <tr v-for="item in movimentos" :key="item">
+                      <td>{{ item.subconta.numero }}</td>
+                      <td>{{ item.subconta.designacao }}</td>
+                      <td>{{ formatValor(item.debito) }}</td>
+                      <td>{{ formatValor(item.credito) }}</td>
+                      <td>{{ formatValor(item.debito == item.credito ? 0 : (item.debito > item.credito ? item.debito - item.credito : 0)) }}</td>
+                      <td>{{ formatValor(item.credito == item.debito ? item.credito - item.debito : (item.credito > item.debito ? item.credito - item.debito : 0)) }}</td>
+                      <td>{{ item.criador.name }}</td>
+                  
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -185,6 +170,10 @@ export default {
   },
   mounted() {
     this.exercicio_id = this.sessions_exercicio ? this.sessions_exercicio.id : "";
+    
+    $('#tabela_de_balancetes').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
   },
     
   watch: {
@@ -255,8 +244,8 @@ export default {
       this.updateData();
     },  
   
-    imprimirPlano() {
-      window.open("imprimir-movimentos");
+    imprimirBalancete() {
+      window.open("imprimir-balancete", this.params);
     },
     formatValor(atual) {
       const valorFormatado = Intl.NumberFormat("pt-br", {

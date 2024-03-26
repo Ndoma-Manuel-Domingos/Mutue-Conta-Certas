@@ -42,7 +42,7 @@ class EmpresaController extends Controller
         })
         ->with(['endereco', 'regime', 'moeda.base', 'moeda.alternativa', 'moeda.cambio', 'tipo', 'grupo'])
         ->where('user_id', $user->id)
-        ->paginate(7);
+        ->get();
     
         return Inertia::render('Empresas/Index', $data);
     }

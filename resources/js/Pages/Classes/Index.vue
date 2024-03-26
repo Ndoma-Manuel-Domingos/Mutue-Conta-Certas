@@ -23,61 +23,39 @@
             <div class="card">
               <div class="card-header">
                 <a href="/classes/create" class="btn btn-info mx-1 btn-sm"> <i class="fas fa-plus"></i> CRIAR CLASSES</a>
-
-                <button class="btn btn-sm float-right btn-danger " @click="imprimirContas()">
-                  <i class="fas fa-save"></i> Visualizar
+                <button class="btn btn-sm mx-1 btn-danger " @click="imprimirContas()">
+                  <i class="fas fa-save"></i> Visalizar
                 </button>
               </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Código</th>
-                        <th>Nome</th>
-                        <th>Estado</th>
-                        <th class="text-right">Ações</th>
-                      </tr>
-                    </thead>
+                <table class="table table-bordered table-hover" id="tabela_de_classes">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Código</th>
+                      <th>Nome</th>
+                      <th>Estado</th>
+                      <th class="text-right">Ações</th>
+                    </tr>
+                  </thead>
 
-                    <tbody>
-                      
-                      <tr>
-                        <td></td>
-                        <td style="width: 250px;">
-                          <input type="text" class="form-control" placeholder="Número ou Código" v-model="classes_numero">
-                        </td>
-                        <td style="width: 250px;">
-                          <input type="text" class="form-control" placeholder="Designação" v-model="classes_designacao">
-                        </td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    
-                      <tr v-for="item in classes.data" :key="item">
-                        <td>#</td>
-                        <td>{{ item.classe.numero }}</td>
-                        <td>{{ item.classe.designacao }}</td>
-                        <td class="text-capitalize">{{ item.estado }}</td>
-                        <td>
-                          <div class="float-right">
-                            <a :href="`/classes/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
-                            <!-- <a @click="deleteItem(item)" class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i> Apagar</a> -->
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                Total Registro: {{ classes.total }}</Link>
-                <Paginacao :links="classes.links" :prev="classes.prev_page_url" :next="classes.next_page_url" />
+                  <tbody>
+                    <tr v-for="item in classes" :key="item">
+                      <td>#</td>
+                      <td>{{ item.classe.numero }}</td>
+                      <td>{{ item.classe.designacao }}</td>
+                      <td class="text-capitalize">{{ item.estado }}</td>
+                      <td>
+                        <div class="float-right">
+                          <a :href="`/classes/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
+                          <!-- <a @click="deleteItem(item)" class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i> Apagar</a> -->
+                          <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
+                          <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -133,9 +111,6 @@ export default {
     return {
       dialog: false,
       id_delete: null,
-      
-      classes_numero: "",
-      classes_designacao: "",
       params: {},
       
     };
@@ -154,20 +129,13 @@ export default {
       }
       this.updateData();
     },
-    
-    classes_numero: function (val) {
-      this.params.classes_numero = val;
-      this.updateData();
-    },
-    
-    classes_designacao: function (val) {
-      this.params.classes_designacao = val;
-      this.updateData();
-    },
- 
   },
   
-  mounted() { },
+  mounted() {
+    $('#tabela_de_classes').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
   methods: {
   
     updateData() {
@@ -180,8 +148,6 @@ export default {
         },
       });
     },
-    
-  
     imprimirContas() {
       // window.open("/estudante/lista-avaliacao/" + btoa(btoa(btoa(this.usuario))) + '/' +  btoa(btoa(btoa(this.ano_lectivo))) + '/' + btoa(btoa(btoa(this.query.id_semestre))));
       window.open("imprimir-classes");

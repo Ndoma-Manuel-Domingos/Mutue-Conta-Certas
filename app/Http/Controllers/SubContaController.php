@@ -34,7 +34,7 @@ class SubContaController extends Controller
         })
         ->with(['empresa', 'conta'])
         ->where('empresa_id', $this->empresaLogada())
-        ->paginate(7);
+        ->get();
                
         return Inertia::render('SubContas/Index', $data);
     }
@@ -163,6 +163,7 @@ class SubContaController extends Controller
         $data['subConta_data'] = SubConta::with(['empresa', 'conta', 'empresa_conta'])->get();     
         
         $pdf = PDF::loadView('pdf.contas.SubConta', $data)->setPaper('a3', 'landscape');
+        $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');
     }
 }

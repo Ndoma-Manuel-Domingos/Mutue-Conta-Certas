@@ -83,7 +83,12 @@
             </tbody>
         </table>
 
-
+        <script type='text/php'>
+            if (isset($pdf)) 
+            {               
+                $pdf->page_text(60, $pdf->get_height() - 50, "{PAGE_NUM} de {PAGE_COUNT}", null, 12, array(0,0,0));
+            }
+        </script>
     </main>
 
     <br>
@@ -127,9 +132,8 @@
     <br>
     <hr>
     <span style="text-align: center; font-size: 12px; align-content: bottom;">
-      <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
-          Inteligentes.</p>
-  </span>
+        <p>Documento processado pelo software MUTUE - Contas Certas.</p>
+    </span>
 </body>
 
 </html>

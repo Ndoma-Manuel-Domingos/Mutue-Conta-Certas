@@ -24,7 +24,10 @@ class ExercicioController extends Controller
         
         $data['exercicios'] = Exercicio::when($request->input_busca_exercicios, function($query, $value){
             $query->where('designacao', 'like', "%".$value."%");
-        })->where('empresa_id', $this->empresaLogada())->with(['empresa'])->paginate(7);
+        })
+        ->where('empresa_id', $this->empresaLogada())
+        ->with(['empresa'])
+        ->get();
                
         return Inertia::render('Exercicios/Index', $data);
     }
@@ -125,6 +128,7 @@ class ExercicioController extends Controller
         $data['exercicio_data'] = Exercicio::with(['empresa'])->get();     
         
         $pdf = PDF::loadView('pdf.contas.Exercicio', $data)->setPaper('a4', 'landscape');
+        $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');
     }
     

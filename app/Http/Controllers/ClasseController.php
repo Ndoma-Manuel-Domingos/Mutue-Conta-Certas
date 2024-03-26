@@ -34,7 +34,7 @@ class ClasseController extends Controller
             }); 
         })
         ->where('empresa_id', $this->empresaLogada())
-        ->where('estado', '!=', 'inactivo')->paginate(7);
+        ->where('estado', '!=', 'inactivo')->get();
                
         return Inertia::render('Classes/Index', $data);
     }
@@ -146,6 +146,7 @@ class ClasseController extends Controller
         $data['classes_data'] = ClasseEmpresa::with(['empresa', 'classe'])->get();     
         
         $pdf = PDF::loadView('pdf.contas.Classes', $data)->setPaper('a4', 'landscape');
+        $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');
     }
 }

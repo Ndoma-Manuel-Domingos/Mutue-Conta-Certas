@@ -30,73 +30,52 @@
                     <i class="fas fa-file-pd"></i> Imprimir
                   </button>
                 </h3>
-                <div class="card-tools">
-                  <div class="input-group input-group" style="width: 450px">
-                    <input
-                      type="text"
-                      v-model="input_busca_diarios"
-                      class="form-control float-right"
-                      placeholder="Informe a campo"
-                    />
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+
               </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Código</th>
-                        <th>Designação</th>
-                        <th>Estado</th>
-                        <th class="text-right">Ações</th>
-                      </tr>
-                    </thead>
+                <table class="table table-bordered table-hover" id="tabela_de_diarias">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Código</th>
+                      <th>Designação</th>
+                      <th>Estado</th>
+                      <th class="text-right">Ações</th>
+                    </tr>
+                  </thead>
 
-                    <tbody>
-                      <tr v-for="item in diarios.data" :key="item">
-                        <td>#</td>
-                        <td>{{ item.numero }}</td>
-                        <td>{{ item.designacao }}</td>
-                        <td class="text-capitalize">{{ item.estado }}</td>
-                        <td>
-                          <div class="float-right">
-                            <a
-                              :href="`/diarios/${item.id}/edit`"
-                              class="btn btn-sm btn-success"
-                              ><i class="fas fa-edit"></i> Editar</a
-                            >
-                            <a
-                              @click="mudar_estado(item)"
-                              class="btn btn-sm btn-info mx-1"
-                              v-if="item.estado == 'desactivo'"
-                              ><i class="fas fa-check"></i> Activar</a
-                            >
-                            <a
-                              @click="mudar_estado(item)"
-                              class="btn btn-sm btn-danger mx-1"
-                              v-else
-                              ><i class="fas fa-times"></i> Desctivar</a
-                            >
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                  <tbody>
+                    <tr v-for="item in diarios" :key="item">
+                      <td>#</td>
+                      <td>{{ item.numero }}</td>
+                      <td>{{ item.designacao }}</td>
+                      <td class="text-capitalize">{{ item.estado }}</td>
+                      <td>
+                        <div class="float-right">
+                          <a
+                            :href="`/diarios/${item.id}/edit`"
+                            class="btn btn-sm btn-success"
+                            ><i class="fas fa-edit"></i> Editar</a
+                          >
+                          <a
+                            @click="mudar_estado(item)"
+                            class="btn btn-sm btn-info mx-1"
+                            v-if="item.estado == 'desactivo'"
+                            ><i class="fas fa-check"></i> Activar</a
+                          >
+                          <a
+                            @click="mudar_estado(item)"
+                            class="btn btn-sm btn-danger mx-1"
+                            v-else
+                            ><i class="fas fa-times"></i> Desctivar</a
+                          >
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
 
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                Total Registro: {{ diarios.total }}</Link>
-                <Paginacao :links="diarios.links" :prev="diarios.prev_page_url" :next="diarios.next_page_url" />
-              </div>
             </div>
           </div>
         </div>
@@ -130,7 +109,11 @@ export default {
       params: {},
     };
   },
-  mounted() {},
+  mounted() {
+    $('#tabela_de_diarias').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
   watch: {
     options: function (val) {
       this.params.page = val.page;

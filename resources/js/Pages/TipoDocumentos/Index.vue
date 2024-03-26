@@ -23,70 +23,40 @@
             <div class="card">
               <div class="card-header"> 
                 <a href="/tipos-documentos/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR TIPO DE DOCUMENTO</a>
-                
                 <button class="btn btn-sm btn-danger mx-1">
                     <i class="fas fa-file-pdf"></i> Imprimir
                   </button>
               </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Código</th>
-                        <th>Designação</th>
-                        <th>Diário</th>
-                        <th>Estado</th>
-                        <th class="text-right">Ações</th>
-                      </tr>
-                    </thead>
-                    
-                    <tbody>
-                      
-                      <tr>
-                        <td></td>
-                        <td style="width: 250px;">
-                          <input type="text" class="form-control" placeholder="Número ou Código" v-model="tipo_documento_numero">
-                        </td>
-                        <td style="width: 250px;">
-                          <input type="text" class="form-control" placeholder="Designação" v-model="tipo_documento_designacao">
-                        </td>
-                        <td style="width: 250px;">
-                          <input type="text" class="form-control" placeholder="Designação" v-model="tipo_diario">
-                        </td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      
-                      <tr v-for="item in tipos_documentos.data" :key="item">
-                        <td>#</td>
-                        <td>{{ item.numero }}</td>
-                        <td>{{ item.designacao }}</td>
-                        <td>{{ item.diario.designacao }}</td>
-                        <td class="text-capitalize">{{ item.estado }}</td>
-                        <td>
-                          <div class="float-right">
-                            <a :href="`/tipos-documentos/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ tipos_documentos.total }}</Link
-                >
-                <Paginacao
-                  :links="tipos_documentos.links"
-                  :prev="tipos_documentos.prev_page_url"
-                  :next="tipos_documentos.next_page_url"
-                />
+                <table class="table table-bordered table-hover" id="tabela_de_tipo_documentos">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Código</th>
+                      <th>Designação</th>
+                      <th>Diário</th>
+                      <th>Estado</th>
+                      <th class="text-right">Ações</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                    <tr v-for="item in tipos_documentos" :key="item">
+                      <td>#</td>
+                      <td>{{ item.numero }}</td>
+                      <td>{{ item.designacao }}</td>
+                      <td>{{ item.diario.designacao }}</td>
+                      <td class="text-capitalize">{{ item.estado }}</td>
+                      <td>
+                        <div class="float-right">
+                          <a :href="`/tipos-documentos/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
+                          <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
+                          <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -112,7 +82,7 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-        sessions() {
+    sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
     sessions_exercicio() {
@@ -127,7 +97,11 @@ export default {
       params: {},
     };
   },
-  mounted() {},
+  mounted() {
+    $('#tabela_de_tipo_documentos').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
   watch: {
     options: function (val) {
       this.params.page = val.page;
@@ -139,21 +113,6 @@ export default {
         this.params.sort_by = null;
         this.params.order_by = null;
       }
-      this.updateData();
-    },
-    
-    tipo_documento_numero: function (val) {
-      this.params.tipo_documento_numero = val;
-      this.updateData();
-    },
-    
-    tipo_documento_designacao: function (val) {
-      this.params.tipo_documento_designacao = val;
-      this.updateData();
-    },
-    
-    tipo_diario: function (val) {
-      this.params.tipo_diario = val;
       this.updateData();
     },
   },

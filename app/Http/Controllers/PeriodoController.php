@@ -22,7 +22,7 @@ class PeriodoController extends Controller
                 
         $data['periodos'] = Periodo::when($request->input_busca_periodos, function($query, $value){
             $query->where('designacao', 'like', "%".$value."%");
-        })->where('empresa_id', $this->empresaLogada())->with(['empresa', 'exercicio'])->paginate(15);
+        })->where('empresa_id', $this->empresaLogada())->with(['empresa', 'exercicio'])->get();
                
         return Inertia::render('Periodos/Index', $data);
     }
@@ -129,6 +129,7 @@ class PeriodoController extends Controller
         $data['periodo_data'] = Periodo::with(['empresa', 'exercicio'])->get();     
         
         $pdf = PDF::loadView('pdf.contas.Periodo', $data)->setPaper('a3', 'landscape');
+        $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');
     }
 }

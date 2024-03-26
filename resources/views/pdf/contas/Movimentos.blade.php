@@ -101,8 +101,7 @@
       <hr>
       <p style="text-align:right">Data: {{ date('Y-m-d H:i:s') }} </p>
 
-      <div align="center"> Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
-          Inteligentes.</div>
+      <div align="center"> Documento processado pelo software MUTUE - Contas Certas.</div>
       
   </div>
 

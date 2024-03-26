@@ -28,61 +28,32 @@
                 <a href="/contas/create" class="btn-sm btn-primary btn float-left mx-1"><i class="fas fa-plus"></i> Criar Conta</a>
                 <a href="/sub-contas/create" class="btn-sm btn-primary btn float-left mx-1"><i class="fas fa-plus"></i> Criar Subconta</a>
                 <a  @click="imprimirPlano()" class="btn-sm btn-danger btn float-left mx-1"><i class="fas fa-file-pdf"></i> Visualizar PGC</a>
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ plano.total }}</Link
-                >
-                <Paginacao
-                  :links="plano.links"
-                  :prev="plano.prev_page_url"
-                  :next="plano.next_page_url"
-                />
               </div>
               
-              <div class="card-header">
-                <div class="row">
-                  <div class="col-12 col-md-4">
-                    <input type="text" class="form-control" placeholder="Pesquisar pela classe: " v-model="classe_designacao">
-                  </div>
-                  <div class="col-12 col-md-4">
-                    <input type="text" class="form-control" placeholder="Pesquisar pela conta:" v-model="conta_designacao">
-                  </div>
-                  <div class="col-12 col-md-4">
-                    <input type="text" class="form-control" placeholder="Pesquisar pela sub conta:" v-model="subconta_designacao">
-                  </div>
-                </div>
-              </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-sm table-hover text-nowrap" v-for="plan in plano.data" :key="plan">
-                    
+                <table class="table table-bordered table-hover" id="tabela_de_balancetes">
                     <thead>
                       <tr class="btn-dark">
-                        <th class="text-uppercase">{{ plan.classe.numero }} - {{ plan.classe.designacao }}</th>
+                        <th class="text-uppercase">te</th>
                       </tr>
                     </thead>
-               
-                    <tbody v-for="conta in plan.classe.contas_empresa" :key="conta">
-                      <tr class="btn-light">
-                        <th style="padding-left: 60px;">{{ conta.conta.numero }} - {{ conta.conta.designacao }}</th>
+                    <tbody>
+                  <template v-for="plan in plano" :key="plan">
+                      <tr>
+                        <th class="text-uppercase">{{ plan.classe.numero }}-{{ plan.classe.designacao }}</th>
                       </tr>
-
-                      <tr v-for="sub_conta in conta.sub_contas_empresa" :key="sub_conta">
-                        <td style="padding-left: 120px;">{{ sub_conta.numero }} - {{ sub_conta.designacao }} </td>
-                      </tr>
+                      <template v-for="conta in plan.classe.contas_empresa" :key="conta">
+                        <tr class="btn-light">
+                          <th style="padding-left: 60px;">{{ conta.conta.numero }} - {{ conta.conta.designacao }}</th>
+                        </tr>
+                
+                        <tr v-for="sub_conta in conta.sub_contas_empresa" :key="sub_conta">
+                          <td style="padding-left: 120px;">{{ sub_conta.numero }} - {{ sub_conta.designacao }} </td>
+                        </tr>
+                  </template>
+                      </template>
                     </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div class="card-footer">
-                <!-- <Link href="" class="text-secondary">
-                  Total Registro: {{ plano.total }}</Link
-                >
-                <Paginacao
-                  :links="plano.links"
-                  :prev="plano.prev_page_url"
-                  :next="plano.next_page_url"
-                /> -->
+                </table>
               </div>
             </div>
           </div>
@@ -153,8 +124,13 @@ export default {
       this.updateData();
     },   
   },
-  
-  mounted() { },
+  mounted() {
+    this.exercicio_id = this.sessions_exercicio ? this.sessions_exercicio.id : "";
+    
+    $('#tabela_de_balancetes').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
   methods: {
     
     updateData() {

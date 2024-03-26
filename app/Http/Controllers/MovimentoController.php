@@ -59,7 +59,7 @@ class MovimentoController extends Controller
             }); 
         })
         ->where('empresa_id', $this->empresaLogada())
-        ->orderBy('id', 'desc')->paginate(10);
+        ->orderBy('id', 'desc')->get();
 
         
         return Inertia::render('Movimentos/Index', $data);
@@ -333,6 +333,7 @@ class MovimentoController extends Controller
         $data['movimentos_data'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $this->empresaLogada())->get();
         
         $pdf = PDF::loadView('pdf.contas.Movimentos', $data)->setPaper('a4', 'landscape');
+        $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');
     }
 

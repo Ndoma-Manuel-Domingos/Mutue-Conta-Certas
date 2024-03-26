@@ -28,64 +28,36 @@
                   <i class="fas fa-save"></i> Imprimir Contas
                 </button>
                 
-                <div class="card-tools">
-                  <div class="input-group input-group" style="width: 450px">
-                    <input
-                      type="text"
-                      v-model="input_busca_exercicios"
-                      class="form-control float-right"
-                      placeholder="Informe a campo"
-                    />
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                
               </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Designação</th>
-                        <th>Estado</th>
-                        <th class="text-right">Ações</th>
-                      </tr>
-                    </thead>
-                    
-                    <tbody>
-                      <tr v-for="item in exercicios.data" :key="item" :style="{ backgroundColor: verificar_sessao_exercicio(item) ? '#D3D3D3' : '' }" >
-                        <td>#</td>
-                        <td>{{ item.designacao }}</td>
-                        <td class="text-capitalize">{{ item.estado == 1 ? 'Activo' : 'Desactivo' }}</td>
-                        <td>
-                          <div class="float-right">
-                            <a :href="`/exercicios/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
-                            <a @click="mudar_estado_exercicio(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == '2'"><i class="fas fa-check"></i> Activar</a>
-                            <a @click="mudar_estado_exercicio(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
-                            <a @click="iniciar_sessao_exercicio(item)" class="btn btn-sm btn-secondary"><i class="fas fa-cog"></i> Operar</a>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <table class="table table-bordered table-hover" id="tabela_de_exercicios">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Designação</th>
+                      <th>Estado</th>
+                      <th class="text-right">Ações</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                    <tr v-for="item in exercicios" :key="item" :style="{ backgroundColor: verificar_sessao_exercicio(item) ? '#D3D3D3' : '' }" >
+                      <td>#</td>
+                      <td>{{ item.designacao }}</td>
+                      <td class="text-capitalize">{{ item.estado == 1 ? 'Activo' : 'Desactivo' }}</td>
+                      <td>
+                        <div class="float-right">
+                          <a :href="`/exercicios/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
+                          <a @click="mudar_estado_exercicio(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == '2'"><i class="fas fa-check"></i> Activar</a>
+                          <a @click="mudar_estado_exercicio(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
+                          <a @click="iniciar_sessao_exercicio(item)" class="btn btn-sm btn-secondary"><i class="fas fa-cog"></i> Operar</a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ exercicios.total }}</Link
-                >
-                <Paginacao
-                  :links="exercicios.links"
-                  :prev="exercicios.prev_page_url"
-                  :next="exercicios.next_page_url"
-                />
-              </div>
+             
             </div>
           </div>
         </div>
@@ -123,9 +95,11 @@ export default {
       params: {},
     };
   },
-
-  mounted() {},
-  
+  mounted() {
+    $('#tabela_de_exercicios').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
   watch: {
     options: function (val) {
       this.params.page = val.page;
@@ -139,12 +113,6 @@ export default {
       }
       this.updateData();
     },
-    
-    input_busca_exercicios: function (val) {
-      this.params.input_busca_exercicios = val;
-      this.updateData();
-    },
-
   },
   
   methods: {   

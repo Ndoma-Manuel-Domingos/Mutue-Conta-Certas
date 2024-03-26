@@ -27,66 +27,38 @@
                 <button class="btn float-right btn-danger btn-sm" @click="imprimirContas()">
                   <i class="fas fa-save"></i> Visualizar
                 </button>
-                
-                <div class="card-tools">
-                  <div class="input-group input-group" style="width: 450px">
-                    <input
-                      type="text"
-                      v-model="input_busca_contas"
-                      class="form-control float-right"
-                      placeholder="Informe a campo"
-                    />
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                
               </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th @click="order_by_codigo" style="cursor: pointer;">Código</th>
-                        <th @click="order_by_conta" style="cursor: pointer;">Conta</th>
-                        <th @click="order_by_classe" style="cursor: pointer;">Classe</th>
-                        <th>Estado</th>
-                        <th class="text-right">Ações</th>
-                      </tr>
-                    </thead>
+                <table class="table table-bordered table-hover" id="tabela_de_contas">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Código</th>
+                      <th>Conta</th>
+                      <th>Classe</th>
+                      <th>Estado</th>
+                      <th class="text-right">Ações</th>
+                    </tr>
+                  </thead>
 
-                    <tbody>
-                      <tr v-for="item in contas.data" :key="item">
-                        <td>#</td>
-                        <td>{{ item.conta.numero }}</td>
-                        <td>{{ item.conta.designacao }}</td>
-                        <td>{{ item.classe.designacao }}</td>
-                       
-                        <td class="text-capitalize">{{ item.estado }}</td>
-                        <td>
-                          <div class="float-right">
-                            <a :href="`/contas/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
-                            
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
-                            <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
-                            
-                            <!-- <a href="" class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash"></i> Apagar</a> -->
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                Total Registro: {{ contas.total }}</Link>
-                <Paginacao :links="contas.links" :prev="contas.prev_page_url" :next="contas.next_page_url" />
+                  <tbody>
+                    <tr v-for="item in contas" :key="item">
+                      <td>#</td>
+                      <td>{{ item.conta.numero }}</td>
+                      <td>{{ item.conta.designacao }}</td>
+                      <td>{{ item.classe.designacao }}</td>
+                     
+                      <td class="text-capitalize">{{ item.estado }}</td>
+                      <td>
+                        <div class="float-right">
+                          <a :href="`/contas/${item.id}/edit`" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> Editar</a>
+                          <a @click="mudar_estado(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado == 'desactivo'"><i class="fas fa-check"></i> Activar</a>
+                          <a @click="mudar_estado(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -138,30 +110,15 @@ export default {
       }
       this.updateData();
     },
-    
-    input_busca_contas: function (val) {
-      this.params.input_busca_contas = val;
-      this.updateData();
-    },
 
   },
-  mounted() {},
+  mounted() {
+    $('#tabela_de_contas').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
+  
   methods: {
-      
-    order_by_codigo(){
-      this.params.order_by = "numero";
-      this.updateData();
-    },    
-    
-    order_by_conta(){
-      this.params.order_by = "conta";
-      this.updateData();
-    }, 
-    
-    order_by_classe(){
-      this.params.order_by = "classe";
-      this.updateData();
-    },  
   
     updateData() {
       this.$Progress.start();
@@ -173,7 +130,6 @@ export default {
         },
       });
     },
-  
   
     imprimirContas() {
       // window.open("/estudante/lista-avaliacao/" + btoa(btoa(btoa(this.usuario))) + '/' +  btoa(btoa(btoa(this.ano_lectivo))) + '/' + btoa(btoa(btoa(this.query.id_semestre))));

@@ -125,8 +125,7 @@
             <div class="card">
          
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
+                  <table class="table table-bordered table-hover" id="tabela_de_contas_relacionadas">
                     <thead>
                       <tr>
                         <th>ID</th>
@@ -141,22 +140,10 @@
                         <td>#</td>
                         <td>{{ item.numero }}</td>
                         <td>{{ item.designacao }}</td>
-                        <td>{{ item.tipo == "M" }}</td>
+                        <td>{{ item.tipo }}</td>
                       </tr>
                     </tbody>
                   </table>
-                </div>
-              </div>
-
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ subcontas.total }}</Link
-                >
-                <Paginacao
-                  :links="subcontas.links"
-                  :prev="subcontas.prev_page_url"
-                  :next="subcontas.next_page_url"
-                />
               </div>
             </div>
           </div>
@@ -206,7 +193,9 @@ export default {
     };
   },
   mounted() {
-   
+    $('#tabela_de_contas_relacionadas').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
   },
   methods: {
     getSubContas() {

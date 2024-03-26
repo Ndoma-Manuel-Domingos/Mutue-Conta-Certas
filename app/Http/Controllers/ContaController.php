@@ -34,7 +34,6 @@ class ContaController extends Controller
                 $query->orWhere('numero', 'like', "%".$value."%");
             }); 
         })
-        
         // ->when($request->order_by, function($query, $value){
         //     if($value == "conta"){
         //         $query->orderBy('conta_id', 'asc');
@@ -44,11 +43,10 @@ class ContaController extends Controller
         //         $query->orderBy('designacao', 'asc');
         //     }
         // })
-               
-        
         ->with(['empresa', 'conta', 'classe'])->where('empresa_id', $this->empresaLogada())
-        // ->orderBy('numero', 'desc')
-        ->paginate(10);
+        // ->orderBy('numero', 'asc')
+        ->get();
+        
                
         return Inertia::render('Contas/Index', $data);
     }
@@ -128,7 +126,7 @@ class ContaController extends Controller
     public function get_conta($id)
     {
         $conta = Conta::findOrFail($id);
-        $subcontas = SubConta::with(['empresa', 'conta'])->where('conta_id', $conta->id)->orderBy('id', 'asc')->get();
+        $subcontas = SubConta::with(['empresa', 'conta'])->where('conta_id', $conta->id)->orderBy('numero', 'asc')->get();
         
         return response()->json(
             [
@@ -188,6 +186,7 @@ class ContaController extends Controller
         $data['contas_data'] = ContaEmpresa::with(['empresa', 'conta', 'classe'])->get();     
         // dd($data['contas_data']);
         $pdf = PDF::loadView('pdf.contas.Contas', $data)->setPaper('a4', 'landscape');
+        $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');
     }
 }

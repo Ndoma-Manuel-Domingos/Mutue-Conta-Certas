@@ -31,7 +31,7 @@
                               <div class="row">
                               
                                 <div class="col-12 col-md-2 mb-4">
-                                  <label for="exercicio_id" class="form-label">Exercícios</label>
+                                  <label for="exercicio_id" class="form-label">Exercício</label>
                                     <Select2 v-model="form.exercicio_id" id="exercicio_id" disabled
                                       :options="exercicios" :settings="{ width: '100%' }" 
                                     />
@@ -39,7 +39,7 @@
                                 </div>
                                 
                                 <div class="col-12 col-md-2 mb-4">
-                                  <label for="periodo_id" class="form-label">Períodos</label>
+                                  <label for="periodo_id" class="form-label">Período</label>
                                     <Select2 v-model="form.periodo_id" id="periodo_id"
                                       :options="periodos" :settings="{ width: '100%' }" 
                                     />
@@ -76,7 +76,7 @@
                                 </div>
                                 
                                 <div class="col-12 col-md-6 mb-4">
-                                  <label for="tipo_documento_id" class="form-label">Tipo Documento</label>
+                                  <label for="tipo_documento_id" class="form-label">Tipo De Documento</label>
                                     <Select2 v-model="form.tipo_documento_id" id="tipo_documento_id"
                                       :options="tipo_documentos" :settings="{ width: '100%' }" 
                                     />
@@ -486,7 +486,7 @@ export default {
           Swal.fire({
             toast: true,
             icon: "danger",
-            title: "Correu um erro ao salvar os dados!",
+            title: "Impossível salvar o movimento!",
             animation: false,
             position: "top-end",
             showConfirmButton: false,
