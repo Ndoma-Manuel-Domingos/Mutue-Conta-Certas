@@ -245,6 +245,7 @@ export default {
     },  
   
     imprimirBalancete() {
+      alert(JSON.stringify(this.params));
       window.open("imprimir-balancete", this.params);
     },
     formatValor(atual) {
