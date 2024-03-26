@@ -144,7 +144,9 @@
     <br>
     <br>
     <hr>
-    <span style="text-align: center; font-size: 12px; align-content: bottom;">
+    <span style="text-align: center; font-size: 16px; align-content: bottom;">
+        <p style="text-align:right">Data: {{ date('Y-m-d H:i:s') }} </p>
+
         <p>Documento processado pelo software MUTUE - Contas Certas.</p>
     </span>
   

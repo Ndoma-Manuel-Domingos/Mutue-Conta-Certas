@@ -64,11 +64,11 @@
       >
         <thead>
           <tr>
-            <th>Conta</th>
-            <th>Descrição</th>
-            <th>Débito</th>
-            <th>Crédito</th>
-            <th>Data</th>
+            <th style="text-align: center;color:white; background-color: gray;">Conta</th>
+            <th style="text-align: center;color:white; background-color: gray;">Descrição</th>
+            <th style="text-align: center;color:white; background-color: gray;">Débito</th>
+            <th style="text-align: center;color:white; background-color: gray;">Crédito</th>
+            <th style="text-align: center;color:white; background-color: gray;">Data</th>
           </tr>
         </thead>
 
