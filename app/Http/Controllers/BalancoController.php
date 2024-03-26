@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 ;
 
 use App\Models\Exercicio;
-use App\Models\Movimento;
-use App\Models\MovimentoItem;
 use App\Models\Periodo;
 use App\Models\User;
 use Illuminate\Http\Request;

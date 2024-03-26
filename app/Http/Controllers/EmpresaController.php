@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Comuna;
 use App\Models\ContactoEmpresa;
-use App\Models\ContaEmpresa;
 use App\Models\DocumentoEmpresa;
 use App\Models\Empresa;
 use App\Models\EnderecoEmpresa;
@@ -25,7 +24,6 @@ use App\Models\UserEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class EmpresaController extends Controller
@@ -69,17 +67,15 @@ class EmpresaController extends Controller
     {
         $user = User::findOrFail(auth()->user()->id);
                      
-        // dd($request->all());            
-                     
-        // Exemplo de retorno de erros de validação em JSON
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             "nome_empresa" => "required",
             "codigo_empresa" => "required",
-        ]);     
-             
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+            'logotipo_da_empresa' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Defina as regras de validação adequadas
+        ], [
+            "nome_empresa.required" => "Campo Obrigatório",
+            "codigo_empresa.required" => "Campo Obrigatório",
+            "logotipo_da_empresa.required" => "Campo Obrigatório", 
+        ]);             
              
         try {
             DB::beginTransaction();
@@ -147,6 +143,34 @@ class EmpresaController extends Controller
                 }
             }
     
+            if ($request->hasFile("logotipo_da_empresa")) {
+                // $imagem = $request->logotipo_da_empresa;
+                // $fileName = $imagem->getClientOriginalName();
+                // $filePath = $imagem->storeAs("comprovativos", $fileName, "public");
+                // $empresa->logotipo_da_empresa = $filePath;
+
+                // $empresa->save();
+                
+                
+                $imagem = $request->logotipo_da_empresa;
+                $fileName = $imagem->getClientOriginalName();
+            
+                // Especifique o novo diretório aqui
+                $newDirectory = '/images'; //public_path('images'); // 'caminho/para/seu/novo/diretorio';
+                
+                // Combine o novo diretório com o nome do arquivo
+                $newFilePath = $newDirectory . '/' . $fileName;
+            
+                // Mova a imagem para o novo diretório
+                $imagem->move(public_path('images'), $fileName);
+            
+                // Salve o caminho do novo diretório no banco de dados
+                $empresa->logotipo_da_empresa = $fileName;
+                
+                $empresa->save();
+                
+            }
+    
             // Se tudo estiver bem, comitar as alterações no banco de dados
             DB::commit();
     
@@ -160,7 +184,7 @@ class EmpresaController extends Controller
         }
              
         
-        return response()->json(['message' => "Dados salvos com sucesso!"], 200);
+        return redirect()->back(); // response()->json(['message' => "Dados salvos com sucesso!"], 200);
     
     }
     
@@ -213,16 +237,18 @@ class EmpresaController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-    
-        $validator = Validator::make($request->all(), [
+    {        
+
+        $request->validate([
             "nome_empresa" => "required",
             "codigo_empresa" => "required",
-        ]);     
-             
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+            // 'logotipo_da_empresa' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Defina as regras de validação adequadas
+        ], [
+            "nome_empresa.required" => "Campo Obrigatório",
+            "codigo_empresa.required" => "Campo Obrigatório",
+            // "logotipo_da_empresa.required" => "Campo Obrigatório", 
+        ]); 
+
         
         $empresa =  Empresa::findOrFail($id);
         
@@ -233,7 +259,7 @@ class EmpresaController extends Controller
         $empresa->regime_empresa_id = $request->regime_empresa_id;
         $empresa->tipo_empresa_id = $request->tipo_empresa_id;
         $empresa->grupo_empresa_id = $request->grupo_empresa_id;
-            
+        
         $empresa->updated_by = auth()->user()->id;
         $empresa->update();
         
@@ -283,7 +309,32 @@ class EmpresaController extends Controller
         }
         
         
-        return response()->json(['message' => "Dados salvos com sucesso!"], 200);
+        if($request->logotipo_da_empresa == $empresa->logotipo_da_empresa){
+        
+        }else{
+            if ($request->hasFile("logotipo_da_empresa")) {
+                
+                $imagem = $request->logotipo_da_empresa;
+                $fileName = $imagem->getClientOriginalName();
+            
+                // Especifique o novo diretório aqui
+                $newDirectory = '/images'; //public_path('images'); // 'caminho/para/seu/novo/diretorio';
+                
+                // Combine o novo diretório com o nome do arquivo
+                $newFilePath = $newDirectory . '/' . $fileName;
+            
+                // Mova a imagem para o novo diretório
+                $imagem->move(public_path('images'), $fileName);
+            
+                // Salve o caminho do novo diretório no banco de dados
+                $empresa->logotipo_da_empresa = $fileName;
+                
+                $empresa->save();
+                
+            }
+        }
+        
+        return redirect()->back(); //  return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
     
     public function iniciar_sessao($id)

@@ -27,8 +27,8 @@
                   <div class="row">
                   
                     <div class="col-12 col-md-4 mb-4">
-                        <label for="conta_id" class="form-label">Contas</label>
-                        <Select2  id="conta_id" v-model="conta_id"
+                        <label for="subconta_id" class="form-label">Contas</label>
+                        <Select2  id="subconta_id" v-model="subconta_id"
                           :options="contas" :settings="{ width: '100%' }" 
                         />
                     </div>
@@ -60,6 +60,9 @@
                   </div>
                 </form>
               </div>
+              <div class="card-footer">
+                <a href="/balancetes" class="d-block btn btn-primary text-uppercase"><i class="fas fa-broom"></i> Limpar a Pesquisa</a>
+              </div>
             </div>
           </div>
         
@@ -77,11 +80,9 @@
                       <th>Descrição</th>
                       <th>Mov. Débito</th>
                       <th>Mov. Crédito</th>
-                      <th>Saldo. Débito</th>
-                      <th>Saldo. Crédito</th>
-                      <th>Operador</th>
+                      <th>Saldo. Devedor</th>
+                      <th>Saldo. Credor</th>
                     </tr>
-                    
                     
                     <tr>
                       <th></th>
@@ -112,14 +113,13 @@
                       <td>{{ formatValor(item.credito) }}</td>
                       <td>{{ formatValor(item.debito == item.credito ? 0 : (item.debito > item.credito ? item.debito - item.credito : 0)) }}</td>
                       <td>{{ formatValor(item.credito == item.debito ? item.credito - item.debito : (item.credito > item.debito ? item.credito - item.debito : 0)) }}</td>
-                      <td>{{ item.criador.name }}</td>
-                  
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
@@ -163,7 +163,7 @@ export default {
       periodo_id: "",
       data_inicio: "",
       data_final: "",
-      conta_id: "",
+      subconta_id: "",
       
       params: {},
     };
@@ -195,8 +195,8 @@ export default {
       this.updateData();
     },
       
-    conta_id: function (val) {
-      this.params.conta_id = val;
+    subconta_id: function (val) {
+      this.params.subconta_id = val;
       this.updateData();
     },   
     
@@ -245,7 +245,7 @@ export default {
     },  
   
     imprimirBalancete() {
-      window.open("imprimir-balancete" , {params: {exercicio_id: this.params.exercicio_id, conta_id: this.params.conta_id, periodo_id: this.params.periodo_id, data_inicio: this.params.data_inicio, data_final: this.params.data_final}});
+      window.open("imprimir-balancete", this.params);
     },
     formatValor(atual) {
       const valorFormatado = Intl.NumberFormat("pt-br", {

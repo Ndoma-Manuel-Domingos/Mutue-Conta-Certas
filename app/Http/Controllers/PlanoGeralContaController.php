@@ -23,18 +23,6 @@ class PlanoGeralContaController extends Controller
                 $query->orWhere('numero', 'like', "%".$value."%");
             }); 
         })
-        // ->whereHas('classe.contas_empresa.conta', function($query) use($request){
-        //     $query->when($request->conta_designacao, function($query, $value){
-        //         $query->where('designacao', 'like', "%".$value."%");
-        //         $query->orWhere('numero', 'like', "%".$value."%");
-        //     }); 
-        // })
-        // ->whereHas('classe.contas_empresa.sub_contas_empresa', function($query) use($request){
-        //     $query->when($request->subconta_designacao, function($query, $value){
-        //         $query->where('designacao', 'like', "%".$value."%");
-        //         $query->orWhere('numero', 'like', "%".$value."%");
-        //     }); 
-        // })
         ->with(['empresa', 'classe.contas_empresa.conta', 'classe.contas_empresa.sub_contas_empresa'])
         ->get();
        

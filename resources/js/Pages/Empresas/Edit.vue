@@ -47,13 +47,40 @@
                         <span class="text-danger" v-if="form.errors && form.errors.descricao_empresa">{{ form.errors.descricao_empresa }}</span>
                       </div>
                 
-                      <div class="col-12 col-md-6 mb-4">
+                      <div class="col-12 col-md-2 mb-4">
                         <label for="estado_empresa_id" class="form-label">Estado</label>
                         <Select2 v-model="form.estado_empresa_id"
                           id="estado_empresa_id" class="col-12 col-md-12"
                           :options="estados" :settings="{ width: '100%' }" 
                         />
                         <span class="text-danger" v-if="form.errors && form.errors.estado_empresa_id">{{ form.errors.estado_empresa_id }}</span>
+                      </div>
+                      
+                      <div class="col-12 col-md-2 mb-4">
+                        <label for="logotipo_da_empresa" class="form-label"
+                          >Descrição</label
+                        >
+                        <input
+                          type="file"
+                          id="logotipo_da_empresa"
+                          accept="image/*"
+                          class="form-control"
+                          @input="previewImage($event)"
+                        />
+                        <span
+                          class="text-danger"
+                          v-if="form.errors && form.errors.logotipo_da_empresa"
+                          >{{ form.errors.logotipo_da_empresa }}</span
+                        >
+                      </div>
+  
+                      <div class="col-12 col-md-2 mb-4">
+                        <img
+                          src=""
+                          alt=""
+                          id="image-preview"
+                          style="height: 120px; width: 100%; display: none"
+                        />
                       </div>
                                             
                     </div>
@@ -247,7 +274,7 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-        sessions() {
+    sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
     sessions_exercicio() {
@@ -261,7 +288,7 @@ export default {
         {'id': 2, 'text': "Desactivo"},
       ],
       
-      form: {
+      form: this.$inertia.form({
       
         nome_empresa: this.empresa ? this.empresa.nome_empresa : "" ,
         codigo_empresa: this.empresa ? this.empresa.codigo_empresa : "" ,
@@ -287,23 +314,23 @@ export default {
         itemIdMoeda: this.empresa ? (this.empresa.moeda ? this.empresa.moeda.id : "") : "",
         itemIdEnderco: this.empresa ? (this.empresa.endereco ? this.empresa.endereco.id : "") : "" ,
         
-        // itemId: this.empresa.id,
-        // itemIdEnderco: this.empresa.endereco.id,
-        // itemIdMoeda: this.empresa.moeda.id,
-        
-      },
+        logotipo_da_empresa: this.empresa ? this.empresa.logotipo_da_empresa : "" ,
+                
+      }),
     };
   },
   mounted() {},
   methods: {
+  
     submit() {
       this.$Progress.start();
-      axios
-        .put(`/empresas/${this.form.itemId}`, this.form)
-        .then((response) => {
-          // this.form.reset();
+      this.form.put(route("empresas.update", this.form.itemId), {
+        preverseScroll: true,
+        onSuccess: () => {
+          this.form.itemId = null;
+          this.form.reset();
           this.$Progress.finish();
-
+          
           Swal.fire({
             toast: true,
             icon: "success",
@@ -316,9 +343,9 @@ export default {
 
           window.location.reload();
           console.log("Resposta da requisição POST:", response.data);
-        })
-        .catch((error) => {
-          // sweetError("Ocorreu um erro ao actualizar Instituição!");
+          
+        },
+        onError: (error) => {
           this.$Progress.fail();
           Swal.fire({
             toast: true,
@@ -331,8 +358,23 @@ export default {
           });
 
           console.error("Erro ao fazer requisição POST:", error);
-        });
+        },
+      });
+
     },
+    
+    previewImage(event) {
+      if (event.target.files.length > 0) {
+        this.form.logotipo_da_empresa = event.target.files[0];
+
+        var src = URL.createObjectURL(event.target.files[0]);
+        var image_preview = document.getElementById("image-preview");
+
+        image_preview.src = src;
+        image_preview.style.display = "block";
+      }
+    },
+    
   },
 };
 </script>
