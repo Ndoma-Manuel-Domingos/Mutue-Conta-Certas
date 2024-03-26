@@ -35,9 +35,8 @@
             <img src="images/log.png">
         </div>
         <div id="company">
-            <h2 class="name">Mutue - Soluções Tecnológicas Inteligentes</h2>
-            <div>Rua Nossa Senhora da Muxima Nº 10, <br>
-                <br>Bairro Kinaxixi, Luanda.
+            <h2 class="name">{{$dados_empresa->nome_empresa}}</h2>  
+            <div>{{$dados_empresa->endereco->rua}}, {{$dados_empresa->endereco->bairro}}, <br>
             </div>
             <div>+244 947716133/+244 942364667</div>
             <div><a href="mailto:geral@uma.co.ao">geral@uma.co.ao</a></div>

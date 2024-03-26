@@ -64,7 +64,7 @@ class PlanoGeralContaController extends Controller
     public function imprimirPlano(){ 
         
         $data['plano_data'] = ClasseEmpresa::with(['empresa', 'classe.contas_empresa.conta', 'classe.contas_empresa.sub_contas_empresa'])->get(); //;->where('empresa_id', $users->empresa_id)->paginate(10);
-           
+        $data['dados_empresa'] = $this->dadosEmpresaLogada();
         $pdf = PDF::loadView('pdf.contas.PlanoContas', $data)->setPaper('a3', 'landscape');
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');

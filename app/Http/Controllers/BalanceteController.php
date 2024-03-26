@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 ;
 
 use App\Models\Exercicio;
+use App\Models\Movimento;
 use App\Models\MovimentoItem;
 use App\Models\Periodo;
 use App\Models\SubConta;
@@ -61,33 +62,12 @@ class BalanceteController extends Controller
                 $query->whereDate('data_lancamento', "<=" ,$value);
             }); 
         })
-        ->when($request->subconta_id, function($query, $value){
+        ->when($request->conta_id, function($query, $value){
             $query->where('subconta_id', $value);
-        })
-        ->whereHas('subconta', function($query) use($request){
-            $query->when($request->data_final, function($query, $value){
-                $query->whereDate('conta_id', $value);
-            }); 
         })
         ->with(['subconta', 'movimento', 'criador'])
         ->where('empresa_id', $this->empresaLogada())
         ->orderBy('id', 'desc')->get();
-        
-        // dd($data['movimentos']);
-        
-        // Soma dos créditos agrupados por conta_id
-        // $somaPorConta = $data['movimentos']->groupBy('conta_id')->map(function ($group) {
-        //     return $group->sum('credito');
-        // });
-        
-        // $somaPorSubConta = $data['movimentos']->groupBy('subconta_id')->map(function ($group) {
-        //     return $group->sum('credito');
-        // });
-        
-        // dd([
-        //     'somaPorConta' => $somaPorConta,
-        //     'somaPorSubConta' => $somaPorSubConta,
-        // ]);
         
         $valores = [];
         
@@ -236,6 +216,8 @@ class BalanceteController extends Controller
         ->select('id', DB::raw('CONCAT(numero, " - ", designacao) AS text'))
         ->get();
            
+        $data['dados_empresa'] = $this->dadosEmpresaLogada();
+        
         $pdf = PDF::loadView('pdf.contas.Balancete', $data)->setPaper('a4', 'landscape');
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Balancete.pdf');

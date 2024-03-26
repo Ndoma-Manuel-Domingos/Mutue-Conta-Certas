@@ -106,7 +106,7 @@
           <div class="card">
             <div class="card-header">
               <a
-                @click="imprimirPlano()"
+                @click="imprimirExtrato()"
                 class="btn btn-sm mx-1 btn-danger float-right"
               >
                 <i class="fas fa-file-pdf"></i> Visualizar</a
@@ -245,6 +245,9 @@ export default {
   },
 
   methods: {
+    imprimirExtrato(){
+      window.open("imprimir-extrato");
+    },
     updateData() {
       this.$Progress.start();
       this.$inertia.get("/extratos-contas", this.params, {
