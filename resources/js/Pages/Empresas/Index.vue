@@ -45,9 +45,9 @@
                   <tbody>
                     
                     <tr v-for="item in empresas" :key="item" :style="{ backgroundColor: verificar_sessao_empresa(item) ? '#D3D3D3' : '' }" >
-                      <td class="text-uppercase"><a :href="`/empresas/${item.id}`">{{ item.codigo_empresa }}</a></td>
-                      <td class="text-uppercase">{{ item.nome_empresa }}</td>
-                      <td>{{ item.regime.designacao }}</td>
+                      <td class="text-uppercase"><a :href="`/empresas/${item.id}`">{{ item.codigo_empresa ?? '' }}</a></td>
+                      <td class="text-uppercase">{{ item.nome_empresa ?? '-' }}</td>
+                      <td>{{ item.regime ? item.regime.designacao : '-' }}</td>
                       <td>{{ item.moeda ? (item.moeda.base ? (item.moeda.base ? item.moeda.base.designacao : "") : "") : "" }} - {{ item.moeda ? (item.moeda.base ? (item.moeda.base ? item.moeda.base.sigla : "") : "") : "" }}</td>
                       <td>{{ item.moeda ? (item.moeda.base ? (item.moeda.alternativa ? item.moeda.alternativa.designacao : "") : "") : "" }} - {{ item.moeda ? (item.moeda.alternativa ? (item.moeda.alternativa ? item.moeda.alternativa.sigla : "") : "") : "" }}</td>
                       

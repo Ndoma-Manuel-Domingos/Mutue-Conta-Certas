@@ -77,11 +77,9 @@
                       <th>Descrição</th>
                       <th>Mov. Débito</th>
                       <th>Mov. Crédito</th>
-                      <th>Saldo. Débito</th>
-                      <th>Saldo. Crédito</th>
-                      <th>Operador</th>
+                      <th>Saldo. Devedor</th>
+                      <th>Saldo. Credor</th>
                     </tr>
-                    
                     
                     <tr>
                       <th></th>
@@ -112,14 +110,13 @@
                       <td>{{ formatValor(item.credito) }}</td>
                       <td>{{ formatValor(item.debito == item.credito ? 0 : (item.debito > item.credito ? item.debito - item.credito : 0)) }}</td>
                       <td>{{ formatValor(item.credito == item.debito ? item.credito - item.debito : (item.credito > item.debito ? item.credito - item.debito : 0)) }}</td>
-                      <td>{{ item.criador.name }}</td>
-                  
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>

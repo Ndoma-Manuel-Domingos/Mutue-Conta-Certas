@@ -78,7 +78,7 @@
                       >
                     </div>
 
-                    <div class="col-12 col-md-6 mb-4">
+                    <div class="col-12 col-md-2 mb-4">
                       <label for="estado_empresa_id" class="form-label"
                         >Estado</label
                       >
@@ -94,6 +94,33 @@
                         v-if="form.errors && form.errors.estado_empresa_id"
                         >{{ form.errors.estado_empresa_id }}</span
                       >
+                    </div>
+
+                    <div class="col-12 col-md-2 mb-4">
+                      <label for="logotipo_da_empresa" class="form-label"
+                        >Descrição</label
+                      >
+                      <input
+                        type="file"
+                        id="logotipo_da_empresa"
+                        accept="image/*"
+                        class="form-control"
+                        @input="previewImage($event)"
+                      />
+                      <span
+                        class="text-danger"
+                        v-if="form.errors && form.errors.logotipo_da_empresa"
+                        >{{ form.errors.logotipo_da_empresa }}</span
+                      >
+                    </div>
+
+                    <div class="col-12 col-md-2 mb-4">
+                      <img
+                        src=""
+                        alt=""
+                        id="image-preview"
+                        style="height: 120px; width: 100%; display: none"
+                      />
                     </div>
                   </div>
                 </div>
@@ -161,8 +188,7 @@
                         >{{ form.errors.moeda_alternativa_id }}</span
                       >
                     </div>
-                    
-                    
+
                     <div class="col-12 col-md-2 mb-4">
                       <label for="tipo_empresa_id" class="form-label"
                         >Tipos</label
@@ -180,7 +206,7 @@
                         >{{ form.errors.tipo_empresa_id }}</span
                       >
                     </div>
-                    
+
                     <div class="col-12 col-md-2 mb-4">
                       <label for="grupo_empresa_id" class="form-label"
                         >Grupos</label
@@ -198,7 +224,6 @@
                         >{{ form.errors.grupo_empresa_id }}</span
                       >
                     </div>
-                                        
                   </div>
                 </div>
 
@@ -212,9 +237,15 @@
                       <h5>Contactos</h5>
                     </div>
                     <div class="card-body">
-                      <div class="row" v-for="item in form.contactos_empresa" :key="item">
+                      <div
+                        class="row"
+                        v-for="item in form.contactos_empresa"
+                        :key="item"
+                      >
                         <div class="col-12 col-md-6 mb-4">
-                          <label for="tipo_contacto_empresa_id" class="form-label"
+                          <label
+                            for="tipo_contacto_empresa_id"
+                            class="form-label"
                             >Tipos Contactos</label
                           >
                           <Select2
@@ -226,13 +257,20 @@
                           />
                           <span
                             class="text-danger"
-                            v-if="form.errors && form.errors.tipo_contacto_empresa_id"
+                            v-if="
+                              form.errors &&
+                              form.errors.tipo_contacto_empresa_id
+                            "
                             >{{ form.errors.tipo_contacto_empresa_id }}</span
                           >
                         </div>
-                        
+
                         <div class="col-12 col-md-6 mb-4">
-                          <label for="tipo_contacto_empresa_designacao" class="form-label">Designação</label>
+                          <label
+                            for="tipo_contacto_empresa_designacao"
+                            class="form-label"
+                            >Designação</label
+                          >
                           <input
                             type="text"
                             id="tipo_contacto_empresa_designacao"
@@ -242,15 +280,24 @@
                           />
                           <span
                             class="text-danger"
-                            v-if="form.errors && form.errors.tipo_contacto_empresa_designacao"
-                            >{{ form.errors.tipo_contacto_empresa_designacao }}</span
+                            v-if="
+                              form.errors &&
+                              form.errors.tipo_contacto_empresa_designacao
+                            "
+                            >{{
+                              form.errors.tipo_contacto_empresa_designacao
+                            }}</span
                           >
                         </div>
-                        
                       </div>
                     </div>
                     <div class="card-footer">
-                      <button class="btn  btn-sm btn-primary" @click="adicionar_campos_tipos_contactos">Adicionar mais contactos</button>
+                      <button
+                        class="btn btn-sm btn-primary"
+                        @click="adicionar_campos_tipos_contactos"
+                      >
+                        Adicionar mais contactos
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -260,9 +307,15 @@
                       <h5>Tipos de Documentos</h5>
                     </div>
                     <div class="card-body">
-                      <div class="row" v-for="item in form.documentos_empresa" :key="item">
+                      <div
+                        class="row"
+                        v-for="item in form.documentos_empresa"
+                        :key="item"
+                      >
                         <div class="col-12 col-md-6 mb-4">
-                          <label for="tipo_documento_empresa_id" class="form-label"
+                          <label
+                            for="tipo_documento_empresa_id"
+                            class="form-label"
                             >Tipos Documentos</label
                           >
                           <Select2
@@ -274,13 +327,20 @@
                           />
                           <span
                             class="text-danger"
-                            v-if="form.errors && form.errors.tipo_documento_empresa_id"
+                            v-if="
+                              form.errors &&
+                              form.errors.tipo_documento_empresa_id
+                            "
                             >{{ form.errors.tipo_documento_empresa_id }}</span
                           >
                         </div>
-                        
+
                         <div class="col-12 col-md-6 mb-4">
-                          <label for="tipo_documento_empresa_designacao" class="form-label">Designação</label>
+                          <label
+                            for="tipo_documento_empresa_designacao"
+                            class="form-label"
+                            >Designação</label
+                          >
                           <input
                             type="text"
                             id="tipo_documento_empresa_designacao"
@@ -290,14 +350,24 @@
                           />
                           <span
                             class="text-danger"
-                            v-if="form.errors && form.errors.tipo_documento_empresa_designacao"
-                            >{{ form.errors.tipo_documento_empresa_designacao }}</span
+                            v-if="
+                              form.errors &&
+                              form.errors.tipo_documento_empresa_designacao
+                            "
+                            >{{
+                              form.errors.tipo_documento_empresa_designacao
+                            }}</span
                           >
                         </div>
                       </div>
                     </div>
                     <div class="card-footer">
-                      <button class="btn btn-sm btn-primary" @click="adicionar_campos_tipos_documentos">Adicionar mais documentos</button>
+                      <button
+                        class="btn btn-sm btn-primary"
+                        @click="adicionar_campos_tipos_documentos"
+                      >
+                        Adicionar mais documentos
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -494,7 +564,7 @@ export default {
         { id: 2, text: "Desactivo" },
       ],
 
-      form: {
+      form: this.$inertia.form({
         nome_empresa: "",
         codigo_empresa: "",
         descricao_empresa: "",
@@ -503,18 +573,26 @@ export default {
         moeda_alternativa_id: "",
         regime_empresa_id: "",
         moeda_cambio_id: "",
-        
+
+        logotipo_da_empresa: "",
+
         tipo_empresa_id: "",
         grupo_empresa_id: "",
-        
+
         contactos_empresa: [
-          { tipo_contacto_empresa_id: "", tipo_contacto_empresa_designacao: "" }
+          {
+            tipo_contacto_empresa_id: "",
+            tipo_contacto_empresa_designacao: "",
+          },
         ],
-        
+
         documentos_empresa: [
-          { tipo_documento_empresa_id: "", tipo_documento_empresa_designacao: "" }
+          {
+            tipo_documento_empresa_id: "",
+            tipo_documento_empresa_designacao: "",
+          },
         ],
-        
+
         rua: "",
         casa: "",
         bairro: "",
@@ -523,31 +601,45 @@ export default {
         provincia_id: "",
         municipio_id: "",
         comuna_id: "",
-      },
+      }),
     };
   },
   mounted() {},
   methods: {
-    
-    adicionar_campos_tipos_documentos(){
-      this.form.documentos_empresa.push({ tipo_documento_empresa_id: '', tipo_documento_empresa_designacao: '' });
+    adicionar_campos_tipos_documentos() {
+      this.form.documentos_empresa.push({
+        tipo_documento_empresa_id: "",
+        tipo_documento_empresa_designacao: "",
+      });
       event.preventDefault();
     },
-    
-    adicionar_campos_tipos_contactos(){
-      this.form.contactos_empresa.push({ tipo_contacto_empresa_id: '', tipo_contacto_empresa_designacao: '' });
+
+    adicionar_campos_tipos_contactos() {
+      this.form.contactos_empresa.push({
+        tipo_contacto_empresa_id: "",
+        tipo_contacto_empresa_designacao: "",
+      });
       event.preventDefault();
     },
-  
+
+    previewImage(event) {
+      if (event.target.files.length > 0) {
+        this.form.logotipo_da_empresa = event.target.files[0];
+
+        var src = URL.createObjectURL(event.target.files[0]);
+        var image_preview = document.getElementById("image-preview");
+
+        image_preview.src = src;
+        image_preview.style.display = "block";
+      }
+    },
+
     submit() {
       this.$Progress.start();
 
-      axios
-        .post(route("empresas.store"), this.form)
-        .then((response) => {
-          // this.form.reset();
-          this.$Progress.finish();
-
+      this.form.post(route("empresas.store"), {
+        preverseScroll: true,
+        onSuccess: (response) => {
           Swal.fire({
             toast: true,
             icon: "success",
@@ -557,12 +649,11 @@ export default {
             showConfirmButton: false,
             timer: 4000,
           });
-
+          this.form.reset();
           window.location.reload();
           console.log("Resposta da requisição POST:", response.data);
-        })
-        .catch((error) => {
-          // sweetError("Ocorreu um erro ao actualizar Instituição!");
+        },
+        onError: (error) => {
           this.$Progress.fail();
           Swal.fire({
             toast: true,
@@ -575,7 +666,8 @@ export default {
           });
 
           console.error("Erro ao fazer requisição POST:", error);
-        });
+        },
+      });
     },
   },
 };

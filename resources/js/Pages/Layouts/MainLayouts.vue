@@ -144,6 +144,11 @@ export default {
     },
 
   },
+  
+  mounted() {
+    // $('.select2').select2()
+  },
+  
   methods: {
     logout() {
       this.$Progress.start();
@@ -219,7 +224,7 @@ export default {
     background-color: brown;
   } */
 
-/*.select2-container--default .select2-selection--single {
+.select2-container--default .select2-selection--single {
   background-color: #ffffff;
   padding: 10px 10px 35px 10px;
 }
@@ -227,5 +232,5 @@ export default {
 .form-control {
   padding: 23px 10px 22px 10px;
   font-size: 12pt;
-}*/
+}
 </style>

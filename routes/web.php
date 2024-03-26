@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\{
+    ApuramentoResultadoController,
     AuthController,
     BalanceteController,
     BalancoController,
@@ -21,6 +22,7 @@ use App\Http\Controllers\{
     PaisesController,
     MunicipioController,
     ComunaController,
+    ExtratoContaController,
     GrupoEmpresaController,
     ProvinciaController,
     TipoEmpresaController,
@@ -72,6 +74,8 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('movimentos', MovimentoController::class);
     Route::resource('balancetes', BalanceteController::class);
     Route::resource('balancos', BalancoController::class);
+    Route::resource('extratos-contas', ExtratoContaController::class);
+    Route::resource('apuramento-resultados', ApuramentoResultadoController::class);
     Route::get('/adicionar-conta-movimento/{id}', [MovimentoController::class, 'adicionar_conta_movimento']);
     Route::get('/remover-conta-movimento/{id}', [MovimentoController::class, 'remover_conta_movimento']);
     Route::get('/alterar-debito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_debito_conta_movimento']);

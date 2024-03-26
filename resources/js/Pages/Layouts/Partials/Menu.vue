@@ -164,12 +164,12 @@
             </Link>
           </li>
 
-          <li class="nav-item" title="Movimentos">
+          <li class="nav-item" title="Apuramento de Resultados">
             <Link
-              href="/movimentos"
+              href="/apuramento-resultados"
               class="nav-link"
               :class="{
-                active: $page.component == 'Contas/Index',
+                active: $page.component == 'ApuramentoResultado/Index',
               }"
             >
               <i class="far fa-circle nav-icon"></i>
