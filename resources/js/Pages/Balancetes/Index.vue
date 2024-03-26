@@ -66,7 +66,7 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header"> 
-                <a @click="imprimirPlano()" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
+                <a @click="imprimirBalancete()" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
                 <a href="" class="btn btn-sm mx-1 btn-success float-right"> <i class="fas fa-file-excel"></i> Exportar</a>
               </div>
               <div class="card-body">
@@ -241,8 +241,9 @@ export default {
       this.updateData();
     },  
   
-    imprimirPlano() {
-      window.open("imprimir-movimentos");
+    imprimirBalancete() {
+      alert(JSON.stringify(this.params));
+      window.open("imprimir-balancete", this.params);
     },
     formatValor(atual) {
       const valorFormatado = Intl.NumberFormat("pt-br", {

@@ -97,17 +97,59 @@
 
                     </tbody>
                 @endforeach
-
             </table>
+            
         @endforeach
-
+        <script type='text/php'>
+            if (isset($pdf)) 
+            {               
+                $pdf->page_text(60, $pdf->get_height() - 50, "{PAGE_NUM} de {PAGE_COUNT}", null, 12, array(0,0,0));
+            }
+        </script>
     </main>
 
-    <span style="text-align: center;">
-        <p style="font-size: 20px;">Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
-            Inteligentes.</p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <span style="text-align: center; font-size: 12px; align-content: bottom;">
+        <p>Documento processado pelo software MUTUE - Contas Certas.</p>
     </span>
-
+  
+                
 </body>
 
 </html>
@@ -125,5 +167,16 @@
     tr td {
         text-align: left;
         margin-top: 160px;
+    }
+
+    .footer {
+        font-size: 0.875rem;
+        padding: 1rem;
+        background-color: rgb(255, 255, 255);
+    }
+
+    .page:after {
+        position: absolute;
+        content: counter(page);
     }
 </style>

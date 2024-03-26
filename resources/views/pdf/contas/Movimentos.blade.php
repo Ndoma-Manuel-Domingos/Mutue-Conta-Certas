@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Lista de Avaliações</title>
+    <title>Lista de Movimentos</title>
     
     <link rel="stylesheet" href="css/style.css" media="all" />
     <style>
@@ -24,8 +24,22 @@
       color: orange;
     }
 
+    tr th{
+        background-color: gray;
+        color:white;
+        text-align: center;
+        
+    }
 
-
+    .footer {
+            font-size: 0.875rem;
+            padding: 1rem;
+            background-color: rgb(255, 255, 255);
+            bottom: 0;
+            position: fixed;
+            width: 90%;
+            text-align: center;
+        }
 </style>
   </head>
  
@@ -44,45 +58,53 @@
       </div>
     </header>
     <main>
-    <h2 style="text-align:center"> Classes </h2>
+    <h2 style="text-align:center"> Listagem dos Movimentos </h2>
     <div style="margin:auto 0px">
 
    </div>
       <table id="table_id" class="display" style="background-color:white; border-radius:4px;">
     <thead>
         <tr class="">
-            <th style="text-align: center;color:white; background-color: gray; width: 5px;"><b>#</b></th>
-            <th style="text-align: center;color:white; background-color: gray;"><b>Número da classe</b></th>
-            <th style="text-align: center;color:white; background-color: gray;"><b>Designação da classe</b></th>
-            <th style="text-align: center;color:white; background-color: gray;"><b>Empresa</b></th>
-            <th style="text-align: center;color:white; background-color: gray;"><b>Estado</b></th>
+            <th><b>Nº</b></th>
+            <th><b>Diário</b></th>
+            <th><b>Documento</b></th>
+            <th><b>Débito</b></th>
+            <th><b>Crédito</b></th>
+            <th><b>Data</b></th>
+            <th><b>Execício</b></th>
+            <th><b>Operador</b></th>
             
-            {{-- <th style="text-align: center;color:white; background-color: gray;"><b>Número</b></th> --}}
         </tr>
     </thead>
     
     <tbody>
         @foreach($movimentos_data as $item)
         <tr>
-            <td style="text-align: center;"></td>
-            <td style="text-align: center;">{{$item}}</td>
-            {{-- <td style="text-align: center;">{{$item->classe->numero}}</td>
-            <td style="text-align: center;">{{$item->classe->designacao}}</td>
-            <td style="text-align: center;">{{$item->empresa->nome_empresa}}</td>
-            <td style="text-align: center;">{{$item->estado}}</td> --}}
+            <td style="text-align: center;">{{$item->id}}</td>
+            <td style="text-align: center;">{{$item->diario->numero}} - {{$item->diario->designacao}}</td>
+            <td style="text-align: center;">{{$item->tipo_documento->numero}} - {{$item->tipo_documento->designacao}}</td>
+            <td style="text-align: center;">{{$item->debito}}</td>
+            <td style="text-align: center;">{{$item->credito}}</td>
+            <td style="text-align: center;">{{$item->data_lancamento}}</td>
+            <td style="text-align: center;">{{$item->exercicio->designacao}}</td>
+            <td style="text-align: center;">{{$item->criador->name}}</td>
+           
             
-            {{-- <td style="text-align: center;">{{$item}}</td>             --}}
         </tr>
         @endforeach
     </tbody>
 </table>
 
     </main>
-    
-    <span style="text-align: center; font-size: 16px;">
-      <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
-          Inteligentes.</p>
-  </span>
+
+    <div class="footer margin-top">
+      <hr>
+      <p style="text-align:right">Data: {{ date('Y-m-d H:i:s') }} </p>
+
+      <div align="center"> Documento processado pelo software MUTUE - Contas Certas.</div>
+      
+  </div>
 
   </body>
 </html>
+

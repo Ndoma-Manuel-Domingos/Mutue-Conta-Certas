@@ -28,12 +28,12 @@
                   <i class="fas fa-plus"></i> CRIAR NOVO PAÍS</a
                 >
 
-                <button
+                <!-- <button
                   class="btn btn-danger btn-sm float-right"
                   @click="imprimirPeriodos()"
                 >
-                  <i class="fas fa-save"></i> Imprimir Contas
-                </button>
+                  <i class="fas fa-save"></i> Visualizar
+                </button> -->
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
@@ -116,7 +116,7 @@ export default {
       console.log(item.id);
     },
     imprimirPeriodos() {
-      window.open("imprimir-periodos");
+      window.open("imprimir-paises");
     },
   },
 };

@@ -26,6 +26,16 @@
         .orange-text {
             color: orange;
         }
+
+        .footer {
+            font-size: 0.875rem;
+            padding: 1rem;
+            background-color: rgb(255, 255, 255);
+            bottom: 0;
+            position: fixed;
+            width: 90%;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -63,22 +73,30 @@
             <tbody>
                 @foreach ($exercicio_data as $item)
                     <tr>
-                        <td style="text-align: left;"></td>
-                        <td style="text-align: left;">{{ $item->designacao }}</td>
-                        <td style="text-align: left;">{{ $item->estado }}</td>
+                        <td style="text-align: center;"></td>
+                        <td style="text-align: center;">{{ $item->designacao }}</td>
+                        <td style="text-align: center;">{{ $item->estado }}</td>
 
                         {{-- <td style="text-align: center;">{{$item}}</td>             --}}
                     </tr>
                 @endforeach
             </tbody>
         </table>
-
+        <script type='text/php'>
+            if (isset($pdf)) 
+            {               
+                $pdf->page_text(60, $pdf->get_height() - 50, "{PAGE_NUM} de {PAGE_COUNT}", null, 12, array(0,0,0));
+            }
+        </script>
     </main>
 
-    <span style="text-align: center; font-size: 16px;">
-        <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
-            Inteligentes.</p>
-    </span>
+    <div class="footer margin-top">
+        <hr>
+        <p style="text-align:right">Data: {{ date('Y-m-d H:i:s') }} </p>
+
+        <div align="center"> Documento processado pelo software MUTUE - Contas Certas.</div>
+
+    </div>
 
 </body>
 

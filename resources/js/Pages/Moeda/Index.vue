@@ -30,7 +30,7 @@
                   class="btn btn-danger btn-sm mx-1"
                   @click="imprimirPeriodos()"
                 >
-                  <i class="fas fa-file-pdf"></i> Imprimir
+                  <i class="fas fa-file-pdf"></i> Visualizar
                 </button>
 
                 <div class="card-tools">

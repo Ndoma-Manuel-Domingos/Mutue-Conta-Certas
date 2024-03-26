@@ -98,6 +98,8 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('imprimir-plano', [PlanoGeralContaController::class, 'imprimirPlano']);
     Route::get('imprimir-diario', [DiarioController::class, 'imprimirDiario']);
     Route::get('imprimir-movimentos', [MovimentoController::class, 'imprimirMovimento']);
+    Route::get('imprimir-paises', [PaisesController::class, 'imprimirPaises']);
+    Route::get('imprimir-balancete', [BalanceteController::class, 'imprimirBalancete']);
 
     // Rotas Tabela de apoio
     Route::resource('regime-empresa', RegimeController::class);
@@ -106,6 +108,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('municipio', MunicipioController::class);
     Route::resource('provincia', ProvinciaController::class);
     Route::resource('comuna', ComunaController::class);
+    
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');
 

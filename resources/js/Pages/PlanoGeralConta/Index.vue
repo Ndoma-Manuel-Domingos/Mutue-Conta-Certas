@@ -27,7 +27,7 @@
                 <a href="/classes/create" class="btn-sm btn-primary btn float-left mx-1"><i class="fas fa-plus"></i> Criar Classe</a>
                 <a href="/contas/create" class="btn-sm btn-primary btn float-left mx-1"><i class="fas fa-plus"></i> Criar Conta</a>
                 <a href="/sub-contas/create" class="btn-sm btn-primary btn float-left mx-1"><i class="fas fa-plus"></i> Criar Subconta</a>
-                <a  @click="imprimirPlano()" class="btn-sm btn-danger btn float-left mx-1"><i class="fas fa-file-pdf"></i> Imprimir PGC</a>
+                <a  @click="imprimirPlano()" class="btn-sm btn-danger btn float-left mx-1"><i class="fas fa-file-pdf"></i> Visualizar PGC</a>
               </div>
               
               <div class="card-body">
@@ -135,6 +135,7 @@ export default {
     
     updateData() {
       this.$Progress.start();
+      
       this.$inertia.get("/plano-geral-contas", this.params, {
         preserveState: true,
         preverseScroll: true,

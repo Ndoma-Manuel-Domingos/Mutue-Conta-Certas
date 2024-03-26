@@ -186,6 +186,7 @@ class ContaController extends Controller
         $data['contas_data'] = ContaEmpresa::with(['empresa', 'conta', 'classe'])->get();     
         // dd($data['contas_data']);
         $pdf = PDF::loadView('pdf.contas.Contas', $data)->setPaper('a4', 'landscape');
+        $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');
     }
 }

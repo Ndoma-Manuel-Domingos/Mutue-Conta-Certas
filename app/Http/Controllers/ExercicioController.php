@@ -128,6 +128,7 @@ class ExercicioController extends Controller
         $data['exercicio_data'] = Exercicio::with(['empresa'])->get();     
         
         $pdf = PDF::loadView('pdf.contas.Exercicio', $data)->setPaper('a4', 'landscape');
+        $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');
     }
     

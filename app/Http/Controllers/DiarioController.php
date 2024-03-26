@@ -151,6 +151,7 @@ class DiarioController extends Controller
         $data['diarios'] = Diario::with(['empresa'])->get();
         
         $pdf = PDF::loadView('pdf.contas.Diario', $data)->setPaper('a3', 'landscape');
+        $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');
     }
 }
