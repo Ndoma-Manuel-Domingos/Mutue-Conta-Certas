@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exercicio;
 use App\Models\User;
+use App\Models\Empresa;
 use App\Models\UserEmpresa;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,6 +50,26 @@ Trait Config{
             }else{
                 return "";
             }
+        }
+        
+        return "";
+    }
+
+    public function dadosEmpresaLogada()
+    {
+        $user = auth()->user();
+        
+        if($user){
+        
+            $user = User::find($user->id);
+            
+            $empresa = Empresa::with(['contactos', 'endereco', 'contactos'])->where('estado_empresa_id', '1')->where('user_id', $user->id)->first();
+            if($empresa){
+                return $empresa;
+            }else{
+                return "";
+            }
+
         }
         
         return "";

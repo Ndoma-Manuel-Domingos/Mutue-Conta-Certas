@@ -36,9 +36,8 @@
             <img src="images/log.png">
         </div>
         <div id="company">
-            <h2 class="name">Mutue - Soluções Tecnológicas Inteligentes</h2>
-            <div>Rua Nossa Senhora da Muxima Nº 10, <br>
-                <br>Bairro Kinaxixi, Luanda.
+            <h2 class="name">{{$dados_empresa->nome_empresa}}</h2>  
+            <div>{{$dados_empresa->endereco->rua}}, {{$dados_empresa->endereco->bairro}}, <br>
             </div>
             <div>+244 947716133/+244 942364667</div>
             <div><a href="mailto:geral@uma.co.ao">geral@uma.co.ao</a></div>
@@ -60,7 +59,7 @@
                 <th style="text-align: center;color:white; background-color: gray;">Mov. Crédito</th>
                 <th style="text-align: center;color:white; background-color: gray;">Saldo. Débito</th>
                 <th style="text-align: center;color:white; background-color: gray;">Saldo. Crédito</th>
-                <th style="text-align: center;color:white; background-color: gray;">Operador</th>
+                {{-- <th style="text-align: center;color:white; background-color: gray;">Operador</th> --}}
               </tr>
               
               
@@ -75,7 +74,7 @@
               
               <tr>
                 <th></th>
-                <th class="text-right">Soma Líquida</th>
+                <th class="text-right" style="background-color: gray; color: white;">Soma Líquida</th>
                  {{-- <th>{{ (object)$resultado }}</th>  --}}
                @foreach ($resultado as $resultado)
                <th>{{number_format($resultado, 2, ',', '.') }}</th> 
@@ -96,7 +95,7 @@
                         <td>{{ number_format($item->credito, 2, ',', '.') }}</td>
                         <td>{{ number_format($item->debito == $item->credito ? 0 : ($item->debito > $item->credito ? $item->debito - $item->credito : 0), 2, ',', '.') }}</td>
                         <td>{{ number_format($item->credito == $item->debito ? $item->credito - $item->debito : ($item->credito > $item->debito ? $item->credito - $item->debito : 0), 2, ',', '.') }}</td>
-                        <td>{{ $item->criador->name }}</td>
+                        {{-- <td>{{ $item->criador->name }}</td> --}}
                     </tr>
                 @endforeach
               

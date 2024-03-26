@@ -245,8 +245,7 @@ export default {
     },  
   
     imprimirBalancete() {
-      alert(JSON.stringify(this.params));
-      window.open("imprimir-balancete", this.params);
+      window.open("imprimir-balancete" , {params: {exercicio_id: this.params.exercicio_id, conta_id: this.params.conta_id, periodo_id: this.params.periodo_id, data_inicio: this.params.data_inicio, data_final: this.params.data_final}});
     },
     formatValor(atual) {
       const valorFormatado = Intl.NumberFormat("pt-br", {

@@ -198,6 +198,8 @@ class BalanceteController extends Controller
         ->select('id', DB::raw('CONCAT(numero, " - ", designacao) AS text'))
         ->get();
            
+        $data['dados_empresa'] = $this->dadosEmpresaLogada();
+        
         $pdf = PDF::loadView('pdf.contas.Balancete', $data)->setPaper('a4', 'landscape');
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Balancete.pdf');
