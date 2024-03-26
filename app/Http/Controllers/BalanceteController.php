@@ -30,6 +30,14 @@ class BalanceteController extends Controller
         // ->where('movimento_items.empresa_id', $this->empresaLogada())
         // ->groupBy('sub_contas.conta_id')
         // ->get();
+        
+        // $data['movimentos'] = MovimentoItem::join('sub_contas', 'movimento_items.subconta_id', '=', 'sub_contas.id')
+        // ->join('contas', 'sub_contas.conta_id', '=', 'contas.id')
+        // ->select('sub_contas.conta_id', \DB::raw('SUM(movimento_items.credito) as total_credito, SUM(movimento_items.debito) as total_debito'))
+        // ->with(['subconta', 'movimento', 'criador'])
+        // ->where('movimento_items.empresa_id', $this->empresaLogada())
+        // ->groupBy('sub_contas.conta_id')
+        // ->first();
             
         // dd($data['movimentos']);
             
