@@ -30,7 +30,7 @@ class DiarioController extends Controller
         })
         ->with(['empresa'])
         ->where('empresa_id', $this->empresaLogada())
-        ->paginate(10);
+        ->get();
                
         return Inertia::render('Diarios/Index', $data);
     }

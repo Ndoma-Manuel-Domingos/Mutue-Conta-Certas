@@ -34,7 +34,7 @@ class ClasseController extends Controller
             }); 
         })
         ->where('empresa_id', $this->empresaLogada())
-        ->where('estado', '!=', 'inactivo')->paginate(7);
+        ->where('estado', '!=', 'inactivo')->get();
                
         return Inertia::render('Classes/Index', $data);
     }

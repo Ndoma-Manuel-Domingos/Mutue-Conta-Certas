@@ -34,7 +34,7 @@ class SubContaController extends Controller
         })
         ->with(['empresa', 'conta'])
         ->where('empresa_id', $this->empresaLogada())
-        ->paginate(7);
+        ->get();
                
         return Inertia::render('SubContas/Index', $data);
     }

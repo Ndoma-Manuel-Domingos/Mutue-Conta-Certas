@@ -22,33 +22,13 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header"> 
-                
-                <div class="card-tools">
-                  <div class="input-group input-group" style="width: 450px">
-                    <input
-                      type="text"
-                      v-model="input_busca_periodos"
-                      class="form-control float-right"
-                      placeholder="Informe a campo"
-                    />
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                
-                        
                 <a href="/periodos/create" class="btn btn-info btn-sm mx-1"> <i class="fas fa-plus"></i> CRIAR PERÍODO</a>
                 <button class="btn btn-danger btn-sm mx-1" @click="imprimirPeriodos()">
                   <i class="fas fa-save"></i> Imprimir Contas
                 </button>
-                
               </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
+                  <table class="table table-bordered table-hover" id="tabela_de_periodos">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -60,7 +40,7 @@
                     </thead>
                     
                     <tbody>
-                      <tr v-for="item in periodos.data" :key="item">
+                      <tr v-for="item in periodos" :key="item">
                         <td>#</td>
                         <td>{{ item.designacao }}</td>
                         <td>{{ item.exercicio.designacao }}</td>
@@ -75,19 +55,8 @@
                       </tr>
                     </tbody>
                   </table>
-                </div>
               </div>
-              
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ periodos.total }}</Link
-                >
-                <Paginacao
-                  :links="periodos.links"
-                  :prev="periodos.prev_page_url"
-                  :next="periodos.next_page_url"
-                />
-              </div>
+         
             </div>
           </div>
         </div>
@@ -125,7 +94,11 @@ export default {
       params: {},
     };
   },
-  mounted() {},
+  mounted() {
+    $('#tabela_de_periodos').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
   watch: {
     options: function (val) {
       this.params.page = val.page;

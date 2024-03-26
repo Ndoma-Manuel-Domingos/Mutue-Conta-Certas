@@ -22,7 +22,7 @@ class PeriodoController extends Controller
                 
         $data['periodos'] = Periodo::when($request->input_busca_periodos, function($query, $value){
             $query->where('designacao', 'like', "%".$value."%");
-        })->where('empresa_id', $this->empresaLogada())->with(['empresa', 'exercicio'])->paginate(15);
+        })->where('empresa_id', $this->empresaLogada())->with(['empresa', 'exercicio'])->get();
                
         return Inertia::render('Periodos/Index', $data);
     }

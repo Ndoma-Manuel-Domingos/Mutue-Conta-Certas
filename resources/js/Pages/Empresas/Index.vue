@@ -26,76 +26,46 @@
                 <button class="btn btn-danger btn-sm mx-1" >
                   <i class="fas fa-file-pdf"></i> Imprimir
                 </button>
-                
-                <div class="card-tools">
-                  <div class="input-group input-group" style="width: 450px">
-                    <input
-                      type="text"
-                      v-model="input_busca_empresas"
-                      class="form-control float-right"
-                      placeholder="Informe a campo"
-                    />
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                
               </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>NIF</th>
-                        <th>Nome</th>
-                        <th>Regime do IVA</th>
-                        <th>Moeda Base</th>
-                        <th>Moeda Alternativo</th>
-                        <th>Tipo</th>
-                        <th>Grupo</th>
-                        <th>Estado</th>
-                        <th class="text-right">Ações</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+                <table class="table table-bordered table-hover" id="tabela_de_empresas">
+                  <thead>
+                    <tr>
+                      <th>NIF</th>
+                      <th>Nome</th>
+                      <th>Regime do IVA</th>
+                      <th>Moeda Base</th>
+                      <th>Moeda Alternativo</th>
+                      <th>Tipo</th>
+                      <th>Grupo</th>
+                      <th>Estado</th>
+                      <th class="text-right">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                    <tr v-for="item in empresas" :key="item" :style="{ backgroundColor: verificar_sessao_empresa(item) ? '#D3D3D3' : '' }" >
+                      <td class="text-uppercase"><a :href="`/empresas/${item.id}`">{{ item.codigo_empresa }}</a></td>
+                      <td class="text-uppercase">{{ item.nome_empresa }}</td>
+                      <td>{{ item.regime.designacao }}</td>
+                      <td>{{ item.moeda ? (item.moeda.base ? (item.moeda.base ? item.moeda.base.designacao : "") : "") : "" }} - {{ item.moeda ? (item.moeda.base ? (item.moeda.base ? item.moeda.base.sigla : "") : "") : "" }}</td>
+                      <td>{{ item.moeda ? (item.moeda.base ? (item.moeda.alternativa ? item.moeda.alternativa.designacao : "") : "") : "" }} - {{ item.moeda ? (item.moeda.alternativa ? (item.moeda.alternativa ? item.moeda.alternativa.sigla : "") : "") : "" }}</td>
                       
-                      <tr v-for="item in empresas.data" :key="item" :style="{ backgroundColor: verificar_sessao_empresa(item) ? '#D3D3D3' : '' }" >
-                        <td class="text-uppercase"><a :href="`/empresas/${item.id}`">{{ item.codigo_empresa }}</a></td>
-                        <td class="text-uppercase">{{ item.nome_empresa }}</td>
-                        <td>{{ item.regime.designacao }}</td>
-                        <td>{{ item.moeda ? (item.moeda.base ? (item.moeda.base ? item.moeda.base.designacao : "") : "") : "" }} - {{ item.moeda ? (item.moeda.base ? (item.moeda.base ? item.moeda.base.sigla : "") : "") : "" }}</td>
-                        <td>{{ item.moeda ? (item.moeda.base ? (item.moeda.alternativa ? item.moeda.alternativa.designacao : "") : "") : "" }} - {{ item.moeda ? (item.moeda.alternativa ? (item.moeda.alternativa ? item.moeda.alternativa.sigla : "") : "") : "" }}</td>
-                        
-                        <td>{{ item.tipo ? item.tipo.designacao : "" }}</td>
-                        <td>{{ item.grupo ? item.grupo.designacao : "" }}</td>
-                        <td class="text-capitalize">{{ item.estado_empresa_id == 1 ? 'Activo': 'Desactivo' }}</td>
-                        <td>
-                                              
-                          <div class="float-right">
-                            <a :href="`/empresas/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>
-                            <a @click="mudar_estado_empresa(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado_empresa_id == 2"><i class="fas fa-check"></i> Activar</a>
-                            <a @click="mudar_estado_empresa(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
-                            <a @click="iniciar_sessao_empresa(item)" class="btn btn-sm btn-secondary mx-1"><i class="fas fa-cog"></i> Operar</a>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ empresas.total }}</Link
-                >
-                <Paginacao
-                  :links="empresas.links"
-                  :prev="empresas.prev_page_url"
-                  :next="empresas.next_page_url"
-                />
+                      <td>{{ item.tipo ? item.tipo.designacao : "" }}</td>
+                      <td>{{ item.grupo ? item.grupo.designacao : "" }}</td>
+                      <td class="text-capitalize">{{ item.estado_empresa_id == 1 ? 'Activo': 'Desactivo' }}</td>
+                      <td>
+                                            
+                        <div class="float-right">
+                          <a :href="`/empresas/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>
+                          <a @click="mudar_estado_empresa(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado_empresa_id == 2"><i class="fas fa-check"></i> Activar</a>
+                          <a @click="mudar_estado_empresa(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>
+                          <a @click="iniciar_sessao_empresa(item)" class="btn btn-sm btn-secondary mx-1"><i class="fas fa-cog"></i> Operar</a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -148,17 +118,13 @@ export default {
       }
       this.updateData();
     },
-    
-    input_busca_empresas: function (val) {
-      this.params.input_busca_empresas = val;
-      this.updateData();
-    },
-
   },
-  
-  mounted() {},
+  mounted() {
+    $('#tabela_de_empresas').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
   methods: {
-  
     updateData() {
       this.$Progress.start();
       this.$inertia.get("/empresas", this.params, {
@@ -169,7 +135,6 @@ export default {
         },
       });
     },
-      
     
     mudar_estado_empresa(item) {
       this.$Progress.start();

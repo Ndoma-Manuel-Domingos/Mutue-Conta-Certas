@@ -17,9 +17,6 @@ import "v3-infinite-loading/lib/style.css";
 
 import Select2 from 'vue3-select2-component';
 
-import VueGoodTablePlugin from 'vue-good-table-next';
-// import the styles
-import 'vue-good-table-next/dist/vue-good-table-next.css'
 
 Chartkick.options = {
   colors: ["#b00", "#666"]
@@ -70,7 +67,7 @@ createInertiaApp({
     createApp({ render: () => h(App, props) })
       .use(plugin)
       .use(VueProgressBar, options)
-      .use(ZiggyVue, Ziggy, VueGoodTablePlugin)
+      .use(ZiggyVue, Ziggy)
       .use(VueChartkick, { adapter: Highcharts })
       .component("infinite-loading", InfiniteLoading)
       .component('Select2', Select2)

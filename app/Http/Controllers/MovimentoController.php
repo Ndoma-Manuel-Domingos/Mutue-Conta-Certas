@@ -58,7 +58,7 @@ class MovimentoController extends Controller
             }); 
         })
         ->where('empresa_id', $this->empresaLogada())
-        ->orderBy('id', 'desc')->paginate(10);
+        ->orderBy('id', 'desc')->get();
 
         
         return Inertia::render('Movimentos/Index', $data);

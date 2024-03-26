@@ -36,7 +36,7 @@ class PlanoGeralContaController extends Controller
         //     }); 
         // })
         ->with(['empresa', 'classe.contas_empresa.conta', 'classe.contas_empresa.sub_contas_empresa'])
-        ->paginate(2);
+        ->get();
                
         // dd($data['plano']);
                

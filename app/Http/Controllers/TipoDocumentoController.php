@@ -33,7 +33,7 @@ class TipoDocumentoController extends Controller
         })
         ->where('empresa_id', $this->empresaLogada())
         ->with(['empresa', 'diario'])
-        ->paginate(10);
+        ->get();
                
         return Inertia::render('TipoDocumentos/Index', $data);
     }

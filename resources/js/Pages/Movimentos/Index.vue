@@ -27,73 +27,43 @@
                 <a href="" class="btn btn-sm mx-1 btn-success float-right"> <i class="fas fa-file-excel"></i> Exportar</a>
               </div>
               <div class="card-body">
-                <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th @click="order_by_codigo" style="cursor: pointer;">Nº</th>
-                        <th @click="order_by_diario" style="cursor: pointer;">Diário</th>
-                        <th @click="order_by_documento" style="cursor: pointer;">Documento</th>
-                        <th>Débito</th>
-                        <th>Crédito</th>
-                        <th>Data</th>
-                        <th>Exercício</th>
-                        <th>Operador</th>
-                        <th class="text-right">Ações</th>
-                      </tr>
-                    </thead>
+                <table class="table table-bordered table-hover" id="tabela_de_movimentos">
+                  <thead>
+                    <tr>
+                      <th @click="order_by_codigo" style="cursor: pointer;">Nº</th>
+                      <th @click="order_by_diario" style="cursor: pointer;">Diário</th>
+                      <th @click="order_by_documento" style="cursor: pointer;">Documento</th>
+                      <th>Débito</th>
+                      <th>Crédito</th>
+                      <th>Data</th>
+                      <th>Exercício</th>
+                      <th>Operador</th>
+                      <th class="text-right">Ações</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
                     
-                    <tbody>
-                      
-                      <tr>
-                        <td></td>
-                        <td style="width: 250px;">
-                          <input type="text" class="form-control" placeholder="Nº ou Designação" v-model="tipo_diario">
-                        </td>
-                        <td style="width: 250px;">
-                          <input type="text" class="form-control" placeholder="Nº ou Designação" v-model="tipo_documento">
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td style="width: 250px;">
-                          <input type="text" class="form-control" placeholder="Nome" v-model="operador_id">
-                        </td>
-                        
-                      </tr>
-                      
-                      <tr v-for="item in movimentos.data" :key="item">
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td>
-                        <td>{{ item.tipo_documento.numero }} - {{ item.tipo_documento.designacao }}</td>
-                        <td>{{ formatValor(item.debito) }}</td>
-                        <td>{{ formatValor(item.credito) }}</td>
-                        <td>{{ item.data_lancamento }}</td>
-                        <td>{{ item.exercicio.designacao }}</td>
-                        <td>{{ item.criador.name }}</td>
-                        <td>
-                          <div class="float-right">
-                            <a :href="`/movimentos/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>
-                            <a :href="`/movimentos/${item.id}`" class="btn btn-sm btn-info mx-1"><i class="fas fa-info-circle"></i> Detalhe</a>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                    <tr v-for="item in movimentos" :key="item">
+                      <td>{{ item.id }}</td>
+                      <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td>
+                      <td>{{ item.tipo_documento.numero }} - {{ item.tipo_documento.designacao }}</td>
+                      <td>{{ formatValor(item.debito) }}</td>
+                      <td>{{ formatValor(item.credito) }}</td>
+                      <td>{{ item.data_lancamento }}</td>
+                      <td>{{ item.exercicio.designacao }}</td>
+                      <td>{{ item.criador.name }}</td>
+                      <td>
+                        <div class="float-right">
+                          <a :href="`/movimentos/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>
+                          <a :href="`/movimentos/${item.id}`" class="btn btn-sm btn-info mx-1"><i class="fas fa-info-circle"></i> Detalhe</a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ movimentos.total }}</Link
-                >
-                <Paginacao
-                  :links="movimentos.links"
-                  :prev="movimentos.prev_page_url"
-                  :next="movimentos.next_page_url"
-                />
-              </div>
+          
             </div>
           </div>
         </div>
@@ -127,14 +97,14 @@ export default {
   },
   data() {
     return {
-      operador_id: "",
-      tipo_diario: "",
-      tipo_documento: "",
       params: {},
     };
   },
-  mounted() {},
-    
+  mounted() {
+    $('#tabela_de_movimentos').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },    
   watch: {
     options: function (val) {
       this.params.page = val.page;
@@ -146,21 +116,6 @@ export default {
         this.params.sort_by = null;
         this.params.order_by = null;
       }
-      this.updateData();
-    },
-    
-    tipo_diario: function (val) {
-      this.params.tipo_diario = val;
-      this.updateData();
-    },
-            
-    tipo_documento: function (val) {
-      this.params.tipo_documento = val;
-      this.updateData();
-    },
-          
-    operador_id: function (val) {
-      this.params.operador_id = val;
       this.updateData();
     },
   },
@@ -176,23 +131,6 @@ export default {
         },
       });
     },
-    
-      
-    order_by_codigo(){
-      this.params.order_by = "numero";
-      this.updateData();
-    },    
-    
-    order_by_diario(){
-      this.params.order_by = "diario";
-      this.updateData();
-    }, 
-    
-    order_by_documento(){
-      this.params.order_by = "documento";
-      this.updateData();
-    },  
-  
     imprimirPlano() {
       window.open("imprimir-movimentos");
     },

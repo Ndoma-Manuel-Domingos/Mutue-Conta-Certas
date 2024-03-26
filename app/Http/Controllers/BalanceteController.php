@@ -48,7 +48,7 @@ class BalanceteController extends Controller
         })
         ->with(['subconta', 'movimento', 'criador'])
         ->where('empresa_id', $this->empresaLogada())
-        ->orderBy('id', 'desc')->paginate(10);
+        ->orderBy('id', 'desc')->get();
         
         $valores = [];
         
