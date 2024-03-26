@@ -89,8 +89,8 @@
                       <th></th>
                       <th></th>
                       <th>Soma Saldos</th>
-                      <th>{{ formatValor(0) }}</th>
-                      <th>{{ formatValor(0) }}</th>
+                      <th>{{ formatValor(resultado.total_movimento_debito) }}</th>
+                      <th>{{ formatValor(resultado.total_movimento_credito) }}</th>
                     </tr>
                     
                     <tr>
@@ -105,6 +105,24 @@
                   </thead>
                   
                   <tbody>
+                  
+                    <tr>
+                      <th></th>
+                      <th class="text-right">Total Por Conta:</th>
+                      <th>{{ formatValor(0) }}</th>
+                      <th>{{ formatValor(0) }}</th>
+                      <th>{{ formatValor(0) }}</th>
+                      <th>{{ formatValor(0) }}</th>
+                    </tr>
+                    
+                    <tr>
+                      <th></th>
+                      <th class="text-right">Total Por Classe:</th>
+                      <th>{{ formatValor(0) }}</th>
+                      <th>{{ formatValor(0) }}</th>
+                      <th>{{ formatValor(0) }}</th>
+                      <th>{{ formatValor(0) }}</th>
+                    </tr>
               
                     <tr v-for="item in movimentos" :key="item">
                       <td>{{ item.subconta.numero }}</td>

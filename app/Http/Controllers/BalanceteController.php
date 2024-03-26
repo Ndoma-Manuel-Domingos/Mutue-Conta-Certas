@@ -24,6 +24,24 @@ class BalanceteController extends Controller
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
             
+        // $data['movimentos'] = MovimentoItem::join('sub_contas', 'movimento_items.subconta_id', '=', 'sub_contas.id')
+        // ->join('contas', 'sub_contas.conta_id', '=', 'contas.id')
+        // ->select('contas.designacao', 'sub_contas.conta_id', \DB::raw('SUM(credito) as total_credito'))
+        // ->with(['subconta', 'movimento', 'criador'])
+        // ->where('movimento_items.empresa_id', $this->empresaLogada())
+        // ->groupBy('sub_contas.conta_id')
+        // ->get();
+        
+        // $data['movimentos'] = MovimentoItem::join('sub_contas', 'movimento_items.subconta_id', '=', 'sub_contas.id')
+        // ->join('contas', 'sub_contas.conta_id', '=', 'contas.id')
+        // ->select('sub_contas.conta_id', \DB::raw('SUM(movimento_items.credito) as total_credito, SUM(movimento_items.debito) as total_debito'))
+        // ->with(['subconta', 'movimento', 'criador'])
+        // ->where('movimento_items.empresa_id', $this->empresaLogada())
+        // ->groupBy('sub_contas.conta_id')
+        // ->first();
+            
+        // dd($data['movimentos']);
+            
         $data['movimentos'] = MovimentoItem::whereHas('movimento', function($query) use($request){
             $query->when($request->exercicio_id, function($query, $value){
                 $query->where('exercicio_id', $value);
