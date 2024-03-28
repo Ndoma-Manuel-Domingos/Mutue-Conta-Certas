@@ -101,7 +101,8 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('imprimir-paises', [PaisesController::class, 'imprimirPaises']);
     Route::get('imprimir-balancete', [BalanceteController::class, 'imprimirBalancete']);
     Route::get('imprimir-extrato', [ExtratoContaController::class, 'imprimirExtrato']);
-    
+
+
     // Rotas Tabela de apoio
     Route::resource('regime-empresa', RegimeController::class);
     Route::resource('moeda', MoedaController::class);

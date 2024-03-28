@@ -77,7 +77,7 @@
             <th></th>
             <th></th>
             @foreach ($resultado as $resultado)
-                <th style="font-weight: bold;">{{ number_format($resultado, 2, ',', '.') }}</th>
+                <th style="font-weight: bold; text-align: left;">{{ number_format($resultado, 2, ',', '.') }}</th>
             @endforeach
             <th></th>
           </tr>
@@ -85,8 +85,8 @@
           <tr>
             <td style="text-align: left;">{{ $item->subconta->numero }}</td>
             <td style="text-align: left;">{{ $item->subconta->designacao }}</td>
-            <td style="text-align: left;">{{ number_format($item->debito, 2, ',', '.') }}</td>
-            <td style="text-align: left;">{{ number_format($item->credito, 2, ',', '.') }}</td>
+            <td style="text-align: left; color: blue;">{{ number_format($item->debito, 2, ',', '.') }}</td>
+            <td style="text-align: left; color: red;">{{ number_format($item->credito, 2, ',', '.') }}</td>
             <td style="text-align: left;">{{ $item->movimento->data_lancamento }}</td>
           </tr>
           @endforeach

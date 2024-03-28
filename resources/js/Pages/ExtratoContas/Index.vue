@@ -157,6 +157,7 @@
 </template>
   
 <script>
+import axios from 'axios';
 
 export default {
   props: [
@@ -245,8 +246,9 @@ export default {
   },
 
   methods: {
+    
     imprimirExtrato(){
-      window.open("imprimir-extrato");
+      window.open("/imprimir-extrato", this.params);
     },
     updateData() {
       this.$Progress.start();

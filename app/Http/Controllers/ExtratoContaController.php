@@ -126,6 +126,7 @@ class ExtratoContaController extends Controller
 
     public function imprimirExtrato(Request $request){
 
+
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
                
         $data['movimentos'] = MovimentoItem::whereHas('movimento', function($query) use($request){
@@ -195,4 +196,5 @@ class ExtratoContaController extends Controller
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Extrato_conta.pdf');
     }
+
 }
