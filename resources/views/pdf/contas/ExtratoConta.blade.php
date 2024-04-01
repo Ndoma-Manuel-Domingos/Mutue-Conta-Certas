@@ -36,6 +36,9 @@
             width: 90%;
             text-align: center;
         }
+        th{
+            border-right: 1px solid black;
+        }
     </style>
 </head>
 
@@ -63,7 +66,7 @@
         id="tabela_de_balancetes"
       >
         <thead>
-          <tr>
+          <tr style="border-right: 1px solid black;">
             <th style="text-align: center;color:white; background-color: gray;">Conta</th>
             <th style="text-align: center;color:white; background-color: gray;">Descrição</th>
             <th style="text-align: center;color:white; background-color: gray;">Débito</th>
