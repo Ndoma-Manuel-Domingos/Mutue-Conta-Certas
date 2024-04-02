@@ -48,8 +48,8 @@
                       <td>{{ item.id }}</td>
                       <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td>
                       <td>{{ item.tipo_documento.numero }} - {{ item.tipo_documento.designacao }}</td>
-                      <td>{{ formatValor(item.debito) }}</td>
-                      <td>{{ formatValor(item.credito) }}</td>
+                      <td class="text-info"><strong>{{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
+                      <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
                       <td>{{ item.data_lancamento }}</td>
                       <td>{{ item.exercicio.designacao }}</td>
                       <td>{{ item.criador.name }}</td>
@@ -134,6 +134,20 @@ export default {
     imprimirPlano() {
       window.open("imprimir-movimentos");
     },
+    
+    formatarValorMonetario(valor) {
+        // Converter o número para uma string e separar parte inteira da parte decimal
+        let partes = String(valor).split('.');
+        let parteInteira = partes[0];
+        let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
+    
+        // Adicionar separadores de milhar
+        parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    
+        // Retornar o valor formatado
+        return parteInteira + parteDecimal;
+    },
+    
     formatValor(atual) {
       const valorFormatado = Intl.NumberFormat("pt-br", {
         style: "currency",

@@ -12,10 +12,16 @@ class Conta extends Model
     protected $table = "contas";
     
     protected $fillable = [
+        'id',
         'numero',
         'designacao',
         'descricao',
     ];
+    
+    public function items_movimentos()
+    {
+        return $this->hasMany(MovimentoItem::class, 'conta_id', 'id');
+    }  
             
     public function empresa()
     {

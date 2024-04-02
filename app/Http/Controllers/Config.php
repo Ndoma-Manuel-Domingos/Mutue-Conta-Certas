@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Exercicio;
 use App\Models\User;
 use App\Models\Empresa;
+use App\Models\Periodo;
 use App\Models\UserEmpresa;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,6 +55,16 @@ Trait Config{
         
         return "";
     }
+    
+    public function periodoActivo()
+    {
+        $mes = (int) date("n");
+    
+        $periodo = Periodo::where('numero', $mes)->where('exercicio_id', $this->exercicioActivo())->first();
+        
+        return $periodo ? $periodo->id : "" ;
+    }
+    
 
     public function dadosEmpresaLogada()
     {

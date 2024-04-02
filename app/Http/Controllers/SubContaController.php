@@ -92,17 +92,18 @@ class SubContaController extends Controller
     
         $empresa = SubConta::findOrFail($id);
         
-        $estado = "";
+        // $estado = "";
         
-        if($empresa->estado == "activo"){
-            $estado = "desactivo";
-        }
-        if($empresa->estado == "desactivo"){
-            $estado = "activo";
-        }
+        // if($empresa->estado == "activo"){
+        //     $estado = "desactivo";
+        // }
+        // if($empresa->estado == "desactivo"){
+        //     $estado = "activo";
+        // }
         
-        $empresa->estado = $estado;
-        $empresa->update();
+        // $empresa->estado = $estado;
+        // $empresa->update();
+        $empresa->delete();
         
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }

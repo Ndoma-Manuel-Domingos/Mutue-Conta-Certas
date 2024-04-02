@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">LISTAGEM DE EXTRATO DE CONTAS</h1>
+            <h1 class="m-0">EXTRACTO DE CONTA</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -26,7 +26,7 @@
               <form action="">
                 <div class="row">
                 
-                  <div class="col-12 col-md-3 mb-4">
+                  <!-- <div class="col-12 col-md-3 mb-4">
                     <label for="conta_id" class="form-label">Contas</label>
                     <Select2
                       id="conta_id"
@@ -34,10 +34,10 @@
                       :options="contas"
                       :settings="{ width: '100%' }"
                     />
-                  </div>
+                  </div> -->
                 
                   <div class="col-12 col-md-3 mb-4">
-                    <label for="subconta_id" class="form-label">SubContas</label>
+                    <label for="subconta_id" class="form-label">Contas</label>
                     <Select2
                       id="subconta_id"
                       v-model="subconta_id"
@@ -96,9 +96,9 @@
                 </div>
               </form>
             </div>
-            <div class="card-footer">
+            <!-- <div class="card-footer">
               <a href="/extratos-contas" class="d-block btn btn-primary text-uppercase"><i class="fas fa-broom"></i> Limpar a Pesquisa</a>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -111,7 +111,9 @@
               >
                 <i class="fas fa-file-pdf"></i> Visualizar</a
               >
-              <a href="" class="btn btn-sm mx-1 btn-success float-right">
+              <a
+                @click="imprimirExtratoExcel()"
+                class="btn btn-sm mx-1 btn-success float-right">
                 <i class="fas fa-file-excel"></i> Exportar</a
               >
             </div>
@@ -120,30 +122,43 @@
                 class="table table-bordered table-hover"
                 id="tabela_de_balancetes"
               >
-                <thead>
+                <thead>                  
+               
                   <tr>
-                    <th>Conta</th>
+                    <td>MOEDA - <strong>AOA</strong></td>
+                    <th class="text-right">Saldo Geral</th>
+                    <th class="text-info">{{ resultado.total_debito > resultado.total_credito ? formatValor(resultado.total_debito - resultado.total_credito) : '-' }}</th>
+                    <th class="text-danger">{{ resultado.total_credito > resultado.total_debito ? formatValor(resultado.total_credito - resultado.total_debito) : '-'}}</th>
+                    <th></th>
+                  </tr>
+                  
+                  <tr>
+                    <th></th>
+                    <th class="text-right">Total</th>
+                    <th class="text-info">{{ formatarValorMonetario(resultado.total_debito)  }}</th>
+                    <th class="text-danger">{{ formatarValorMonetario(resultado.total_credito) }}</th>
+                    <th></th>
+                  </tr>
+                  
+                  
+                  <tr>
+                    <th style="width: 70px">Nº de Movimento</th>
                     <th>Descrição</th>
                     <th>Débito</th>
                     <th>Crédito</th>
-                    <th>Data</th>
-                  </tr>
+                    <th style="width: 70px">Data</th>
+                  </tr>                 
+                 
                 </thead>
 
                 <tbody>
-                  <tr>
-                    <th></th>
-                    <th></th>
-                    <th>{{ formatValor(resultado.total_debito) }}</th>
-                    <th>{{ formatValor(resultado.total_credito) }}</th>
-                    <th></th>
-                  </tr>
 
                   <tr v-for="item in movimentos" :key="item">
-                    <td>{{ item.subconta.numero }}</td>
-                    <td>{{ item.subconta.designacao }}</td>
-                    <td>{{ formatValor(item.debito) }}</td>
-                    <td>{{ formatValor(item.credito) }}</td>
+                    <td style="text-align: center">{{ item.movimento.lancamento_atual }}</td>
+                    <td>{{ item.descricao }}</td>
+                    <!-- <td>{{ item.subconta.designacao }}</td> -->
+                    <td class="text-info"><strong>{{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
+                    <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
                     <td>{{ item.movimento.data_lancamento }}</td>
                   </tr>
                 </tbody>
@@ -166,6 +181,7 @@ export default {
     "movimentos",
     "resultado",
     "contas",
+    "requests"
   ],
   computed: {
     user() {
@@ -181,18 +197,19 @@ export default {
   data() {
     return {
     
-      conta_id: "",
-      subconta_id: "",
-      exercicio_id: "",
-      periodo_id: "",
-      data_inicio: "",
-      data_final: "",
+      conta_id: this.requests.conta_id ?? "3",
+      subconta_id: this.requests.subconta_id ?? "",
+      // exercicio_id: "",
+      // periodo_id: "",
+      data_inicio: this.requests.data_inicio ?? new Date().toISOString().substr(0, 10),
+      data_final: this.requests.data_final ?? new Date().toISOString().substr(0, 10),
 
       params: {},
     };
   },
   mounted() {
-
+    console.log(this.requests);
+    
     $("#tabela_de_balancetes").DataTable({
       responsive: true,
       lengthChange: true,
@@ -223,15 +240,15 @@ export default {
       this.updateData();
     },
 
-    exercicio_id: function (val) {
-      this.params.exercicio_id = val;
-      this.updateData();
-    },
+    // exercicio_id: function (val) {
+    //   this.params.exercicio_id = val;
+    //   this.updateData();
+    // },
 
-    periodo_id: function (val) {
-      this.params.periodo_id = val;
-      this.updateData();
-    },
+    // periodo_id: function (val) {
+    //   this.params.periodo_id = val;
+    //   this.updateData();
+    // },
 
     data_inicio: function (val) {
       this.params.data_inicio = val;
@@ -246,7 +263,10 @@ export default {
 
   methods: {
     imprimirExtrato(){
-      window.open("imprimir-extrato");
+      window.open("imprimir-extrato?conta_id="+this.conta_id+"&subconta_id="+this.subconta_id+"&data_inicio="+this.data_inicio+"&data_final="+this.data_final+"");
+    },
+    imprimirExtratoExcel(){
+      window.open("imprimir-extrato-excel?conta_id="+this.conta_id+"&subconta_id="+this.subconta_id+"&data_inicio="+this.data_inicio+"&data_final="+this.data_final+"");
     },
     updateData() {
       this.$Progress.start();
@@ -258,6 +278,20 @@ export default {
         },
       });
     },
+    
+    formatarValorMonetario(valor) {
+        // Converter o número para uma string e separar parte inteira da parte decimal
+        let partes = String(valor).split('.');
+        let parteInteira = partes[0];
+        let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
+    
+        // Adicionar separadores de milhar
+        parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    
+        // Retornar o valor formatado
+        return parteInteira + parteDecimal;
+    },
+    
     formatValor(atual) {
       const valorFormatado = Intl.NumberFormat("pt-br", {
         style: "currency",

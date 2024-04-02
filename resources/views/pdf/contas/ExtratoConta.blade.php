@@ -36,16 +36,17 @@
             width: 90%;
             text-align: center;
         }
+
     </style>
 </head>
 
 <body>
     <header class="clearfix">
-        <div id="logo">
-            <img src="images/log.png">
+        <div id="logo" style="padding: 0">
+            <img src="images/{{$dados_empresa->logotipo_da_empresa ?? 'log.png' }}" style="width: 150px;height: 150px;position: absolute;top: -40px">
         </div>
         <div id="company">
-            <h2 class="name">{{$dados_empresa->nome_empresa}}</h2>  
+            <h2 class="name">{{$dados_empresa->nome_empresa}}</h2>
             <div>{{$dados_empresa->endereco->rua}}, {{$dados_empresa->endereco->bairro}}, <br>
             </div>
             <div>+244 947716133/+244 942364667</div>
@@ -54,45 +55,62 @@
         </div>
     </header>
     <main>
-        <h2 style="text-align:center"> Extrator de Contas </h2>
+        <h2 style="text-align: left;border-bottom: 1px solid #c2c2c2;padding-bottom: 2px;text-transform: uppercase;font-size: 11pt;font-weight: 100"> Extracto da Conta - {{ $conta->numero ?? '' }}. {{ $conta->designacao ?? '' }}</h2>
+        <h2 style="text-align: left;border-bottom: 1px solid #c2c2c2;padding-bottom: 2px;text-transform: uppercase;font-size: 11pt;font-weight: 100"> Período: {{ $requests['data_inicio'] ?? date('Y-m-d')  }} a {{ $requests['data_final'] ?? date('Y-m-d') }}</h2>
         <div style="margin:auto 0px">
 
         </div>
-        <table
-        class="table table-bordered table-hover"
-        id="tabela_de_balancetes"
-      >
-        <thead>
-          <tr>
-            <th>Conta</th>
-            <th>Descrição</th>
-            <th>Débito</th>
-            <th>Crédito</th>
-            <th>Data</th>
-          </tr>
-        </thead>
+        <table  id="tabela_de_balancetes">
+            <thead>
+            
+                <tr>
+                    <th style="background-color: gray; color: white;"><strong>Nº</strong></th>
+                    <th style="background-color: gray; color: white;"><strong>Nº Movimento</strong></th>
+                    <th style="background-color: gray; color: white;text-align: left;"><strong>Descrição</strong></th>
+                    <th style="background-color: gray; color: white;text-align: right;"><strong>Débito</strong></th>
+                    <th style="background-color: gray; color: white;text-align: right;"><strong>Crédito</strong></th>
+                    <th style="background-color: gray; color: white;text-align: right;"><strong>Data</strong></th>
+                </tr>
+            </thead>
 
-        <tbody>
-          <tr>
-            <th></th>
-            <th></th>
-            @foreach ($resultado as $resultado)
-                <th style="font-weight: bold;">{{ number_format($resultado, 2, ',', '.') }}</th>
-            @endforeach
-            <th></th>
-          </tr>
-          @foreach ($movimentos as $item)
-          <tr>
-            <td>{{ $item->subconta->numero }}</td>
-            <td>{{ $item->subconta->designacao }}</td>
-            <td>{{ number_format($item->debito, 2, ',', '.') }}</td>
-            <td>{{ number_format($item->credito, 2, ',', '.') }}</td>
-            <td>{{ $item->movimento->data_lancamento }}</td>
-          </tr>
-          @endforeach
-          
-        </tbody>
-      </table>
+            <tbody>
+              
+                @foreach ($movimentos as $key => $item)
+                <tr>
+                    <td>{{ $key + 1 }}</td>
+                    <td style="text-align: center;">{{ $item->id }}</td>
+                    <td style="text-align: left;">{{ $item->descricao }}</td>
+                    <td style="color: blue;">{{ $item->debito == 0 ? '-' : number_format($item->debito, 2, ',', '.') }}</td>
+                    <td style="color: red;">{{ $item->credito == 0 ? '-' : number_format($item->credito, 2, ',', '.') }}</td>
+                    <td style="text-align: right;">{{ $item->movimento->data_lancamento }}</td>
+                </tr>
+                @endforeach
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: right;">TOTAL</th>
+                    <th style="font-weight: bold;text-align: right;color: blue;">{{ $resultado['total_debito'] == 0 ? '-' : number_format($resultado['total_debito'], 2, ',', '.') }}</th>
+                    <th style="font-weight: bold;text-align: right;color: red;">{{ $resultado['total_credito'] == 0 ? '-' : number_format($resultado['total_credito'], 2, ',', '.') }}</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: right;">SALDO DO PERIODO</th>
+                    <th style="font-weight: bold;text-align: right;color: blue;">{{ number_format($resultado['total_debito'] - $resultado['total_credito'], 2, ',', '.') }}</th>
+                    <th style="font-weight: bold;text-align: right;color: red;">-</th>
+                    <th></th>
+                </tr>
+                {{-- <tr>
+                    <th style="text-align: right;" colspan="3">SALDO GERAL</th>
+                    <th  style="text-align: right;color: blue;"><strong>{{ $resultado['total_debito'] > $resultado['total_credito'] ? number_format($resultado['total_debito'] - $resultado['total_credito'], 2, ',', '.') : number_format(0, 2, ',', '.') }}</strong></th>
+                    <th  style="text-align: right;color: red;"><strong>{{ $resultado['total_credito'] > $resultado['total_debito'] ? number_format($resultado['total_credito'] - $resultado['total_debito'], 2, ',', '.') : number_format(0, 2, ',', '.') }}</strong></th>
+                    <th></th>
+                </tr> --}}
+                
+
+            </tbody>
+        </table>
         <script type='text/php'>
             if (isset($pdf)) 
             {               
@@ -100,24 +118,6 @@
             }
         </script>
     </main>
-
-    {{-- <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <hr>
-    <span style="text-align: center; font-size: 12px; align-content: bottom;">
-        <p>Documento processado pelo software MUTUE - Contas Certas, desenvolvido pela Mutue - Soluções Tecnológicas
-            Inteligentes.</p>
-    </span> --}}
 
     <div class="footer margin-top">
         <hr>

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Http\Controllers\Config;
 use App\Models\Empresa;
 use App\Models\Exercicio;
+use App\Models\Periodo;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Session;
@@ -49,7 +50,8 @@ class HandleInertiaRequests extends Middleware
             ],
             'sessions' => [
                 'empresa_sessao' => Empresa::find($this->empresaLogada()), // Session::get('empresa_logada_mutue_contas_certas_2024'),
-                'exercicio_sessao' =>Exercicio::find($this->exercicioActivo()), //  Session::get('exercicio_logada_mutue_contas_certas_2024'),
+                'exercicio_sessao' => Exercicio::find($this->exercicioActivo()), //  Session::get('exercicio_logada_mutue_contas_certas_2024'),
+                'periodo_sessao' => Periodo::find($this->periodoActivo()), //  Session::get('exercicio_logada_mutue_contas_certas_2024'),
             ],
             'flash' => function () use ($request) {
                 return [

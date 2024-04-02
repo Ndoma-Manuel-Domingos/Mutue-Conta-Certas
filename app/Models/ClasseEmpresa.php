@@ -19,6 +19,11 @@ class ClasseEmpresa extends Model
         'updated_by',
         'deleted_by',
     ];
+    
+    // public function contas()
+    // {
+    //     return $this->belongsToMany(ContaEmpresa::class, 'classe_id', 'classe_id');
+    // } 
             
     public function empresa()
     {

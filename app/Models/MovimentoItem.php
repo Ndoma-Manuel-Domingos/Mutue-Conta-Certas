@@ -19,6 +19,7 @@ class MovimentoItem extends Model
         'descricao',
         'empresa_id',
         'subconta_id',
+        'conta_id',
         'movimento_id',
         'user_id',
         'created_by',

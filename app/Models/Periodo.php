@@ -12,6 +12,7 @@ class Periodo extends Model
     protected $table = "periodos";
     
     protected $fillable = [
+        'numero',
         'designacao',
         'estado',
         'exercicio_id',

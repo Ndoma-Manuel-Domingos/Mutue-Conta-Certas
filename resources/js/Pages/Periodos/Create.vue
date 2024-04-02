@@ -26,15 +26,22 @@
 
                 <div class="card-body">
                   <div class="row">
-                  
-                    <div class="col-12 col-md-4 mb-4">
+                      
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="numero" class="form-label">Número</label>
+                      <input type="text" class="form-control" placeholder="Informe apenas o número" v-model="form.numero">
+                     
+                      <span class="text-danger" v-if="form.errors && form.errors.numero">{{ form.errors.numero }}</span>
+                    </div>
+                    
+                    <div class="col-12 col-md-3 mb-4">
                       <label for="designacao" class="form-label">Designação</label>
                       <input type="text" class="form-control" placeholder="Designação. Ex: 2024" v-model="form.designacao">
                      
                       <span class="text-danger" v-if="form.errors && form.errors.designacao">{{ form.errors.designacao }}</span>
                     </div>
                   
-                    <div class="col-12 col-md-4 mb-4">
+                    <div class="col-12 col-md-3 mb-4">
                       <label for="exercicio_id" class="form-label">Exercícios</label>
                       <Select2 v-model="form.exercicio_id"
                         id="exercicio_id" class="col-12 col-md-12"
@@ -43,7 +50,7 @@
                       <span class="text-danger" v-if="form.errors && form.errors.exercicio_id">{{ form.errors.exercicio_id }}</span>
                     </div>
 
-                    <div class="col-12 col-md-4 mb-4">
+                    <div class="col-12 col-md-3 mb-4">
                       <label for="estado" class="form-label">Estado</label>
                       <Select2 v-model="form.estado"
                         id="estado" class="col-12 col-md-12"
@@ -77,7 +84,7 @@ export default {
     user() {
       return this.$page.props.auth.user;
     },
-        sessions() {
+    sessions() {
       return this.$page.props.sessions.empresa_sessao;
     },
     sessions_exercicio() {
@@ -93,6 +100,7 @@ export default {
       ],
       
       form: {
+        numero: "",
         designacao: "",
         exercicio_id: "",
         estado: "activo",

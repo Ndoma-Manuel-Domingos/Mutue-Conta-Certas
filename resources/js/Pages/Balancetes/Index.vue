@@ -4,11 +4,13 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">LISTAGEM DE BALANCETES</h1>
+            <h1 class="m-0">VISUALIZAR BALANCETE</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+              <li class="breadcrumb-item">
+                <a href="/dashboard">Dashboard</a>
+              </li>
               <li class="breadcrumb-item active">Listagem</li>
             </ol>
           </div>
@@ -19,65 +21,201 @@
     <div class="content">
       <div class="container-fluid">
         <div class="row">
-          
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-body">
                 <form action="">
                   <div class="row">
-                  
                     <div class="col-12 col-md-4 mb-4">
+                      <label for="tipo_balancete_id" class="form-label"
+                        >Tipo de Balancete</label
+                      >
+                      <Select2
+                        id="tipo_balancete_id"
+                        v-model="tipo_balancete_id"
+                        :options="tipos_balancetes"
+                        :settings="{ width: '100%' }"
+                      />
+                    </div>
+
+                    <!-- <div class="col-12 col-md-4 mb-4">
                         <label for="subconta_id" class="form-label">Contas</label>
                         <Select2  id="subconta_id" v-model="subconta_id"
                           :options="contas" :settings="{ width: '100%' }" 
                         />
-                    </div>
-                    
+                    </div> -->
+
                     <div class="col-12 col-md-2 mb-4">
-                        <label for="exercicio_id" class="form-label">Exercícios</label>
-                        <Select2  id="exercicio_id" v-model="exercicio_id"
-                          :options="exercicios" :settings="{ width: '100%' }" 
-                        />
+                      <label for="exercicio_id" class="form-label"
+                        >Exercícios</label
+                      >
+                      <Select2
+                        id="exercicio_id"
+                        v-model="exercicio_id"
+                        :options="exercicios"
+                        :settings="{ width: '100%' }"
+                      />
                     </div>
-                    
+
                     <div class="col-12 col-md-2 mb-4">
-                      <label for="periodo_id" class="form-label">Períodos</label>
-                        <Select2 id="periodo_id" v-model="periodo_id"
-                          :options="periodos" :settings="{ width: '100%' }" 
-                        />
+                      <label for="periodo_id" class="form-label"
+                        >Períodos</label
+                      >
+                      <Select2
+                        id="periodo_id"
+                        v-model="periodo_id"
+                        :options="periodos"
+                        :settings="{ width: '100%' }"
+                      />
                     </div>
-                  
+
                     <div class="col-12 col-md-2 mb-4">
-                      <label for="data_inicio" class="form-label">Data Inicio</label>
-                      <input type="date" id="data_inicio" v-model="data_inicio" class="form-control" placeholder="Ex: 1.1, 1.1.1">
+                      <label for="data_inicio" class="form-label"
+                        >Data Inicio</label
+                      >
+                      <input
+                        type="date"
+                        id="data_inicio"
+                        v-model="data_inicio"
+                        class="form-control"
+                        placeholder="Ex: 1.1, 1.1.1"
+                      />
                     </div>
-                    
+
                     <div class="col-12 col-md-2 mb-4">
-                      <label for="data_final" class="form-label">Final Inicio</label>
-                      <input type="date" id="data_final" v-model="data_final" class="form-control" placeholder="Ex: 1.1, 1.1.1">
+                      <label for="data_final" class="form-label"
+                        >Final Inicio</label
+                      >
+                      <input
+                        type="date"
+                        id="data_final"
+                        v-model="data_final"
+                        class="form-control"
+                        placeholder="Ex: 1.1, 1.1.1"
+                      />
                     </div>
-                   
                   </div>
                 </form>
               </div>
-              <div class="card-footer">
+              <!-- <div class="card-footer">
                 <a href="/balancetes" class="d-block btn btn-primary text-uppercase"><i class="fas fa-broom"></i> Limpar a Pesquisa</a>
-              </div>
+              </div> -->
             </div>
           </div>
-        
+
           <div class="col-12 col-md-12">
             <div class="card">
-              <div class="card-header"> 
-                <a @click="imprimirBalancete()" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
-                <a href="" class="btn btn-sm mx-1 btn-success float-right"> <i class="fas fa-file-excel"></i> Exportar</a>
+              <div class="card-header">
+                <a
+                  @click="imprimirBalancete()"
+                  class="btn btn-sm mx-1 btn-danger float-right"
+                >
+                  <i class="fas fa-file-pdf"></i> Visualizar</a
+                >
+                <a href="" class="btn btn-sm mx-1 btn-success float-right">
+                  <i class="fas fa-file-excel"></i> Exportar</a
+                >
               </div>
               <div class="card-body">
-                <table class="table table-bordered table-hover" id="tabela_de_balancetes">
+                <table
+                  class="table table-bordered table-hover" 
+                >
+                  <thead>
+                    <tr>
+                      <th rowspan="2">Conta</th>
+                      <th rowspan="2">Descrição</th>
+                      <th colspan="2">Dados do Período</th>
+                      <th>Mov. Débito</th>
+                      <th>Mov. Crédito</th>
+                      <th >Saldo. Devedor</th>
+                      <th >Saldo. Credor</th>
+                    </tr>
+                    
+                    <tr>
+                      <th>Débito</th>
+                      <th>Crébito</th>
+                      
+                      <th></th>
+                      <th>Soma Saldos</th>
+                      
+                      <th class="text-info">-</th>
+                      <th class="text-danger">-</th>
+                    </tr>
+                    
+                    <tr>
+                      <th></th>
+                      <th class="text-right">Soma Líquida</th>
+                      
+                      <th class="text-info">{{ resultado_por_conta.total_debito == 0 ? '-' : formatarValorMonetario(resultado_por_conta.total_debito) }}</th>
+                      <th class="text-danger">{{ resultado_por_conta.total_credito == 0 ? '-' : formatarValorMonetario(resultado_por_conta.total_credito) }}</th>
+                      
+                      <th class="text-info">{{ resultado.total_movimento_debito == 0 ? '-' : formatarValorMonetario(resultado.total_movimento_debito) }}</th>
+                      <th class="text-danger">{{ resultado.total_movimento_credito == 0 ? '-' : formatarValorMonetario(resultado.total_movimento_credito) }}</th>
+                      <th class="text-info">{{ resultado.total_debito == 0 ? '-' : formatarValorMonetario(resultado.total_debito) }}</th>
+                      <th class="text-danger">{{ resultado.total_credito == 0 ? '-' : formatarValorMonetario(resultado.total_credito) }}</th>
+                    </tr>
+                    
+                    <template v-for="item in registros.data" :key="item">
+                      
+                      <tr>
+                        <th>{{ item.conta.numero ?? '' }}</th>
+                        <th>{{ item.conta.designacao ?? '' }}</th>
+                        <th></th>
+                        <th></th>
+                        
+                        <th></th>
+                        <th></th>
+                        
+                        <th></th>
+                        <th></th>
+                      </tr>
+                      
+                      <template  v-for="item2 in item.sub_contas_empresa" :key="item2">
+                        <tr>
+                          <td>{{ item2.numero ?? '' }}</td>
+                          <td><a :href="`extratos-contas?subconta_id=${item2.id}`" class="text-info">{{ item2.designacao ?? '' }}</a></td>
+                          <td class="text-info">{{ item2.items_movimentos[0] ? (item2.items_movimentos[0].total_debito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_debito) ) : '-' }}</td>
+                          <td class="text-danger">{{ item2.items_movimentos[0] ?  (item2.items_movimentos[0].total_credito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_credito))  : '-' }}</td>
+                          
+                          <td class="text-info">{{ item2.items_movimentos[0] ? (item2.items_movimentos[0].total_debito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_debito) ) : '-' }}</td>
+                          <td class="text-danger">{{ item2.items_movimentos[0] ?  (item2.items_movimentos[0].total_credito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_credito))  : '-' }}</td>
+                          
+                          <td class="text-info">{{ item2.items_movimentos[0] ? (item2.items_movimentos[0].total_debito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_debito) ) : '-' }}</td>
+                          <td class="text-danger">{{ item2.items_movimentos[0] ?  (item2.items_movimentos[0].total_credito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_credito))  : '-' }}</td>
+                        </tr>
+                      </template>
+                      
+                      <tr>
+                        <th></th>
+                        <th class="text-right">Total por Classe</th>
+                        <td class="text-info">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalDebito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalDebito)) : '-' }}</td>
+                        <td class="text-danger">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalCredito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalCredito)) : '-' }}</td>
+                        <td class="text-info">-</td>
+                        <td class="text-danger">-</td>
+                        <td class="text-info">-</td>
+                        <td class="text-danger">-</td>
+                      </tr>
+                      
+                      <tr>
+                        <th></th>
+                        <th class="text-right">Total por Conta</th>
+                        <td class="text-info">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalDebito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalDebito)) : '-' }}</td>
+                        <td class="text-danger">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalCredito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalCredito)) : '-' }}</td>
+                        <td class="text-info">-</td>
+                        <td class="text-danger">-</td>
+                        <td class="text-info">-</td>
+                        <td class="text-danger">-</td>
+                      </tr>
+                    </template>
+                  </thead>
+                </table>
+
+                <!-- <table class="table table-bordered table-hover" id="tabela_de_balancetes1">
                   <thead>
                     <tr>
                       <th>Conta</th>
                       <th>Descrição</th>
+                      <th colspan="2" class="text-center">Dados do Período</th>
                       <th>Mov. Débito</th>
                       <th>Mov. Crédito</th>
                       <th>Saldo. Devedor</th>
@@ -87,19 +225,23 @@
                     <tr>
                       <th></th>
                       <th></th>
+                      <th>Débito</th>
+                      <th>Crédito</th>
                       <th></th>
                       <th>Soma Saldos</th>
-                      <th>{{ formatValor(resultado.total_movimento_debito) }}</th>
-                      <th>{{ formatValor(resultado.total_movimento_credito) }}</th>
+                      <th class="text-info">{{ formatarValorMonetario(resultado.total_movimento_debito) }}</th>
+                      <th class="text-danger">{{ formatarValorMonetario(resultado.total_movimento_credito) }}</th>
                     </tr>
                     
                     <tr>
                       <th></th>
                       <th class="text-right">Soma Líquida</th>
-                      <th>{{ formatValor(resultado.total_movimento_debito) }}</th>
-                      <th>{{ formatValor(resultado.total_movimento_credito) }}</th>
-                      <th>{{ formatValor(resultado.total_debito) }}</th>
-                      <th>{{ formatValor(resultado.total_credito) }}</th>
+                      <th class="text-info"><strong>-</strong></th>
+                      <th class="text-danger"><strong>-</strong></th>
+                      <th class="text-info">{{ formatarValorMonetario(resultado.total_movimento_debito) }}</th>
+                      <th class="text-danger">{{ formatarValorMonetario(resultado.total_movimento_credito) }}</th>
+                      <th class="text-info">{{ formatarValorMonetario(resultado.total_debito) }}</th>
+                      <th class="text-danger">{{ formatarValorMonetario(resultado.total_credito) }}</th>
                     </tr>
                     
                   </thead>
@@ -109,35 +251,40 @@
                     <tr>
                       <th></th>
                       <th class="text-right">Total Por Conta:</th>
-                      <th>{{ formatValor(0) }}</th>
-                      <th>{{ formatValor(0) }}</th>
-                      <th>{{ formatValor(0) }}</th>
-                      <th>{{ formatValor(0) }}</th>
+                      <th class="text-info"><strong>{{ formatarValorMonetario(resultado.total_movimento_debito) }}</strong></th>
+                      <th class="text-danger"><strong>{{ formatarValorMonetario(resultado.total_movimento_credito) }}</strong></th>
+                      <th class="text-info"><strong>-</strong></th>
+                      <th class="text-danger"><strong>-</strong></th>
+                      <th class="text-info"><strong>-</strong></th>
+                      <th class="text-danger"><strong>-</strong></th>
                     </tr>
                     
                     <tr>
                       <th></th>
                       <th class="text-right">Total Por Classe:</th>
-                      <th>{{ formatValor(0) }}</th>
-                      <th>{{ formatValor(0) }}</th>
-                      <th>{{ formatValor(0) }}</th>
-                      <th>{{ formatValor(0) }}</th>
+                      <th class="text-info"><strong>{{ formatarValorMonetario(resultado.total_movimento_debito) }}</strong></th>
+                      <th class="text-danger"><strong>{{ formatarValorMonetario(resultado.total_movimento_credito) }}</strong></th>
+                      <th class="text-info"><strong>-</strong></th>
+                      <th class="text-danger"><strong>-</strong></th>
+                      <th class="text-info"><strong>-</strong></th>
+                      <th class="text-danger"><strong>-</strong></th>
                     </tr>
               
                     <tr v-for="item in movimentos" :key="item">
                       <td>{{ item.subconta.numero }}</td>
-                      <td>{{ item.subconta.designacao }}</td>
-                      <td>{{ formatValor(item.debito) }}</td>
-                      <td>{{ formatValor(item.credito) }}</td>
-                      <td>{{ formatValor(item.debito == item.credito ? 0 : (item.debito > item.credito ? item.debito - item.credito : 0)) }}</td>
-                      <td>{{ formatValor(item.credito == item.debito ? item.credito - item.debito : (item.credito > item.debito ? item.credito - item.debito : 0)) }}</td>
+                      <td><a :href="`extratos-contas?subconta_id=${item.subconta.id}`" class="text-info">{{ item.subconta.designacao }}</a></td>
+                      <td class="text-info"><strong> {{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
+                      <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
+                      <td class="text-info"><strong> {{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
+                      <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
+                      <td class="text-info"><strong>{{ item.debito == 0 ? '-' : (item.debito > item.credito ? formatarValorMonetario(item.debito - item.credito) : "-") }}</strong></td>
+                      <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : (item.credito > item.debito ? formatarValorMonetario(item.credito - item.debito) : '-') }}</strong></td>
                     </tr>
                   </tbody>
-                </table>
+                </table> -->
               </div>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
@@ -145,19 +292,20 @@
 </template>
   
 <script>
-
 import Paginacao from "../../components/Paginacao.vue";
 
 export default {
-
   props: [
-    'movimentos',
-    'resultado',
+    "movimentos",
+    "resultado",
+    "resultado_por_conta",
     "exercicios",
     "periodos",
     "contas",
+    "tipos_balancetes",
+    "registros",
   ],
-  components:{
+  components: {
     Paginacao,
   },
   computed: {
@@ -170,30 +318,40 @@ export default {
     sessions_exercicio() {
       return this.$page.props.sessions.exercicio_sessao;
     },
+    periodo_sessao() {
+      return this.$page.props.sessions.periodo_sessao;
+    },
   },
   data() {
     return {
       operador_id: "",
       tipo_diario: "",
       tipo_documento: "",
-      
+
+      tipo_balancete_id: 1,
+
       exercicio_id: "",
       periodo_id: "",
-      data_inicio: "",
-      data_final: "",
+      data_inicio: new Date().toISOString().substr(0, 10),
+      data_final: new Date().toISOString().substr(0, 10),
       subconta_id: "",
-      
+
       params: {},
     };
   },
   mounted() {
-    this.exercicio_id = this.sessions_exercicio ? this.sessions_exercicio.id : "";
-    
-    $('#tabela_de_balancetes').DataTable({
-      "responsive": true, "lengthChange": true, "autoWidth": true,
+    this.exercicio_id = this.sessions_exercicio
+      ? this.sessions_exercicio.id
+      : "";
+    this.periodo_id = this.periodo_sessao ? this.periodo_sessao.id : "";
+
+    $("#tabela_de_balancetes").DataTable({
+      responsive: true,
+      lengthChange: true,
+      autoWidth: true,
     });
   },
-    
+
   watch: {
     options: function (val) {
       this.params.page = val.page;
@@ -207,33 +365,33 @@ export default {
       }
       this.updateData();
     },
-    
+
     exercicio_id: function (val) {
       this.params.exercicio_id = val;
       this.updateData();
     },
-      
+
     subconta_id: function (val) {
       this.params.subconta_id = val;
       this.updateData();
-    },   
-    
+    },
+
     periodo_id: function (val) {
       this.params.periodo_id = val;
       this.updateData();
     },
-            
+
     data_inicio: function (val) {
       this.params.data_inicio = val;
       this.updateData();
     },
-          
+
     data_final: function (val) {
       this.params.data_final = val;
       this.updateData();
     },
   },
-  
+
   methods: {
     updateData() {
       this.$Progress.start();
@@ -245,26 +403,38 @@ export default {
         },
       });
     },
-    
-      
-    order_by_codigo(){
-      this.params.order_by = "numero";
-      this.updateData();
-    },    
-    
-    order_by_diario(){
-      this.params.order_by = "diario";
-      this.updateData();
-    }, 
-    
-    order_by_documento(){
-      this.params.order_by = "documento";
-      this.updateData();
-    },  
-  
+
     imprimirBalancete() {
-      window.open("imprimir-balancete", this.params);
+      window.open(
+        `imprimir-balancete?tipo_balancete_id=${this.tipo_balancete_id}&exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`
+      );
     },
+
+    formatarValorMonetario(valor) {
+      // Converter o número para uma string e separar parte inteira da parte decimal
+      let partes = String(valor).split(".");
+      let parteInteira = partes[0];
+      let parteDecimal = partes.length > 1 ? "." + partes[1] : "";
+
+      // Adicionar separadores de milhar
+      parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+      // Retornar o valor formatado
+      return parteInteira + parteDecimal;
+    },
+
+    obterMesAtual() {
+      // Criar um objeto de data
+      let dataAtual = new Date();
+
+      // Obter o mês (vale de 0 a 11, onde 0 representa janeiro e 11 representa dezembro)
+      let mes = dataAtual.getMonth();
+
+      // Adicionar 1 ao mês, pois os meses são indexados a partir de 0
+      // para que janeiro seja 1, fevereiro seja 2 e assim por diante
+      return mes + 1;
+    },
+
     formatValor(atual) {
       const valorFormatado = Intl.NumberFormat("pt-br", {
         style: "currency",

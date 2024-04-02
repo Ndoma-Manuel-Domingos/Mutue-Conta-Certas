@@ -24,6 +24,11 @@ class SubConta extends Model
         'updated_by',
         'deleted_by',
     ];
+    
+    public function items_movimentos()
+    {
+        return $this->hasMany(MovimentoItem::class, 'subconta_id', 'id');
+    }  
             
     public function empresa()
     {

@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 ;
 
+use App\Exports\ExtratoContaExport;
+use App\Models\Conta;
 use App\Models\ContaEmpresa;
+use App\Models\Empresa;
 use App\Models\Exercicio;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Movimento;
 use App\Models\MovimentoItem;
 use App\Models\Periodo;
@@ -52,7 +56,7 @@ class ExtratoContaController extends Controller
         ->when($request->subconta_id, function($query, $value){
             $query->where('subconta_id', $value);
         })
-        ->with(['subconta', 'movimento', 'criador'])
+        ->with(['subconta',  'movimento.diario', 'movimento.tipo_documento', 'criador'])
         ->where('empresa_id', $this->empresaLogada())
         ->orderBy('id', 'desc')->get();
         
@@ -75,7 +79,9 @@ class ExtratoContaController extends Controller
         
         $data['exercicios'] = Exercicio::select('id', 'designacao As text')->get();
         $data['periodos'] = Periodo::select('id', 'designacao As text')->get();
-        $data['subcontas'] = SubConta::with(['empresa', 'conta'])
+        $data['subcontas'] = SubConta::when($request->conta_id, function($query, $value){
+            $query->where('conta_id', $value);
+        })->with(['empresa', 'conta'])
         ->where('empresa_id', $this->empresaLogada())
         ->select('id', 'designacao As d', DB::raw('CONCAT(numero, " - ", designacao) AS text'))
         ->get();
@@ -84,6 +90,8 @@ class ExtratoContaController extends Controller
         ->join('contas', "controle_conta_empresas.conta_id" , '=', 'contas.id')
         ->select('contas.id', 'contas.designacao As d', DB::raw('CONCAT(contas.numero, " - ", contas.designacao) AS text'))
         ->get();
+        
+        $data['requests'] = $request->all('conta_id', 'subconta_id', 'data_inicio', 'data_final');
            
         return Inertia::render('ExtratoContas/Index', $data);
     }
@@ -156,7 +164,7 @@ class ExtratoContaController extends Controller
         ->when($request->subconta_id, function($query, $value){
             $query->where('subconta_id', $value);
         })
-        ->with(['subconta', 'movimento', 'criador'])
+        ->with(['subconta', 'movimento.diario', 'movimento.tipo_documento','criador'])
         ->where('empresa_id', $this->empresaLogada())
         ->orderBy('id', 'desc')->get();
         
@@ -177,6 +185,7 @@ class ExtratoContaController extends Controller
         
         $data['resultado'] = $valores;
         
+        
         $data['exercicios'] = Exercicio::select('id', 'designacao As text')->get();
         $data['periodos'] = Periodo::select('id', 'designacao As text')->get();
         $data['subcontas'] = SubConta::with(['empresa', 'conta'])
@@ -188,11 +197,20 @@ class ExtratoContaController extends Controller
         ->join('contas', "controle_conta_empresas.conta_id" , '=', 'contas.id')
         ->select('contas.id', 'contas.designacao As d', DB::raw('CONCAT(contas.numero, " - ", contas.designacao) AS text'))
         ->get();
-
-        $data['dados_empresa'] = $this->dadosEmpresaLogada();
+        
+        
+        $data['requests'] = $request->all('data_inicio', 'data_final');
+        
+        $data['dados_empresa'] = Empresa::findOrFail($this->empresaLogada());
+        $data['conta'] = Conta::find($request->conta_id);
 
         $pdf = PDF::loadView('pdf.contas.ExtratoConta', $data)->setPaper('a4', 'landscape');
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Extrato_conta.pdf');
+    } 
+    
+    public function imprimirExtratoExcel(Request $request)
+    {
+        return Excel::download(new ExtratoContaExport($request), 'extrato-de-conta.xlsx');
     }
 }
