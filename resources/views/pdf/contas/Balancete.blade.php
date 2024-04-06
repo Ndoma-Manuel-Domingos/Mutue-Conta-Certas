@@ -49,88 +49,120 @@
         <h2 style="text-align: left;border-bottom: 1px solid #c2c2c2;padding-bottom: 2px;text-transform: uppercase;font-size: 11pt">Exercício: {{ $exercicio->designacao ?? '' }}</h2>
         <h2 style="text-align: left;border-bottom: 1px solid #c2c2c2;padding-bottom: 2px;text-transform: uppercase;font-size: 11pt">Período: {{ $periodo->designacao ?? '' }}</h2>
         <div style="margin:auto 0px">
-            
+
         </div>
 
-        <table class="table table-bordered table-hover" id="tabela_de_balancetes">
+        <table class="table table-bordered table-hover">
             <thead>
+                <thead>
+                    <tr>
+                        <th style="text-align: center;color:white; background-color: gray;" rowspan="2">Conta</th>
+                        <th style="text-align: center;color:white; background-color: gray;text-align: left" rowspan="2">Descrição</th>
+                        <th style="text-align: center;color:white; background-color: gray;" colspan="2">Dados do Período</th>
+                        <th style="text-align: center;color:white; background-color: gray;" colspan="2">Movimento</th>
+                        <th style="text-align: center;color:white; background-color: gray;" colspan="2">Saldo</th>
+                    </tr>
+    
+                    <tr>
+                        <th style="text-align: center;color:white; background-color: gray;">Débito</th>
+                        <th style="text-align: center;color:white; background-color: gray;">Crédito</th>
+                        
+                        <th style="text-align: center;color:white; background-color: gray;">Débito</th>
+                        <th style="text-align: center;color:white; background-color: gray;">Crédito</th>
+                        
+                        <th style="text-align: center;color:white; background-color: gray;">Débito</th>
+                        <th style="text-align: center;color:white; background-color: gray;">Crédito</th>
+                    </tr>
+    
+                </thead>
+             
                 <tr>
-                    <th style="text-align: center;color:white; background-color: gray;" rowspan="2">Conta</th>
-                    <th style="text-align: center;color:white; background-color: gray;text-align: left" rowspan="2">Descrição</th>
-                    <th style="text-align: center;color:white; background-color: gray;" colspan="2">Dados do Período</th>
-                    <th style="text-align: center;color:white; background-color: gray;" colspan="2">Movimento</th>
-                    <th style="text-align: center;color:white; background-color: gray;" colspan="2">Saldo</th>
+                    <th></th>
+                    <th class="text-right" style="text-align: right">Total</th>
+
+                    <th class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ $resultado_por_conta['total_debito'] == 0 ? '-' : number_format($resultado_por_conta['total_debito']) }}</th>
+                    <th class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ $resultado_por_conta['total_credito'] == 0 ? '-' : number_format($resultado_por_conta['total_credito']) }}</th>
+
+                    <th class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ $resultado['total_movimento_debito'] == 0 ? '-' : number_format($resultado['total_movimento_debito']) }}</th>
+                    <th class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ $resultado['total_movimento_credito'] == 0 ? '-' : number_format($resultado['total_movimento_credito']) }}</th>
+                    <th class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ $resultado['total_debito'] == 0 ? '-' : number_format($resultado['total_debito']) }}</th>
+                    <th class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ $resultado['total_credito'] == 0 ? '-' : number_format($resultado['total_credito']) }}</th>
+                </tr>
+
+                @foreach ($registros as $item)
+                
+                <tr>
+                    <th class="text-right" colspan="2" style="text-align: right; background-color: rgb(212, 212, 212);color:gray;">Total por Classe</th>
+                    
+                    @php
+                        $movimento = optional($item->conta->items_movimentos[0]);
+                        $total_debito = $movimento ? ($movimento->TotalDebito == 0 ? '-' : number_format($movimento->TotalDebito)) : '-';
+                        $total_credito = $movimento ? ($movimento->TotalCredito == 0 ? '-' : number_format($movimento->TotalCredito)) : '-';
+                    @endphp
+                    
+                    <td class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ $total_debito }}</td>
+                    <td class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ $total_credito }}</td>
+                    
+                    <td class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">-</td>
+                    <td class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">-</td>
+                    <td class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">-</td>
+                    <td class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">-</td>
                 </tr>
 
                 <tr>
-                    <th style="text-align: center;color:white; background-color: gray;">Débito</th>
-                    <th style="text-align: center;color:white; background-color: gray;">Crédito</th>
+                   
+                    <th class="text-right" colspan="2" style="text-align: right; background-color: rgb(212, 212, 212);color:gray;">Total por Conta</th>
                     
-                    <th style="text-align: center;color:white; background-color: gray;">Débito</th>
-                    <th style="text-align: center;color:white; background-color: gray;">Crédito</th>
+                    @php
+                        $movimento = $item->conta->items_movimentos[0] ?? null;
+                        $total_debito = $movimento ? ($movimento->TotalDebito == 0 ? '-' : number_format($movimento->TotalDebito)) : '-';
+                        $total_credito = $movimento ? ($movimento->TotalCredito == 0 ? '-' : number_format($movimento->TotalCredito)) : '-';
+                    @endphp
                     
-                    <th style="text-align: center;color:white; background-color: gray;">Débito</th>
-                    <th style="text-align: center;color:white; background-color: gray;">Crédito</th>
+                    <td class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ $total_debito }}</td>
+                    <td class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ $total_credito }}</td>
+                    <td class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">-</td>
+                    <td class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">-</td>
+                    <td class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">-</td>
+                    <td class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">-</td>
+                </tr>
+                
+                <tr>
+                    <th style="text-align: left;color:white; background-color: gray;" colspan="9">CLASSE - {{ $item->classe->numero ?? '' }} - {{ $item->classe->designacao ?? '' }}</th>
+                </tr>
+                
+                <tr>
+                    <th style="text-align: center;color:white; background-color: gray;">{{ $item->conta->numero ?? '' }}</th>
+                    <th style="text-align: left;color:white; background-color: gray;" colspan="8">{{ $item->conta->designacao ?? '' }}</th>
                 </tr>
 
-            </thead>
-
-            <tbody>
-                @foreach ($movimentos as $item)
+                @foreach ($item->sub_contas_empresa as $item2)
                 <tr>
-                    <td>{{ $item->subconta->numero }}</td>
-                    <td style="text-align: left">{{ $item->subconta->designacao }}</td>
-                    <td style="color: blue">{{ $item->debito == 0 ? '-' : number_format($item->debito, 2, ',', '.') }}</td>
-                    <td style="color: red">{{ $item->credito == 0 ? '-' : number_format($item->credito, 2, ',', '.') }}</td>
-                    <td style="color: blue">{{ $item->debito == 0 ? '-' : number_format($item->debito, 2, ',', '.') }}</td>
-                    <td style="color: red">{{ $item->credito == 0 ? '-' : number_format($item->credito, 2, ',', '.') }}</td>
-                    <td style="color: blue">{{ $item->debito == 0 ? '-' : ($item->debito > $item->credito ? number_format($item->debito - $item->credito, 2, ',', '.') : '-') }}</td>
-                    <td style="color: red">{{ $item->credito == 0 ? '-' : ($item->credito > $item->debito ? number_format($item->credito - $item->debito, 2, ',', '.') : '-') }}</td>
-                    {{-- <td>{{ $item->criador->name }}</td> --}}
+                    <td>{{ $item2->numero ?? '' }}</td>
+                    <td style="text-align: left">{{ $item2->designacao ?? '' }}</td>
+                    
+                    @php
+                        $movimento = $item2->items_movimentos[0] ?? null;
+                        $total_debito = $movimento ? ($movimento->total_debito == 0 ? '-' : number_format($movimento->total_debito)) : '-';
+                        $total_credito = $movimento ? ($movimento->total_credito == 0 ? '-' : number_format($movimento->total_credito)) : '-';
+                    @endphp
+                    
+                    <td class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ $total_debito }}</td>
+                    <td class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ $total_credito }}</td>
+                    
+                    <td class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ $total_debito }}</td>
+                    <td class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ $total_credito }}</td>
+                    
+                    <td class="text-info" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ $total_debito }}</td>
+                    <td class="text-danger" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ $total_credito }}</td>
+                    
                 </tr>
                 @endforeach
-                
-                <tr>
-                    <th colspan="2" style="text-align: right; background-color: rgb(212, 212, 212);color:gray;">Soma Líquida</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ number_format($resultado['total_debito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ number_format($resultado['total_credito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ number_format($resultado['total_debito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ number_format($resultado['total_credito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ number_format($resultado['total_movimento_debito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ number_format($resultado['total_movimento_credito'], 2, ',', '.') }}</th>
-                </tr>
-                
-                <tr>
-                    <th colspan="2" style="text-align: right; background-color: rgb(212, 212, 212);color:gray;">Total por Classe</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ number_format($resultado['total_debito'] - 62562, 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ number_format($resultado['total_credito'] - 34534, 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ number_format($resultado['total_debito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ number_format($resultado['total_credito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ number_format($resultado['total_movimento_debito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ number_format($resultado['total_movimento_credito'], 2, ',', '.') }}</th>
-                </tr>
-                
-                <tr>
-                    <th colspan="2" style="text-align: right; background-color: rgb(212, 212, 212);color:gray;">Total por Conta</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ number_format($resultado['total_debito'] - 82536, 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ number_format($resultado['total_credito'] - 54243, 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ number_format($resultado['total_debito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ number_format($resultado['total_credito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: blue;">{{ number_format($resultado['total_movimento_debito'], 2, ',', '.') }}</th>
-                    <th class="text-right" style="background-color: rgb(212, 212, 212); text-align: right;color: red;">{{ number_format($resultado['total_movimento_credito'], 2, ',', '.') }}</th>
-                </tr>
-                
-                <tr>
-                    <th colspan="2" style="text-align: right; background-color: gray;color:white;"></th>
-                    <th style="text-align: center;color:white; background-color: gray;"></th>
-                    <th style="text-align: center;color:white; background-color: gray;"></th>
-                    <th colspan="2" style="text-align: right; background-color: gray;color:white;">TOTAL</th>
-                    <th style="text-align: right">{{ number_format(0, 2, ',', '.') }}</th>
-                    <th style="text-align: right">{{ number_format(0, 2, ',', '.') }}</th>
-                </tr>
 
-            </tbody>
+                @endforeach
+            </thead>
         </table>
+
         <script type='text/php'>
             if (isset($pdf)) 
             {               
@@ -138,41 +170,10 @@
             }
         </script>
     </main>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br><br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
     <div class="footer margin-top">
         <hr>
         <p style="text-align:right">Data: {{ date('Y-m-d H:i:s') }} </p>

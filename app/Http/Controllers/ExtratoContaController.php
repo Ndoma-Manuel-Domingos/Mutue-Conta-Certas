@@ -198,11 +198,11 @@ class ExtratoContaController extends Controller
         ->select('contas.id', 'contas.designacao As d', DB::raw('CONCAT(contas.numero, " - ", contas.designacao) AS text'))
         ->get();
         
-        
         $data['requests'] = $request->all('data_inicio', 'data_final');
         
         $data['dados_empresa'] = Empresa::findOrFail($this->empresaLogada());
         $data['conta'] = Conta::find($request->conta_id);
+        $data['subconta'] = SubConta::find($request->subconta_id);
 
         $pdf = PDF::loadView('pdf.contas.ExtratoConta', $data)->setPaper('a4', 'landscape');
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);

@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">LISTAGEM DE MUNICÍPIOS</h1>
+                        <h1 class="m-0 text-info">LISTAGEM DE MUNICÍPIOS</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
