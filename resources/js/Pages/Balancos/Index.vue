@@ -317,6 +317,7 @@
                         <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
                       
+                      
                       <tr>
                         <td>Parte cor. dos empr. a médio e longo prazos. . . . .</td>
                         <td class="text-center"><a href="">15</a></td>
