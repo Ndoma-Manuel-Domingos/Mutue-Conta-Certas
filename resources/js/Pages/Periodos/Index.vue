@@ -32,6 +32,7 @@
                     <thead>
                       <tr>
                         <th>#</th>
+                        <th>Número</th>
                         <th>Designação</th>
                         <th>Exercicíos</th>
                         <th>Estado</th>
@@ -42,6 +43,7 @@
                     <tbody>
                       <tr v-for="item in periodos" :key="item">
                         <td>#</td>
+                        <td>{{ item.numero }}</td>
                         <td>{{ item.designacao }}</td>
                         <td>{{ item.exercicio.designacao }}</td>
                         <td class="text-capitalize">{{ item.estado }}</td>

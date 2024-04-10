@@ -52,6 +52,7 @@ class PeriodoController extends Controller
         if($this->empresaLogada()){
         
             Periodo::create([
+                'numero' => $request->numero,
                 'designacao' => $request->designacao,
                 'exercicio_id' => $request->exercicio_id,
                 'empresa_id' => $this->empresaLogada(),
@@ -112,6 +113,7 @@ class PeriodoController extends Controller
         
         // Atualiza um post específico no banco de dados
         $periodo = Periodo::findOrFail($id);
+        $periodo->numero = $request->numero;
         $periodo->estado = $request->estado;
         $periodo->designacao = $request->designacao;
         $periodo->exercicio_id = $request->exercicio_id;
