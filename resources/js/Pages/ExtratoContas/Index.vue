@@ -198,7 +198,7 @@ export default {
     return {
     
       conta_id: this.requests.conta_id ?? "3",
-      subconta_id: this.requests.subconta_id ?? "",
+      subconta_id: this.requests.subconta_id ?? "1",
       // exercicio_id: "",
       // periodo_id: "",
       data_inicio: this.requests.data_inicio ?? new Date().toISOString().substr(0, 10),

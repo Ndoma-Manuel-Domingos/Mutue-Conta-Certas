@@ -288,7 +288,29 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
-          <li class="nav-item" title="EMPRESAS">
+          <li class="nav-item" title="TIPOS DE CRÉDITOS">
+            <Link
+              href="/tipos-creditos"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'TipoCreditos/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Tipos de Créditos</p>
+            </Link>
+            
+            <Link
+              href="/tipos-movimentos"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'TipoMovimentos/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Tipos de Movimentos</p>
+            </Link>
+            
             <Link
               href="/regime-empresa"
               class="nav-link"

@@ -63,20 +63,20 @@ class ContaController extends Controller
 
     public function store(Request $request)
     {
-
+    
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
              
         $request->validate([
             "classe_id" => "required",
             "conta_id" => "required",
-            "tipo" => "required",
+            // "tipo" => "required",
             "numero" => "required",
             "estado" => "required",
         ], 
         [
             "classe_id.required" => "Campo Obrigatório",
             "conta_id.required" => "Campo Obrigatório",
-            "tipo.required" => "Campo Obrigatório",
+            // "tipo.required" => "Campo Obrigatório",
             "numero.required" => "Campo Obrigatório",
             "estado.required" => "Campo Obrigatório",
         ]);
@@ -86,7 +86,7 @@ class ContaController extends Controller
             $classes =  ContaEmpresa::create([
                 'classe_id' => $request->classe_id,
                 'conta_id' => $request->conta_id,
-                'tipo' => $request->tipo,
+                // 'tipo' => $request->tipo,
                 'numero' => $request->numero,
                 'estado' => $request->estado,
                 'created_by' => auth()->user()->id,

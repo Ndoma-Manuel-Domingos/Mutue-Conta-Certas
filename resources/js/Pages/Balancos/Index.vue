@@ -84,7 +84,7 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header">
-                <a class="btn btn-sm mx-1 btn-danger float-right">
+                <a class="btn btn-sm mx-1 btn-danger float-right" @click="imprimirBalancete()">
                   <i class="fas fa-file-pdf"></i> Visualizar</a
                 >
                 <a href="" class="btn btn-sm mx-1 btn-success float-right">
@@ -98,8 +98,8 @@
                       <tr>
                         <th>Designação</th>
                         <th style="width: 5px" class="text-center">Notas</th>
-                        <th>2022</th>
-                        <th>2021</th>
+                        <th>2024</th>
+                        <th>2023</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -108,32 +108,51 @@
                       <tr>
                         <th colspan="4">Activos não correntes:</th>
                       </tr>
-                      <tr v-for="item in conta_do_activos_nao_corrente" :key="item">
-                        <td>
-                          {{ item.conta.numero ?? "" }} -
-                          {{ item.conta.designacao ?? "" }}
-                        </td>
-                        <td class="text-center">4</td>
-                        <td>
-                          {{
-                            item.debito > item.credito
-                              ? item.debito - item.credito
-                              : item.credito - item.debito
-                          }}
-                        </td>
+                      <!-- <tr v-for="(item, index) in conta_do_activos_nao_corrente" :key="index">
+                        <td>{{ item.conta.numero ?? "" }} - {{ item.conta.designacao ?? "" }}</td>
+                        <td class="text-center"><a href="">{{ item.conta.nota ?? "" }}</a></td>
+                        <td>{{ item.debito > item.credito ? item.debito - item.credito : item.credito - item.debito }}</td>
                         <td>0</td>
+                      </tr> -->
+                      <tr>
+                        <td>Imobilizações corpóreas ....................................</td>
+                        <td class="text-center"><a href="">4</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+               
+                      <tr>
+                        <td>Imobilizações incorpóreas ....................................</td>
+                        <td class="text-center"><a href="">5</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+               
+                      <tr>
+                        <td>Investimentos em subsidiárias e associadas ....................................</td>
+                        <td class="text-center"><a href="">6</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+                      
+                      <tr>
+                        <td>Outros activos financeiros ....................................</td>
+                        <td class="text-center"><a href="">7</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
                       <tr>
-                        <td><small><strong>Outros activos não correntes ..................................................</strong></small></td>
-                        <td></td>
-                        <td></td>
-                        <td><small><strong>0</strong></small></td>
+                        <td>Outros activos não correntes ....................................</td>
+                        <td class="text-center"><a href="">9</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
+               
                       <tr>
                         <th></th>
-                        <th>0</th>
-                        <td></td>
-                        <th>0</th>
+                        <th></th>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
                       </tr>
                       <!-- </template> -->
                       <!-- ================================================================================ -->
@@ -142,41 +161,46 @@
                         <th colspan="4">Activos correntes:</th>
                       </tr>
 
-                      <tr v-for="item in conta_do_activos_corrente" :key="item">
-                        <td>
-                          {{ item.conta.numero ?? "" }} -
-                          {{ item.conta.designacao ?? "" }}
-                        </td>
+                      <!-- <tr v-for="(item, index) in conta_do_activos_corrente" :key="index">
+                        <td>{{ item.conta.numero ?? "" }} - {{ item.conta.designacao ?? "" }}</td>
+                        <td class="text-center"><a href="">{{ item.conta.nota ?? "" }}</a></td>
+                        <td>{{ item.debito > item.credito ? item.debito - item.credito : item.credito - item.debito }}</td>
                         <td>0</td>
-                        <td>
-                          {{
-                            item.debito > item.credito
-                              ? item.debito - item.credito
-                              : item.credito - item.debito
-                          }}
-                        </td>
-                        <td class="text-center">0</td>
+                      </tr> -->
+                      
+                      <tr>
+                        <td>Existências ....................................</td>
+                        <td class="text-center"><a href="">8</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+
+                      <tr>
+                        <td>Contas a receber ....................................</td>
+                        <td class="text-center"><a href="">9</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
                       
                       <tr>
-                        <td><small><strong>Outros activos correntes ..................................................</strong></small></td>
-                        <td>4</td>
-                        <td><small><strong>0</strong></small></td>
-                        <td><small><strong>0</strong></small></td>
+                        <td>Disponibilidades ....................................</td>
+                        <td class="text-center"><a href="">10</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
-
+                      
                       <tr>
-                        <th></th>
-                        <th></th>
-                        <th>0</th>
-                        <th>0</th>
+                        <td>Outros activos correntes  ....................................</td>
+                        <td class="text-center"><a href="">11</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
-
+                   
                       <tr>
                         <th>Total do activo</th>
-                        <th></th>
-                        <th>0</th>
-                        <th>0</th>
+                        <th class="text-center"></th>
+                        <th class="text-right">0</th>
+                        <th class="text-right">0</th>
                       </tr>
                       <!-- </template> -->
 
@@ -191,24 +215,39 @@
                       </tr>
                       <tr>
                         <td>Capital ....................................</td>
-                        <td></td>
-                        <td>0,00</td>
-                        <td>0,00</td>
+                        <td class="text-center"><a href="">12</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
 
                       <tr>
                         <!-- ---------------------------------------- -->
                         <td>Reservas ....................................</td>
-                        <td></td>
-                        <td>0,00</td>
-                        <td>0,00</td>
+                        <td class="text-center"><a href="">13</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+                      
+                      <tr>
+                        <!-- ---------------------------------------- -->
+                        <td>Resultados transitados ....................................</td>
+                        <td class="text-center"><a href="">14</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+                      <tr>
+                        <!-- ---------------------------------------- -->
+                        <td>Resultados do exercício ....................................</td>
+                        <td class="text-center"><a href="">13</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
 
                       <tr>
                         <th></th>
-                        <th></th>
-                        <th>0</th>
-                        <th>0</th>
+                        <th class="text-center"></th>
+                        <th class="text-right"></th>
+                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
                       </tr>
 
                       <!-- ================================================================================ -->
@@ -216,34 +255,46 @@
                       <tr>
                         <th colspan="4">Passivo não corrente:</th>
                       </tr>
-                      <tr v-for="item in conta_do_passivos_nao_corrente" :key="item">
-                        <td>
-                          {{ item.conta.numero ?? "" }} -
-                          {{ item.conta.designacao ?? "" }}
-                        </td>
-                        <td class="text-center">0</td>
-                        <td>
-                          {{
-                            item.debito > item.credito
-                              ? item.debito - item.credito
-                              : item.credito - item.debito
-                          }}
-                        </td>
-                        <td>0</td>
+                      
+                      <tr>
+                        <td>Impostos diferidos. . . .</td>
+                        <td class="text-center"><a href="">16</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
                       
                       <tr>
-                        <td><small><strong>Outros passivo não correntes ..................................................</strong></small></td>
-                        <td><small><strong></strong></small></td>
-                        <td><small><strong>0</strong></small></td>
-                        <td><small><strong>0</strong></small></td>
+                        <td>Provisões para pensões. . . .</td>
+                        <td class="text-center"><a href="">17</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
-
+                        
+                      <tr>
+                        <td>Provisões para outros riscos e encargos. . . .</td>
+                        <td class="text-center"><a href="">18</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+                      
+                      <tr>
+                        <td>Outros passivos não correntes. . . .</td>
+                        <td class="text-center"><a href="">19</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+                      <!-- <tr v-for="(item, index) in conta_do_passivos_nao_corrente" :key="index">
+                        <td>{{ item.conta.numero ?? "" }} - {{ item.conta.designacao ?? "" }}</td>
+                        <td class="text-center"><a href="">{{ item.conta.nota ?? "" }}</a></td>
+                        <td>{{ item.debito > item.credito ? item.debito - item.credito : item.credito - item.debito }}</td>
+                        <td>0</td>
+                      </tr> -->
+                 
                       <tr>
                         <th></th>
-                        <th></th>
-                        <th>0</th>
-                        <th>0</th>
+                        <th class="text-center"></th>
+                        <th class="text-right">0</th>
+                        <th class="text-right">0</th>
                       </tr>
 
                       <!-- ================================================================================ -->
@@ -251,42 +302,54 @@
                       <tr>
                         <th colspan="4">Passivo corrente:</th>
                       </tr>
-                      <tr v-for="item in conta_do_passivos_corrente" :key="item">
-                        <td>
-                          {{ item.conta.numero ?? "" }} -
-                          {{ item.conta.designacao ?? "" }}
-                        </td>
-                        <td class="text-center">0</td>
-                        <td>
-                          {{
-                            item.debito > item.credito
-                              ? item.debito - item.credito
-                              : item.credito - item.debito
-                          }}
-                        </td>
-                        <td></td>
-                        <td>0</td>
-                      </tr>
-     
+                      
                       <tr>
-                        <td><small><strong>Outros passivo correntes ..................................................</strong></small></td>
-                        <td><small><strong></strong></small></td>
-                        <td><small><strong>0</strong></small></td>
-                        <td><small><strong>0</strong></small></td>
+                        <td>Contas a pagar. . . . .</td>
+                        <td class="text-center"><a href="">19</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
                       </tr>
+                      
+                      <tr>
+                        <td>Empréstimos de curto prazo. . . . .</td>
+                        <td class="text-center"><a href="">20</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+                      
+                      <tr>
+                        <td>Parte cor. dos empr. a médio e longo prazos. . . . .</td>
+                        <td class="text-center"><a href="">15</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+                      
+                      <tr>
+                        <td>Outros passivos correntes. . . . .</td>
+                        <td class="text-center"><a href="">21</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                      </tr>
+                      
+                      <!-- <tr v-for="(item, index) in conta_do_passivos_corrente" :key="index">
+                        <td>{{ item.conta.numero ?? "" }} - {{ item.conta.designacao ?? "" }}</td>
+                        <td class="text-center"><a href="">{{ item.conta.nota ?? "" }}</a></td>
+                        <td>{{ item.debito > item.credito ? item.debito - item.credito : item.credito - item.debito }}</td>
+                        <td></td>
+                      </tr> -->
 
                       <tr>
                         <th></th>
-                        <th></th>
-                        <th>0</th>
-                        <th>0</th>
+                        <th class="text-center"></th>
+                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
+                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
                       </tr>
                  
                       <tr>
                         <th></th>
-                        <th>Total do capital próprio e passivo</th>
-                        <th>0</th>
-                        <th>0</th>
+                        <th class="text-center">Total do capital próprio e passivo</th>
+                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
+                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
                       </tr>
                       <!-- </template> -->
                     </tbody>
@@ -436,6 +499,13 @@ export default {
       }).format(atual);
       return valorFormatado;
     },
+    
+    imprimirBalancete() {
+      window.open(
+        `imprimir-balanco?exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`
+      );
+    },
+
   },
 };
 </script>
