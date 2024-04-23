@@ -52,9 +52,9 @@
                       <th>#</th>
                       <th>Conta</th>
                       <th>Subconta</th>
-                      <th>Débito</th>
-                      <th>Crédito</th>
-                      <th>IVA</th>
+                      <th class="text-right">Débito</th>
+                      <th class="text-right">Crédito</th>
+                      <th class="text-right">IVA</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -68,9 +68,9 @@
                         {{ item.subconta.numero }} -
                         {{ item.subconta.designacao }}
                       </td>
-                      <td>{{ formatValor(item.debito) }}</td>
-                      <td>{{ formatValor(item.credito) }}</td>
-                      <td>{{ formatValor(item.iva) }}</td>
+                      <td class="text-primary text-right">{{ formatarValorMonetario(item.debito) }}</td>
+                      <td class="text-danger text-right">{{ formatarValorMonetario(item.credito) }}</td>
+                      <td class="text-right">{{ formatarValorMonetario(item.iva) }}</td>
                     </tr>
                   </tbody>
                   <tfoot>
@@ -78,9 +78,9 @@
                       <td></td>
                       <td></td>
                       <td></td>
-                      <th>{{ formatValor(movimento.debito) }}</th>
-                      <th>{{ formatValor(movimento.credito) }}</th>
-                      <th>{{ formatValor(movimento.iva) }}</th>
+                      <th class="text-primary text-right">{{ formatarValorMonetario(movimento.debito) }}</th>
+                      <th class="text-danger text-right">{{ formatarValorMonetario(movimento.credito) }}</th>
+                      <th class="text-right">{{ formatarValorMonetario(movimento.iva) }}</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -104,15 +104,15 @@
                       <table class="table">
                         <tr>
                           <th style="width: 50%">Total Débito:</th>
-                          <td>{{ formatValor(movimento.debito) }}</td>
+                          <td>{{ formatarValorMonetario(movimento.debito) }}</td>
                         </tr>
                         <tr>
                           <th>Total Crédito:</th>
-                          <td>{{ formatValor(movimento.credito) }}</td>
+                          <td>{{ formatarValorMonetario(movimento.credito) }}</td>
                         </tr>
                         <tr>
                           <th>Total IVA:</th>
-                          <td>{{ formatValor(movimento.iva) }}</td>
+                          <td>{{ formatarValorMonetario(movimento.iva) }}</td>
                         </tr>
                       </table>
                     </div>
@@ -164,6 +164,21 @@ export default {
       }).format(atual);
       return valorFormatado;
     },
+    
+      
+    formatarValorMonetario(valor) {
+      // Converter o número para uma string e separar parte inteira da parte decimal
+      let partes = String(valor).split(".");
+      let parteInteira = partes[0];
+      let parteDecimal = partes.length > 1 ? "." + partes[1] : "";
+
+      // Adicionar separadores de milhar
+      parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+      // Retornar o valor formatado
+      return parteInteira + parteDecimal;
+    },
+    
   },
 };
 </script>

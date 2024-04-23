@@ -125,7 +125,7 @@
                 
                 <tr>
                     <th>{{ $key + 1 }}</th>
-                    <th style="text-align: center;color:white; background-color: gray;">{{ $item->conta->numero ?? '' }}</th>
+                    <th style="text-align: left;color:white; background-color: gray;">{{ $item->conta->numero ?? '' }}</th>
                     <th style="text-align: left;color:white; background-color: gray;" colspan="">{{ $item->conta->designacao ?? '' }}</th>
                     
                     @php
@@ -153,7 +153,7 @@
                     @foreach ($item->sub_contas_empresa as $key => $item2)
                     <tr>
                         <th>{{ $key + 1 }}</th>
-                        <td>{{ $item2->numero ?? '' }}</td>
+                        <td style="text-align: left">{{ $item2->numero ?? '' }}</td>
                         <td style="text-align: left">{{ $item2->designacao ?? '' }}</td>
                         
                         @php

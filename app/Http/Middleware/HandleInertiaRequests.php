@@ -49,7 +49,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sessions' => [
-                'empresa_sessao' => Empresa::find($this->empresaLogada()), // Session::get('empresa_logada_mutue_contas_certas_2024'),
+                'empresa_sessao' => Empresa::with(["contactos", "documentos", "tipo", "grupo", "regime", "endereco", "moeda.base"])->find($this->empresaLogada()), // Session::get('empresa_logada_mutue_contas_certas_2024'),
                 'exercicio_sessao' => Exercicio::find($this->exercicioActivo()), //  Session::get('exercicio_logada_mutue_contas_certas_2024'),
                 'periodo_sessao' => Periodo::find($this->periodoActivo()), //  Session::get('exercicio_logada_mutue_contas_certas_2024'),
             ],

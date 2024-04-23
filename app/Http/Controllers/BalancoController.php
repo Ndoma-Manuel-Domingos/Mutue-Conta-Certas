@@ -35,7 +35,6 @@ class BalancoController extends Controller
         $contas_passivos_corrente = ContaEmpresa::whereIn('classe_id', $classes_passivos_corrente)->pluck('conta_id');
         $contas_passivos_nao_corrente = ContaEmpresa::whereIn('classe_id', $classes_passivos_nao_corrente)->pluck('conta_id');
         
-        
         $data['conta_do_activos_corrente'] = MovimentoItem::with(['conta', 'movimento'])->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'),
         )->whereIn('conta_id', $contas_activos_corrente)
         ->groupBy('conta_id')
@@ -46,7 +45,6 @@ class BalancoController extends Controller
         ->whereIn('conta_id', $contas_activos_nao_corrente)
         ->groupBy('conta_id')
         ->get();
-        
         
         $data['conta_do_passivos_corrente'] = MovimentoItem::with(['conta', 'movimento'])
         ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'), )
@@ -59,8 +57,6 @@ class BalancoController extends Controller
         ->whereIn('conta_id', $contas_passivos_nao_corrente)
         ->groupBy('conta_id')
         ->get();
-        
-        
                 
         $capital_proprio = Conta::whereIn('numero', ['51', '55', '81', '88'])->pluck('id');
         $data['capital_proprio'] = MovimentoItem::with(['conta', 'movimento'])
@@ -69,9 +65,6 @@ class BalancoController extends Controller
         ->groupBy('conta_id')
         ->get();
         
-        // dd($data['capital_proprio']);
-
-
         $data['exercicios'] = Exercicio::select('id', 'designacao As text')->get();
         $data['periodos'] = Periodo::select('id', 'designacao As text')->get();
         

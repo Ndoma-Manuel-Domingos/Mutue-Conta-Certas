@@ -24,8 +24,8 @@ class Movimento extends Model
         'data_lancamento',
         'lancamento_atual',
         'diario_id',
+        'origem',
         'tipo_documento_id',
-        
         'user_id',
         'created_by',
         'updated_by',
@@ -40,6 +40,11 @@ class Movimento extends Model
     public function exercicio()
     {
         return $this->belongsTo(Exercicio::class, 'exercicio_id', 'id');
+    } 
+    
+    public function periodo()
+    {
+        return $this->belongsTo(Periodo::class, 'periodo_id', 'id');
     } 
     
     public function diario()

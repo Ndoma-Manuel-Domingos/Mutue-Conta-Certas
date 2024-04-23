@@ -31,7 +31,6 @@
                                             <input type="text" id="designacao" v-model="form.designacao" class="form-control" placeholder="Informe a designação">
                                             <span class="text-danger" v-if="form.errors && form.errors.designacao">{{ form.errors.designacao }}</span>
                                         </div>
-
                                     </div>
                                 </div>
 
