@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">LISTAGEM DE MOVIMENTOS</h1>
+            <h1 class="m-0 text-info">LISTAGEM DE MOVIMENTOS</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -23,6 +23,7 @@
             <div class="card">
               <div class="card-header"> 
                 <a href="/movimentos/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> LANÇAR MOVIMENTOS</a>
+                <a href="/fluxos-caixas/create" class="btn btn-info btn-sm mx-1"> <i class="fas fa-plus"></i> FLUXO DE CAIXA</a>
                 <a @click="imprimirPlano()" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
                 <a href="" class="btn btn-sm mx-1 btn-success float-right"> <i class="fas fa-file-excel"></i> Exportar</a>
               </div>

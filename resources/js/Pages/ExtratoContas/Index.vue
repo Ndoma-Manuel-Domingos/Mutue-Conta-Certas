@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">EXTRACTO DE CONTA</h1>
+            <h1 class="m-0 text-info">EXTRACTO DE CONTA</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -126,27 +126,27 @@
                
                   <tr>
                     <td>MOEDA - <strong>AOA</strong></td>
+                    <th></th>
                     <th class="text-right">Saldo Geral</th>
                     <th class="text-info">{{ resultado.total_debito > resultado.total_credito ? formatValor(resultado.total_debito - resultado.total_credito) : '-' }}</th>
                     <th class="text-danger">{{ resultado.total_credito > resultado.total_debito ? formatValor(resultado.total_credito - resultado.total_debito) : '-'}}</th>
-                    <th></th>
                   </tr>
                   
                   <tr>
                     <th></th>
+                    <th></th>
                     <th class="text-right">Total</th>
                     <th class="text-info">{{ formatarValorMonetario(resultado.total_debito)  }}</th>
                     <th class="text-danger">{{ formatarValorMonetario(resultado.total_credito) }}</th>
-                    <th></th>
                   </tr>
                   
                   
                   <tr>
                     <th style="width: 70px">Nº de Movimento</th>
+                    <th>Data</th>
                     <th>Descrição</th>
                     <th>Débito</th>
                     <th>Crédito</th>
-                    <th style="width: 70px">Data</th>
                   </tr>                 
                  
                 </thead>
@@ -155,11 +155,11 @@
 
                   <tr v-for="item in movimentos" :key="item">
                     <td style="text-align: center">{{ item.movimento.lancamento_atual }}</td>
+                    <td>{{ item.movimento.data_lancamento }}</td>
                     <td>{{ item.descricao }}</td>
                     <!-- <td>{{ item.subconta.designacao }}</td> -->
                     <td class="text-info"><strong>{{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
                     <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
-                    <td>{{ item.movimento.data_lancamento }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -199,7 +199,7 @@ export default {
     return {
     
       conta_id: this.requests.conta_id ?? "3",
-      subconta_id: this.requests.subconta_id ?? "",
+      subconta_id: this.requests.subconta_id ?? "1",
       // exercicio_id: "",
       // periodo_id: "",
       data_inicio: this.requests.data_inicio ?? new Date().toISOString().substr(0, 10),

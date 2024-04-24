@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-8">
-            <h1 class="m-0">Privacidade</h1>
+            <h1 class="m-0 text-info">Privacidade</h1>
           </div>
           <div class="col-sm-4">
             <button

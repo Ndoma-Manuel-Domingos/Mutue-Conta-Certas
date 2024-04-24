@@ -23,9 +23,12 @@ use App\Http\Controllers\{
     MunicipioController,
     ComunaController,
     ExtratoContaController,
+    FluxoCaixaController,
     GrupoEmpresaController,
     ProvinciaController,
+    TipoCreditoController,
     TipoEmpresaController,
+    TipoMovimentoController,
     UtilizadorController,
 };
 use Illuminate\Support\Facades\Route;
@@ -72,6 +75,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/get-diario/{id}', [DiarioController::class, 'get_diario']);
     Route::resource('tipos-documentos', TipoDocumentoController::class);
     Route::resource('movimentos', MovimentoController::class);
+    Route::resource('fluxos-caixas', FluxoCaixaController::class);
     Route::resource('balancetes', BalanceteController::class);
     Route::resource('balancos', BalancoController::class);
     Route::resource('extratos-contas', ExtratoContaController::class);
@@ -88,7 +92,6 @@ Route::group(["middleware" => "auth"], function () {
     
     Route::resource('utilizadores', UtilizadorController::class);
 
-
     // Rotas de impressao de documentos-Ednilson
     Route::get('imprimir-contas', [ContaController::class, 'imprimirContas']);
     Route::get('imprimir-sub-contas', [SubContaController::class, 'imprimirSubContas']);
@@ -100,10 +103,15 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('imprimir-movimentos', [MovimentoController::class, 'imprimirMovimento']);
     Route::get('imprimir-paises', [PaisesController::class, 'imprimirPaises']);
     Route::get('imprimir-balancete', [BalanceteController::class, 'imprimirBalancete']);
+    Route::get('imprimir-balanco', [BalancoController::class, 'imprimirBalanco']);
     Route::get('imprimir-extrato', [ExtratoContaController::class, 'imprimirExtrato']);
     Route::get('imprimir-extrato-excel', [ExtratoContaController::class, 'imprimirExtratoExcel']);
+
+    Route::get('get-subcontas', [BalancoController::class, 'getSubcontas']);
     
     // Rotas Tabela de apoio
+    Route::resource('tipos-creditos', TipoCreditoController::class);
+    Route::resource('tipos-movimentos', TipoMovimentoController::class);
     Route::resource('regime-empresa', RegimeController::class);
     Route::resource('moeda', MoedaController::class);
     Route::resource('paises', PaisesController::class);

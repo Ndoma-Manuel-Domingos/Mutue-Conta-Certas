@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">VISUALIZAR BALANCETE</h1>
+            <h1 class="m-0 text-info">VISUALIZAR BALANCETE</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -71,27 +71,27 @@
 
                     <div class="col-12 col-md-2 mb-4">
                       <label for="data_inicio" class="form-label"
-                        >Data Inicio</label
+                        >Data Inicial</label
                       >
                       <input
                         type="date"
                         id="data_inicio"
                         v-model="data_inicio"
                         class="form-control"
-                        placeholder="Ex: 1.1, 1.1.1"
+                        :min="minDate(userYear)" :max="maxDate(userYear)"
                       />
                     </div>
 
                     <div class="col-12 col-md-2 mb-4">
                       <label for="data_final" class="form-label"
-                        >Final Inicio</label
+                        >Data Final</label
                       >
                       <input
                         type="date"
                         id="data_final"
                         v-model="data_final"
                         class="form-control"
-                        placeholder="Ex: 1.1, 1.1.1"
+                        :min="minDate(userYear)" :max="maxDate(userYear)"
                       />
                     </div>
                   </div>
@@ -122,167 +122,85 @@
                 >
                   <thead>
                     <tr>
+                      <th rowspan="2">Nº</th>
                       <th rowspan="2">Conta</th>
                       <th rowspan="2">Descrição</th>
-                      <th colspan="2">Dados do Período</th>
-                      <th>Mov. Débito</th>
-                      <th>Mov. Crédito</th>
-                      <th >Saldo. Devedor</th>
-                      <th >Saldo. Credor</th>
+                      <th colspan="2" class="text-center" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">Dados do Período</th>
+                      <th colspan="2" class="text-center">Movimentos</th>
+                      <th colspan="2" class="text-center">Saldo</th>
                     </tr>
                     
                     <tr>
-                      <th>Débito</th>
-                      <th>Crébito</th>
-                      
-                      <th></th>
-                      <th>Soma Saldos</th>
-                      
-                      <th class="text-info">-</th>
-                      <th class="text-danger">-</th>
+                      <th class="text-left" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">Débito</th>
+                      <th class="text-left" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">Crébito</th>
+                      <th class="text-left">Débito</th>
+                      <th class="text-left">Crédito</th>
+                      <th class="text-left">Devedor</th>
+                      <th class="text-left">Credor</th>
                     </tr>
                     
                     <tr>
                       <th></th>
-                      <th class="text-right">Soma Líquida</th>
+                      <th></th>
+                      <th class="text-right">Total</th>
+                      <th class="text-primary text-right" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">{{ resultado_por_conta.total_debito == 0 ? '-' : formatarValorMonetario(resultado_por_conta.total_debito) }}</th>
+                      <th class="text-danger text-right" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">{{ resultado_por_conta.total_credito == 0 ? '-' : formatarValorMonetario(resultado_por_conta.total_credito) }}</th>
+                      <th class="text-primary text-right">{{ resultado_por_conta.total_debito == 0 ? '-' : formatarValorMonetario(resultado_por_conta.total_debito) }}</th>
+                      <th class="text-danger text-right">{{ resultado_por_conta.total_credito == 0 ? '-' : formatarValorMonetario(resultado_por_conta.total_credito) }}</th>
+                      <th class="text-primary text-right">{{ resultado_por_conta.total_debito > resultado_por_conta.total_credito ? formatarValorMonetario(resultado_por_conta.total_debito - resultado_por_conta.total_credito) : '-' }}</th>
+                      <th class="text-danger text-right">{{ resultado_por_conta.total_credito > resultado_por_conta.total_debito ? formatarValorMonetario(resultado_por_conta.total_credito - resultado_por_conta.total_debito) : '-'  }}</th>
                       
-                      <th class="text-info">{{ resultado_por_conta.total_debito == 0 ? '-' : formatarValorMonetario(resultado_por_conta.total_debito) }}</th>
-                      <th class="text-danger">{{ resultado_por_conta.total_credito == 0 ? '-' : formatarValorMonetario(resultado_por_conta.total_credito) }}</th>
                       
-                      <th class="text-info">{{ resultado.total_movimento_debito == 0 ? '-' : formatarValorMonetario(resultado.total_movimento_debito) }}</th>
-                      <th class="text-danger">{{ resultado.total_movimento_credito == 0 ? '-' : formatarValorMonetario(resultado.total_movimento_credito) }}</th>
-                      <th class="text-info">{{ resultado.total_debito == 0 ? '-' : formatarValorMonetario(resultado.total_debito) }}</th>
-                      <th class="text-danger">{{ resultado.total_credito == 0 ? '-' : formatarValorMonetario(resultado.total_credito) }}</th>
+                      <!-- <th class="text-primary text-right">{{ resultado.total_movimento_debito == 0 ? '-' : formatarValorMonetario(resultado.total_movimento_debito) }}</th>
+                      <th class="text-danger text-right">{{ resultado.total_movimento_credito == 0 ? '-' : formatarValorMonetario(resultado.total_movimento_credito) }}</th> -->
+                      <!-- <th class="text-primary text-right">{{ resultado.total_movimento_debito > resultado.total_movimento_credito ? formatarValorMonetario(resultado.total_movimento_debito - resultado.total_movimento_credito) : '-' }}</th>
+                      <th class="text-danger text-right">{{ resultado.total_movimento_credito > resultado.total_movimento_debito ? formatarValorMonetario(resultado.total_movimento_credito - resultado.total_movimento_debito) : '-'  }}</th> -->
+                      
                     </tr>
                     
-                    <template v-for="item in registros.data" :key="item">
-                      
-                      <tr>
-                        <th>{{ item.conta.numero ?? '' }}</th>
-                        <th>{{ item.conta.designacao ?? '' }}</th>
-                        <th></th>
-                        <th></th>
-                        
-                        <th></th>
-                        <th></th>
-                        
-                        <th></th>
-                        <th></th>
+                    <template v-for="(item, index) in registros.data" :key="index">
+                      <!-- CLASSES -->
+                      <tr v-show="tipo_balancete_id == 3 || tipo_balancete_id == 4">
+                        <th colspan="3" class="text-uppercase">CLASSE {{ item.classe.numero ?? '' }} - {{ item.classe.designacao ?? '' }}</th>
+                        <th class="text-primary text-right" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalDebito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalDebito)) : '-' }}</th>
+                        <th class="text-danger text-right" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalCredito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalCredito)) : '-' }}</th>
+                        <th class="text-primary text-right">-</th>
+                        <th class="text-danger text-right">-</th>
+                        <th class="text-primary text-right">-</th>
+                        <th class="text-danger text-right">-</th>
                       </tr>
-                      
-                      <template  v-for="item2 in item.sub_contas_empresa" :key="item2">
-                        <tr>
+                      <!-- CONTAS -->
+                      <tr>
+                        <th>Nº</th>
+                        <th class="text-uppercase" colspan="2">{{ item.conta.numero ?? '' }} - {{ item.conta.designacao ?? '' }}</th>
+                        <th class="text-primary text-right" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalDebito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalDebito)) : '-' }}</th>
+                        <th class="text-danger text-right" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalCredito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalCredito)) : '-' }}</th>
+                        <th class="text-primary text-right">{{ item.conta.items_movimentos[0].TotalDebito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalDebito) }}</th>
+                        <th class="text-danger text-right">{{ item.conta.items_movimentos[0].TotalCredito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalCredito) }}</th>
+                        <th class="text-primary text-right">{{ item.conta.items_movimentos[0].TotalDebito == 0 ? '-' : (item.conta.items_movimentos[0].TotalDebito > item.conta.items_movimentos[0].TotalCredito ? formatarValorMonetario(item.conta.items_movimentos[0].TotalDebito - item.conta.items_movimentos[0].TotalCredito) : '-')  }}</th>
+                        <th class="text-danger text-right">{{ item.conta.items_movimentos[0].TotalCredito == 0 ? '-' : (item.conta.items_movimentos[0].TotalCredito > item.conta.items_movimentos[0].TotalDebito ? formatarValorMonetario(item.conta.items_movimentos[0].TotalCredito - item.conta.items_movimentos[0].TotalDebito) : '-')  }}</th>
+                      </tr>
+                      <!-- ITENS -->
+                      <template  v-for="(item2, index) in item.sub_contas_empresa" :key="index">
+                        <tr v-show="tipo_balancete_id == 3 || tipo_balancete_id == 4">
+                          <td>{{ index + 1 }}</td>
                           <td>{{ item2.numero ?? '' }}</td>
-                          <td><a :href="`extratos-contas?subconta_id=${item2.id}`" class="text-info">{{ item2.designacao ?? '' }}</a></td>
-                          <td class="text-info">{{ item2.items_movimentos[0] ? (item2.items_movimentos[0].total_debito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_debito) ) : '-' }}</td>
-                          <td class="text-danger">{{ item2.items_movimentos[0] ?  (item2.items_movimentos[0].total_credito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_credito))  : '-' }}</td>
-                          
-                          <td class="text-info">{{ item2.items_movimentos[0] ? (item2.items_movimentos[0].total_debito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_debito) ) : '-' }}</td>
-                          <td class="text-danger">{{ item2.items_movimentos[0] ?  (item2.items_movimentos[0].total_credito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_credito))  : '-' }}</td>
-                          
-                          <td class="text-info">{{ item2.items_movimentos[0] ? (item2.items_movimentos[0].total_debito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_debito) ) : '-' }}</td>
-                          <td class="text-danger">{{ item2.items_movimentos[0] ?  (item2.items_movimentos[0].total_credito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_credito))  : '-' }}</td>
+                          <td><a :href="`extratos-contas?subconta_id=${item2.id}`" class="text-primary text-uppercase">{{ item2.designacao ?? '' }}</a></td>
+                          <td class="text-primary  text-right" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">{{ item2.items_movimentos[0] ? (item2.items_movimentos[0].total_debito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_debito) ) : '-' }}</td>
+                          <td class="text-danger  text-right" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">{{ item2.items_movimentos[0] ?  (item2.items_movimentos[0].total_credito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_credito))  : '-' }}</td>
+                          <td class="text-primary  text-right">{{ item2.items_movimentos[0] ? (item2.items_movimentos[0].total_debito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_debito) ) : '-' }}</td>
+                          <td class="text-danger  text-right">{{ item2.items_movimentos[0] ?  (item2.items_movimentos[0].total_credito == 0 ? '-' : formatarValorMonetario(item2.items_movimentos[0].total_credito))  : '-' }}</td>
+                          <td class="text-primary  text-right">{{ item2.items_movimentos[0] ? (item2.items_movimentos[0].total_debito > item2.items_movimentos[0].total_credito ? formatarValorMonetario(item2.items_movimentos[0].total_debito - item2.items_movimentos[0].total_credito) : '-' )  : '-' }}</td>
+                          <td class="text-danger  text-right">{{ item2.items_movimentos[0] ?  (item2.items_movimentos[0].total_credito > item2.items_movimentos[0].total_debito ? formatarValorMonetario(item2.items_movimentos[0].total_credito - item2.items_movimentos[0].total_debito) :'-' ) : '-' }}</td>
                         </tr>
                       </template>
                       
-                      <tr>
-                        <th></th>
-                        <th class="text-right">Total por Classe</th>
-                        <td class="text-info">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalDebito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalDebito)) : '-' }}</td>
-                        <td class="text-danger">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalCredito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalCredito)) : '-' }}</td>
-                        <td class="text-info">-</td>
-                        <td class="text-danger">-</td>
-                        <td class="text-info">-</td>
-                        <td class="text-danger">-</td>
-                      </tr>
-                      
-                      <tr>
-                        <th></th>
-                        <th class="text-right">Total por Conta</th>
-                        <td class="text-info">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalDebito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalDebito)) : '-' }}</td>
-                        <td class="text-danger">{{ item.conta.items_movimentos[0] ? (item.conta.items_movimentos[0].TotalCredito == 0 ? '-' : formatarValorMonetario(item.conta.items_movimentos[0].TotalCredito)) : '-' }}</td>
-                        <td class="text-info">-</td>
-                        <td class="text-danger">-</td>
-                        <td class="text-info">-</td>
-                        <td class="text-danger">-</td>
-                      </tr>
                     </template>
                   </thead>
                 </table>
 
-                <!-- <table class="table table-bordered table-hover" id="tabela_de_balancetes1">
-                  <thead>
-                    <tr>
-                      <th>Conta</th>
-                      <th>Descrição</th>
-                      <th colspan="2" class="text-center">Dados do Período</th>
-                      <th>Mov. Débito</th>
-                      <th>Mov. Crédito</th>
-                      <th>Saldo. Devedor</th>
-                      <th>Saldo. Credor</th>
-                    </tr>
-                    
-                    <tr>
-                      <th></th>
-                      <th></th>
-                      <th>Débito</th>
-                      <th>Crédito</th>
-                      <th></th>
-                      <th>Soma Saldos</th>
-                      <th class="text-info">{{ formatarValorMonetario(resultado.total_movimento_debito) }}</th>
-                      <th class="text-danger">{{ formatarValorMonetario(resultado.total_movimento_credito) }}</th>
-                    </tr>
-                    
-                    <tr>
-                      <th></th>
-                      <th class="text-right">Soma Líquida</th>
-                      <th class="text-info"><strong>-</strong></th>
-                      <th class="text-danger"><strong>-</strong></th>
-                      <th class="text-info">{{ formatarValorMonetario(resultado.total_movimento_debito) }}</th>
-                      <th class="text-danger">{{ formatarValorMonetario(resultado.total_movimento_credito) }}</th>
-                      <th class="text-info">{{ formatarValorMonetario(resultado.total_debito) }}</th>
-                      <th class="text-danger">{{ formatarValorMonetario(resultado.total_credito) }}</th>
-                    </tr>
-                    
-                  </thead>
-                  
-                  <tbody>
-                  
-                    <tr>
-                      <th></th>
-                      <th class="text-right">Total Por Conta:</th>
-                      <th class="text-info"><strong>{{ formatarValorMonetario(resultado.total_movimento_debito) }}</strong></th>
-                      <th class="text-danger"><strong>{{ formatarValorMonetario(resultado.total_movimento_credito) }}</strong></th>
-                      <th class="text-info"><strong>-</strong></th>
-                      <th class="text-danger"><strong>-</strong></th>
-                      <th class="text-info"><strong>-</strong></th>
-                      <th class="text-danger"><strong>-</strong></th>
-                    </tr>
-                    
-                    <tr>
-                      <th></th>
-                      <th class="text-right">Total Por Classe:</th>
-                      <th class="text-info"><strong>{{ formatarValorMonetario(resultado.total_movimento_debito) }}</strong></th>
-                      <th class="text-danger"><strong>{{ formatarValorMonetario(resultado.total_movimento_credito) }}</strong></th>
-                      <th class="text-info"><strong>-</strong></th>
-                      <th class="text-danger"><strong>-</strong></th>
-                      <th class="text-info"><strong>-</strong></th>
-                      <th class="text-danger"><strong>-</strong></th>
-                    </tr>
-              
-                    <tr v-for="item in movimentos" :key="item">
-                      <td>{{ item.subconta.numero }}</td>
-                      <td><a :href="`extratos-contas?subconta_id=${item.subconta.id}`" class="text-info">{{ item.subconta.designacao }}</a></td>
-                      <td class="text-info"><strong> {{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
-                      <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
-                      <td class="text-info"><strong> {{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
-                      <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
-                      <td class="text-info"><strong>{{ item.debito == 0 ? '-' : (item.debito > item.credito ? formatarValorMonetario(item.debito - item.credito) : "-") }}</strong></td>
-                      <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : (item.credito > item.debito ? formatarValorMonetario(item.credito - item.debito) : '-') }}</strong></td>
-                    </tr>
-                  </tbody>
-                </table> -->
               </div>
+              
             </div>
           </div>
         </div>
@@ -304,6 +222,7 @@ export default {
     "contas",
     "tipos_balancetes",
     "registros",
+    "requests"
   ],
   components: {
     Paginacao,
@@ -328,22 +247,32 @@ export default {
       tipo_diario: "",
       tipo_documento: "",
 
-      tipo_balancete_id: 1,
+      tipo_balancete_id: this.requests.tipo_balancete_id ?? "3",
 
       exercicio_id: "",
       periodo_id: "",
-      data_inicio: new Date().toISOString().substr(0, 10),
-      data_final: new Date().toISOString().substr(0, 10),
+      
+      userYear: "",
+      
+      data_inicio: "", // new Date().toISOString().substr(0, 10),
+      data_final:  "", // new Date().toISOString().substr(0, 10),
+      
       subconta_id: "",
 
       params: {},
     };
   },
   mounted() {
-    this.exercicio_id = this.sessions_exercicio
-      ? this.sessions_exercicio.id
-      : "";
+    this.exercicio_id = this.sessions_exercicio ? this.sessions_exercicio.id : "";
     this.periodo_id = this.periodo_sessao ? this.periodo_sessao.id : "";
+    this.tipo_balancete_id = "3";
+    
+    const year = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
+    
+    this.data_inicio = `${year}-01-01`;
+    this.data_final = `${year}-12-31`;
+    
+    this.userYear = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
 
     $("#tabela_de_balancetes").DataTable({
       responsive: true,
@@ -370,7 +299,12 @@ export default {
       this.params.exercicio_id = val;
       this.updateData();
     },
-
+    
+    tipo_balancete_id: function (val) {
+      this.params.tipo_balancete_id = val;
+      this.updateData();
+    },
+    
     subconta_id: function (val) {
       this.params.subconta_id = val;
       this.updateData();
@@ -402,6 +336,14 @@ export default {
           this.$Progress.finish();
         },
       });
+    },
+        
+    minDate(year) {
+      return `${year}-01-01`; // Primeiro dia do ano especificado
+    },
+    
+    maxDate(year) {
+      return `${year}-12-31`; // Último dia do ano especificado
     },
 
     imprimirBalancete() {

@@ -26,6 +26,11 @@ class MovimentoItem extends Model
         'updated_by',
         'deleted_by',
     ];
+        
+    public function conta()
+    {
+        return $this->belongsTo(Conta::class, 'conta_id', 'id');
+    }  
     
     public function subconta()
     {
