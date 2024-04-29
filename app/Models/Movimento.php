@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Movimento extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
         
     protected $table = "movimentos";
     
@@ -22,6 +23,8 @@ class Movimento extends Model
         'periodo_id',
         'dia_id',
         'data_lancamento',
+        'requisitante',
+        'centro_custo',
         'lancamento_atual',
         'diario_id',
         'origem',

@@ -271,7 +271,7 @@ export default {
     },
 
     imprimirPDF(){
-      window.open(`imprimir-fluxo-caixa?exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`);
+      window.open(`imprimir-controlo-fluxo-caixa?exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`);
     },
 
     formatValor(atual) {

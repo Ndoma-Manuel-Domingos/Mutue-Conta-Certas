@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-info">FLUXO DE CAIXA</h1>
+            <h1 class="m-0 text-info">FLUXO DE CAIXA DIÁRIO</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -44,7 +44,7 @@
                         >Contas</label
                       >
                       <Select2
-                        v-model="form.sub_conta_id"
+                        v-model="sub_conta_id"
                         id="sub_conta_id"
                         class="col-12 col-md-12"
                         :options="subcontas"
@@ -179,6 +179,44 @@
                       >
                     </div>
                     
+                    <div class="col-12 col-md-12">
+                      <div class="row">
+                        <div class="col-12 col-md-6 mb-4">
+                          <label for="requisitante" class="form-label"
+                            >Requisitante</label
+                          >
+                          <textarea
+                            id="requisitante"
+                            v-model="form.requisitante"
+                            class="form-control"
+                            placeholder="Requisitante"
+                          ></textarea>
+                          <span
+                            class="text-danger"
+                            v-if="form.errors && form.errors.requisitante"
+                            >{{ form.errors.requisitante }}</span
+                          >
+                        </div>
+                        
+                        <div class="col-12 col-md-6 mb-4">
+                          <label for="centro_custo" class="form-label"
+                            >Centro Custo</label
+                          >
+                          <textarea
+                            id="centro_custo"
+                            v-model="form.centro_custo"
+                            class="form-control"
+                            placeholder="Centro de Custo"
+                          ></textarea>
+                          <span
+                            class="text-danger"
+                            v-if="form.errors && form.errors.centro_custo"
+                            >{{ form.errors.centro_custo }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    
                     <!-- <div class="col-12 col-md-3 mb-4">
                       <label for="taxa_iva_id" class="form-label"
                         >Taxa do IVA</label
@@ -196,14 +234,12 @@
                         >{{ form.errors.taxa_iva_id }}</span
                       >
                     </div> -->
-                    
-                    
                   </div>
                 </div>
                 <div class="card-footer">
-                  <a @click="addSubContaMovimento()" class="btn btn-info btn-sm ml-2">
+                  <!-- <a @click="addSubContaMovimento()" class="btn btn-info btn-sm ml-2">
                     <i class="fas fa-plus"></i> {{ title_botao }}</a
-                  >
+                  > -->
                   <button  type="submit" class="btn btn-success btn-sm ml-2">
                     <i class="fas fa-plus"></i> FINALIZAR O LANÇAMENTO</button
                   >
@@ -241,7 +277,7 @@
                     </tr>
                     <tr v-for="(item, index) in item_movimentos" :key="index">
                       <td class="text-center">{{ index + 1 }} </td>
-                      <td class="text-center">000</td>
+                      <td class="text-center">{{ item.movimento.lancamento_atual ?? '' }}</td>
                       <td class="text-left">{{ item.descricao }} </td>
                       <td class="text-right text-primary">{{ formatarValorMonetario(item.debito) }} </td>
                       <td class="text-right text-danger">{{ formatarValorMonetario(item.credito) }} </td>
@@ -318,7 +354,7 @@ export default {
       isUpdate: false,
     
       form: this.$inertia.form({
-        sub_conta_id: "",
+        sub_conta_id: this.sub_conta_id,
         valor: "",
         designacao: "",
         documento_id: "",
@@ -327,23 +363,26 @@ export default {
         tipo_movimento_id: "",
         tipo_proveito_id: "",
         taxa_iva_id: "1",
+        requisitante: "",
+        centro_custo: "",
       }),
       
-      item_movimentos: this.item_movimentos,
-      resultados: this.resultados,
-
+      contrapartida_id: "",
       tipo_credito_id: "",
+      sub_conta_id: "",
+      
+      // item_movimentos: this.item_movimentos,
+      // resultados: this.resultados,
+
       params: {},
   
     };
   },
   mounted() {
     // console.log(this.item_movimentos);
-  
     // this.item_movimentos = [];
     // this.item_movimentos = this.item_movimentos;
     // this.resultados = this.resultados;
-  
   },
   watch: {
     options: function (val) {
@@ -362,6 +401,10 @@ export default {
       this.params.tipo_credito_id = val;
       this.updateData();
     },
+    sub_conta_id: function (val) {
+      this.params.sub_conta_id = val;
+      this.updateData();
+    },
   },
 
   methods: {
@@ -376,44 +419,39 @@ export default {
       });
     },
     
-    addSubContaMovimento() {
+    // addSubContaMovimento() {
+    //   this.form.tipo_credito_id = this.tipo_credito_id;
+    //   this.form.contrapartida_id = this.contrapartida_id;
+    //   this.form.sub_conta_id = this.sub_conta_id;
       
-      this.form.tipo_credito_id = this.tipo_credito_id;
-      this.form.contrapartida_id = this.contrapartida_id;
-      
-      if (this.isUpdate) {
- 
-        axios
-          .put(`/editar-fluxo-caixa/${this.itemId}`, this.form)
-          .then((response) => {
+    //   if (this.isUpdate) {
+    //     axios
+    //       .put(`/editar-fluxo-caixa/${this.itemId}`, this.form)
+    //       .then((response) => {
             
-            this.item_movimentos = [];
-            this.item_movimentos = response.data.item_movimentos;
-            this.resultados = response.data.resultados;
+    //         this.item_movimentos = [];
+    //         this.item_movimentos = response.data.item_movimentos;
+    //         this.resultados = response.data.resultados;
               
-            this.isUpdate = false; 
-            this.itemId = null; 
+    //         this.isUpdate = false; 
+    //         this.itemId = null; 
             
-          })
-          .catch((error) => {});
-          
-        
-      } else {
-      
-        axios
-          .post(`/adicionar-fluxo-caixa`, this.form)
-          .then((response) => {
+    //       })
+    //       .catch((error) => {});
+    //   } else {
+    //     axios
+    //       .post(`/adicionar-fluxo-caixa`, this.form)
+    //       .then((response) => {
             
-            this.item_movimentos = [];
-            this.item_movimentos = response.data.item_movimentos;
-            this.resultados = response.data.resultados;
+    //         this.item_movimentos = [];
+    //         this.item_movimentos = response.data.item_movimentos;
+    //         this.resultados = response.data.resultados;
             
-          })
-          .catch((error) => {});
-      }
+    //       })
+    //       .catch((error) => {});
+    //   }
    
-    },
-    
+    // },
     
     editar_fluxo_caixa_item(item){
         this.form.valor = (item.tipo_movimento.sigla == "D" ? item.debito : item.credito);
@@ -447,10 +485,15 @@ export default {
           
         })
         .catch((error) => {});
-     console.log(item)
+        console.log(item)
     },    
 
     submit() {
+      
+      this.form.tipo_credito_id = this.tipo_credito_id;
+      this.form.contrapartida_id = this.contrapartida_id;
+      this.form.sub_conta_id = this.sub_conta_id;
+    
       this.$Progress.start();
       this.form.post(route("fluxos-caixas.store"), {
         preverseScroll: true,
@@ -466,9 +509,12 @@ export default {
             showConfirmButton: false,
             timer: 4000,
           });
-
+          
+          if(this.form.tipo_movimento_id == 1){
+            this.imprimirComprovativo();
+          }
+          
           window.location.reload();
-
           this.$Progress.finish();
         },
         onError: (errors) => {
@@ -500,6 +546,13 @@ export default {
 
       // Retornar o valor formatado
       return parteInteira + parteDecimal;
+    },
+    
+    imprimirComprovativo() {
+      window.open(
+        `/fluxos-caixas-imprimir-nota-entregue?id=0`,
+        "_blank"
+      );
     },
 
     imprimirPlano() {

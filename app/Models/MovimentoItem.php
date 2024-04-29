@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MovimentoItem extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
         
     protected $table = "movimento_items";
     
@@ -33,7 +34,7 @@ class MovimentoItem extends Model
         'created_by',
         'updated_by',
         'deleted_by',
-    ];
+    ];       
         
     public function conta()
     {
@@ -82,7 +83,7 @@ class MovimentoItem extends Model
         
     public function movimento()
     {
-        return $this->belongsTo(Movimento::class, 'movimento_id', 'id');
+        return $this->hasOne(Movimento::class, 'id', 'movimento_id');
     }  
     
     public function alterador()

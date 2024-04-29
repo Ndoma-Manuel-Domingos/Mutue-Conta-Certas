@@ -124,7 +124,7 @@
                       <th class="text-right">Exercício</th>
                       <th class="text-right">Período</th>
                       <th class="text-right">Data</th>
-                      <th class="text-right">Ações</th>
+                      <th class="text-right" style="width: 300px">Ações</th>
                     </tr>
                   </thead>
 
@@ -158,6 +158,13 @@
                             class="btn btn-sm btn-success mr-2"
                             ><i class="fas fa-edit"></i> Editar</a
                           >
+                          
+                          <a v-if="item.credito != 0"
+                            :href="`/fluxos-caixas-imprimir-nota-entregue?id=${item.id}`"
+                            class="btn btn-sm btn-danger mx-2" target="_blink"
+                            ><i class="fas fa-file-pdf"></i> Imprimir</a
+                          >
+                          
                         </div>
                       </td>
                     </tr>
