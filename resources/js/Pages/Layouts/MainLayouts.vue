@@ -227,10 +227,12 @@ export default {
 .select2-container--default .select2-selection--single {
   background-color: #ffffff;
   padding: 10px 10px 35px 10px;
+  border: 1px solid #000000;
 }
 
 .form-control {
   padding: 23px 10px 22px 10px;
   font-size: 12pt;
+  border: 1px solid #9b9b9b;
 }
 </style>

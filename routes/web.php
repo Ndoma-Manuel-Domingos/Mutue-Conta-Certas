@@ -12,7 +12,6 @@ use App\Http\Controllers\{
     EmpresaController,
     ExercicioController,
     MovimentoController,
-    OperacaoController,
     PeriodoController,
     PlanoGeralContaController,
     SubContaController,
@@ -22,13 +21,16 @@ use App\Http\Controllers\{
     PaisesController,
     MunicipioController,
     ComunaController,
+    ContrapartidaController,
     ExtratoContaController,
     FluxoCaixaController,
     GrupoEmpresaController,
+    DocumentoController,
     ProvinciaController,
     TipoCreditoController,
     TipoEmpresaController,
     TipoMovimentoController,
+    TipoProveitoController,
     UtilizadorController,
 };
 use Illuminate\Support\Facades\Route;
@@ -63,6 +65,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('periodos', PeriodoController::class);
     Route::resource('contas', ContaController::class);
     Route::get('/get-conta/{id}', [ContaController::class, 'get_conta']);
+    Route::get('/get-subconta/{id}', [ContrapartidaController::class, 'get_subconta']);
     Route::resource('sub-contas', SubContaController::class);
     Route::resource('empresas', EmpresaController::class);
     Route::get('/empresas-mudar-estado/{id}', [EmpresaController::class, 'mudar_estado']);
@@ -76,6 +79,11 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('tipos-documentos', TipoDocumentoController::class);
     Route::resource('movimentos', MovimentoController::class);
     Route::resource('fluxos-caixas', FluxoCaixaController::class);
+    Route::post('/adicionar-fluxo-caixa', [FluxoCaixaController::class, 'adicionar_fluxo_caixa']);
+    Route::put('/editar-fluxo-caixa/{id}', [FluxoCaixaController::class, 'editar_fluxo_caixa']);
+    Route::get('/remover-fluxo-caixa/{id}', [FluxoCaixaController::class, 'remover_fluxo_caixa']);
+    Route::get('/demonstracao-fluxo-caixa', [FluxoCaixaController::class, 'demonstracaoFluxoCaixa']);
+    
     Route::resource('balancetes', BalanceteController::class);
     Route::resource('balancos', BalancoController::class);
     Route::resource('extratos-contas', ExtratoContaController::class);
@@ -105,13 +113,18 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('imprimir-balancete', [BalanceteController::class, 'imprimirBalancete']);
     Route::get('imprimir-balanco', [BalancoController::class, 'imprimirBalanco']);
     Route::get('imprimir-extrato', [ExtratoContaController::class, 'imprimirExtrato']);
+    Route::get('imprimir-fluxo-caixa-detalhe', [FluxoCaixaController::class, 'imprimirDetalhePDF']);
+    Route::get('imprimir-fluxo-caixa', [FluxoCaixaController::class, 'imprimirPDF']);
     Route::get('imprimir-extrato-excel', [ExtratoContaController::class, 'imprimirExtratoExcel']);
 
     Route::get('get-subcontas', [BalancoController::class, 'getSubcontas']);
     
     // Rotas Tabela de apoio
     Route::resource('tipos-creditos', TipoCreditoController::class);
+    Route::resource('tipos-proveitos', TipoProveitoController::class);
+    Route::resource('contrapartidas', ContrapartidaController::class);
     Route::resource('tipos-movimentos', TipoMovimentoController::class);
+    Route::resource('documentos', DocumentoController::class);
     Route::resource('regime-empresa', RegimeController::class);
     Route::resource('moeda', MoedaController::class);
     Route::resource('paises', PaisesController::class);

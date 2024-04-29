@@ -171,7 +171,7 @@ export default {
     "item_movimentos",
     "ultimo_movimento",
     "resultados",
-    "periodos"
+    "periodos",
   ],
   computed: {
     user() {
@@ -182,6 +182,9 @@ export default {
     },
     sessions_exercicio() {
       return this.$page.props.sessions.exercicio_sessao;
+    },
+    periodo_sessao() {
+      return this.$page.props.sessions.periodo_sessao;
     },
   },
   data() {
@@ -248,6 +251,7 @@ export default {
   },
   mounted() {
     this.form.exercicio_id = this.sessions_exercicio ? this.sessions_exercicio.id : "";
+    this.form.periodo_id = this.periodo_sessao ? this.periodo_sessao.id : "";
     
     this.form.dia_id = this.dataAtual.getDate();
     this.form.mes_id = this.dataAtual.getMonth() + 1;

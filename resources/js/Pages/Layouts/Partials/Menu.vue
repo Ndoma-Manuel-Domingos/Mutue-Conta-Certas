@@ -163,6 +163,19 @@
               <p>Movimentos</p>
             </Link>
           </li>
+          
+          <li class="nav-item" title="Fluxo de Caixa">
+            <Link
+              href="/fluxos-caixas"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'FluxoCaixa/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Fluxo de Caixa</p>
+            </Link>
+          </li>
 
           <li class="nav-item" title="Apuramento de Resultados">
             <Link
@@ -301,6 +314,17 @@
             </Link>
             
             <Link
+              href="/contrapartidas"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Contrapartidas/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Contrapartidas</p>
+            </Link>
+            
+            <Link
               href="/tipos-movimentos"
               class="nav-link"
               :class="{
@@ -309,6 +333,28 @@
             >
               <i class="far fa-circle nav-icon"></i>
               <p>Tipos de Movimentos</p>
+            </Link>
+            
+            <Link
+              href="/documentos"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Documentos/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Documentos</p>
+            </Link>
+            
+            <Link
+              href="/tipos-proveitos"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'TipoProveitos/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Tipos de Proveitos</p>
             </Link>
             
             <Link

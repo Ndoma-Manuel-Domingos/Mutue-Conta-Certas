@@ -19,6 +19,14 @@ class MovimentoItem extends Model
         'descricao',
         'empresa_id',
         'subconta_id',
+        'tipo_movimento_id',
+        'taxta_iva_id',
+        'documento_id',
+        'tipo_credito_id',
+        'tipo_proveito_id',
+        'contrapartida_id',
+        'origem',
+        'apresentar',
         'conta_id',
         'movimento_id',
         'user_id',
@@ -30,6 +38,36 @@ class MovimentoItem extends Model
     public function conta()
     {
         return $this->belongsTo(Conta::class, 'conta_id', 'id');
+    }  
+        
+    public function documento()
+    {
+        return $this->belongsTo(Documento::class, 'documento_id', 'id');
+    }  
+    
+    public function contrapartida()
+    {
+        return $this->belongsTo(Contrapartida::class, 'contrapartida_id', 'id');
+    }  
+        
+    public function taxa_iva()
+    {
+        return $this->belongsTo(Taxa::class, 'contrapartida_id', 'id');
+    }  
+    
+    public function tipo_proveito()
+    {
+        return $this->belongsTo(TipoProveito::class, 'tipo_proveito_id', 'id');
+    }  
+    
+    public function tipo_credito()
+    {
+        return $this->belongsTo(TipoCredito::class, 'tipo_credito_id', 'id');
+    }  
+    
+    public function tipo_movimento()
+    {
+        return $this->belongsTo(TipoMovimento::class, 'tipo_movimento_id', 'id');
     }  
     
     public function subconta()
