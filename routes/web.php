@@ -83,6 +83,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::put('/editar-fluxo-caixa/{id}', [FluxoCaixaController::class, 'editar_fluxo_caixa']);
     Route::get('/remover-fluxo-caixa/{id}', [FluxoCaixaController::class, 'remover_fluxo_caixa']);
     Route::get('/demonstracao-fluxo-caixa', [FluxoCaixaController::class, 'demonstracaoFluxoCaixa']);
+    Route::get('/fluxos-caixas-imprimir-nota-entregue', [FluxoCaixaController::class, 'imprimirNotaEntregue']);
     
     Route::resource('balancetes', BalanceteController::class);
     Route::resource('balancos', BalancoController::class);
@@ -115,6 +116,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('imprimir-extrato', [ExtratoContaController::class, 'imprimirExtrato']);
     Route::get('imprimir-fluxo-caixa-detalhe', [FluxoCaixaController::class, 'imprimirDetalhePDF']);
     Route::get('imprimir-fluxo-caixa', [FluxoCaixaController::class, 'imprimirPDF']);
+    Route::get('imprimir-controlo-fluxo-caixa', [FluxoCaixaController::class, 'imprimircontrolePDF']);
     Route::get('imprimir-extrato-excel', [ExtratoContaController::class, 'imprimirExtratoExcel']);
     
     // Rotas Tabela de apoio

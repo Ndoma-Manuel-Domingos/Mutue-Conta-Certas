@@ -176,6 +176,19 @@
               <p>Fluxo de Caixa</p>
             </Link>
           </li>
+          
+          <li class="nav-item" title="Demonstração de Fluxo de Caixa">
+            <Link
+              href="/demonstracao-fluxo-caixa"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'FluxoCaixa/Demonstracao',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Demonstração de Fluxo de Caixa</p>
+            </Link>
+          </li>
 
           <li class="nav-item" title="Apuramento de Resultados">
             <Link
