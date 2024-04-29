@@ -135,7 +135,7 @@
                       <tr>
                         <td>Investimentos em subsidiárias e associadas ....................................</td>
                         <td class="text-center"><a href="get-subcontas?nota=6">6</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(total_subssidiarias) }}</td>
+                        <td class="text-right" style="color: blue;">{{ formatarValorMonetario(total_subssidiarias) }}</td>
                         <td class="text-right">-</td>
                       </tr>
                       
