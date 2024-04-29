@@ -105,27 +105,27 @@
 
                   <tbody>
                     <tr>
-                        <td>Dinheiro recebido de Clientes</td>
+                        <td><a href="/demonstracao-fluxo-caixa-detalhe?demonstracao=clientes" class="text-info">Dinheiro recebido de Clientes</a></td>
                         <td class="text-right">{{ formatarValorMonetario(dinheiro_recebido_clientes) }}</td>
                     </tr>
                     <tr>
-                        <td>Dinheiro pagos em mercadorias</td>
+                        <td><a href="/demonstracao-fluxo-caixa-detalhe?demonstracao=mercadorias" class="text-info">Dinheiro pagos em mercadorias</a></td>
                         <td class="text-right">{{ formatarValorMonetario(dinheiro_recebido_fornecedores) }}</td>
                     </tr>
                     <tr>
-                        <td>Dinheiro pagos em salários e custos operacionais</td>
+                        <td><a href="/demonstracao-fluxo-caixa-detalhe?demonstracao=operacionais" class="text-info">Dinheiro pagos em salários e custos operacionais</a></td>
                         <td class="text-right">{{ formatarValorMonetario(dinheiro_custo) }}</td>
                     </tr>
                     <tr>
-                        <td>Dinheiro pagos em juros</td>
+                        <td><a href="/demonstracao-fluxo-caixa-detalhe?demonstracao=jursos" class="text-info">Dinheiro pagos em juros</a></td>
                         <td class="text-right">{{ formatarValorMonetario(dinheiro_pagos_juros) }}</td>
                     </tr>
                     <tr>
-                        <td>Dinheiro pagos em impostos</td>
+                        <td><a href="/demonstracao-fluxo-caixa-detalhe?demonstracao=imposto" class="text-info">Dinheiro pagos em impostos</a></td>
                         <td class="text-right">{{ formatarValorMonetario(dinheiro_imposto) }}</td>
                     </tr>
                     <tr>
-                        <td>Outros</td>
+                        <td><a href="/demonstracao-fluxo-caixa-detalhe?demonstracao=outros" class="text-info">Outros</a></td>
                         <td class="text-right">{{ formatarValorMonetario(outros) }}</td>
                     </tr>
                   </tbody>

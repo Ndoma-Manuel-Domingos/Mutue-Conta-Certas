@@ -83,6 +83,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::put('/editar-fluxo-caixa/{id}', [FluxoCaixaController::class, 'editar_fluxo_caixa']);
     Route::get('/remover-fluxo-caixa/{id}', [FluxoCaixaController::class, 'remover_fluxo_caixa']);
     Route::get('/demonstracao-fluxo-caixa', [FluxoCaixaController::class, 'demonstracaoFluxoCaixa']);
+    Route::get('/demonstracao-fluxo-caixa-detalhe', [FluxoCaixaController::class, 'demonstracaoFluxoCaixaDetalhe']);
     Route::get('/fluxos-caixas-imprimir-nota-entregue', [FluxoCaixaController::class, 'imprimirNotaEntregue']);
     
     Route::resource('balancetes', BalanceteController::class);
