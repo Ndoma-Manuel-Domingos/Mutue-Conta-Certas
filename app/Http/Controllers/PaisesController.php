@@ -15,7 +15,7 @@ class PaisesController extends Controller
      */
     public function index()
     {
-        $data['paises'] = Pais::paginate(10);
+        $data['paises'] = Pais::get();
 
         return Inertia::render('Paises/Index', $data);
     }

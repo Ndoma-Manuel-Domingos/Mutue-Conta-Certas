@@ -15,10 +15,7 @@ class TipoEmpresaController extends Controller
      */
     public function index(Request $request)
     {
-        $data['tipos_empresas'] = TipoEmpresa::when($request->input_busca_tipos_empresas, function($query, $value){
-            $query->where('designacao', 'like', "%".$value."%");
-        })
-        ->paginate(10);
+        $data['tipos_empresas'] = TipoEmpresa::get();
 
         return Inertia::render('TipoEmpresas/Index', $data);
     }

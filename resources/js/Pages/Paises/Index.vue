@@ -37,7 +37,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
+                  <table class="table table-bordered table-hover" id="tabela_paises">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -49,7 +49,7 @@
                     </thead>
 
                     <tbody>
-                      <tr v-for="item in paises.data" :key="item">
+                      <tr v-for="item in paises" :key="item">
                         <td>#</td>
                         <td>{{ item.id }}</td>
                         <td>{{ item.designacao }}</td>
@@ -72,16 +72,6 @@
                     </tbody>
                   </table>
                 </div>
-              </div>
-
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ paises.total }}</Link
-                >
-                <Paginacao :links="paises.links" 
-                    :prev="paises.prev_page_url"
-                    :next="paises.next_page_url"
-                />
               </div>
             </div>
           </div>
@@ -110,7 +100,11 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+    $('#tabela_paises').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
   methods: {
     deleteItem(item) {
       console.log(item.id);

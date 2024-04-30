@@ -51,7 +51,7 @@
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
+                  <table class="table table-bordered table-hover" id="tabela_dos_tipos_de_moedas">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -64,7 +64,7 @@
                     </thead>
 
                     <tbody>
-                      <tr v-for="item in moeda.data" :key="item">
+                      <tr v-for="item in moeda" :key="item">
                         <td>#</td>
                         <td>{{ item.id }}</td>
                         <td>{{ item.designacao }}</td>
@@ -83,17 +83,6 @@
                     </tbody>
                   </table>
                 </div>
-              </div>
-
-              <div class="card-footer">
-                <Link href="" class="text-secondary">
-                  Total Registro: {{ moeda.total }}</Link
-                >
-                <Paginacao
-                  :links="moeda.links"
-                  :prev="moeda.prev_page_url"
-                  :next="moeda.next_page_url"
-                />
               </div>
             </div>
           </div>
@@ -125,7 +114,11 @@ export default {
       params: {},
     };
   },
-  mounted() {},
+  mounted() {
+    $('#tabela_dos_tipos_de_moedas').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+  },
   watch: {
     options: function (val) {
       this.params.page = val.page;
