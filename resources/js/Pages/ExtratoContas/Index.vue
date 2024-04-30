@@ -172,6 +172,7 @@
 </template>
   
 <script>
+import axios from 'axios';
 
 export default {
   props: [
@@ -262,6 +263,7 @@ export default {
   },
 
   methods: {
+    
     imprimirExtrato(){
       window.open("imprimir-extrato?conta_id="+this.conta_id+"&subconta_id="+this.subconta_id+"&data_inicio="+this.data_inicio+"&data_final="+this.data_final+"");
     },

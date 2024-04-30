@@ -346,7 +346,7 @@
         <hr>
         <p style="text-align:right">Data: {{ date('Y-m-d H:i:s') }} </p>
 
-        <div align="center"> Documento processado pelo software MUTUE - Contas Certas.</div>
+        <div align="center"> Documento processado pelo software MCC(Mutue Contas Certas).</div>
 
     </div>
 </body>

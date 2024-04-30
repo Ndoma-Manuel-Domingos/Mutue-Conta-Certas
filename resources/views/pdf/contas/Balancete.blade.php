@@ -26,24 +26,24 @@
         .orange-text {
             color: orange;
         }
-
     </style>
 </head>
 
 <body>
-    <header class="clearfix">
+    {{-- <header class="clearfix">
         <div id="logo" style="padding: 0">
-            <img src="images/{{$dados_empresa->logotipo_da_empresa ?? 'log.png' }}" style="width: 150px;height: 150px;position: absolute;top: -40px">
+            <img src="images/{{ $dados_empresa->logotipo_da_empresa ?? 'log.png' }}"
+                style="width: 150px;height: 150px;position: absolute;top: -40px">
         </div>
         <div id="company">
-            <h2 class="name">{{$dados_empresa->nome_empresa}}</h2>
-            <div>{{$dados_empresa->endereco->rua}}, {{$dados_empresa->endereco->bairro}}, <br>
+            <h2 class="name">{{ $dados_empresa->nome_empresa }}</h2>
+            <div>{{ $dados_empresa->endereco->rua }}, {{ $dados_empresa->endereco->bairro }}, <br>
             </div>
             <div>+244 947716133/+244 942364667</div>
             <div><a href="mailto:geral@uma.co.ao">geral@uma.co.ao</a></div>
         </div>
         </div>
-    </header>
+    </header> --}}
     <main>
         <h2 style="text-align: left;border-bottom: 1px solid #c2c2c2;padding-bottom: 2px;text-transform: uppercase;font-size: 11pt">Balancete {{ $tipo_balancete->designacao ?? '' }} <span style="float: right">DATA INICIO: {{ $requests['data_inicio'] ?? date('Y-m-d')  }}, DATA FINAL {{ $requests['data_final'] ?? date('Y-m-d') }}</span></h2>
         <h2 style="text-align: left;border-bottom: 1px solid #c2c2c2;padding-bottom: 2px;text-transform: uppercase;font-size: 11pt">Exercício: {{ $exercicio->designacao ?? '' }}</h2>

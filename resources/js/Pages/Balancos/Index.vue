@@ -50,7 +50,7 @@
                       />
                     </div> -->
 
-                    <div class="col-12 col-md-4 mb-4">
+                    <!-- <div class="col-12 col-md-4 mb-4">
                       <label for="data_inicio" class="form-label"
                         >Data Inicio</label
                       >
@@ -74,7 +74,8 @@
                         :min="minDate(userYear)" :max="maxDate(userYear)"
                         class="form-control"
                       />
-                    </div>
+                    </div> -->
+
                   </div>
                 </form>
               </div>
@@ -98,8 +99,8 @@
                       <tr>
                         <th>Designação</th>
                         <th style="width: 5px" class="text-center">Notas</th>
-                        <th>2024</th>
-                        <th>2023</th>
+                        <th class="text-center">{{ exercicio_actual[0].text}}</th>
+                        <th class="text-center">{{ exercicio_anterior.designacao }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -115,44 +116,47 @@
                         <td>0</td>
                       </tr> -->
                       <tr>
+                        
                         <td>Imobilizações corpóreas ....................................</td>
-                        <td class="text-center"><a href="">4</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=4">4</a></td>
+                        <!-- <td class="text-right" style="color: red;" v-if="total_imobilizacoes_corporeas < 0">{{ total_imobilizacoes_corporeas * -1}}</td> -->
+                        <td class="text-right" style="color: blue;">{{ total_imobilizacoes_corporeas*-1 }}</td>
+                        <td class="text-right">-</td>
                       </tr>
                
                       <tr>
                         <td>Imobilizações incorpóreas ....................................</td>
-                        <td class="text-center"><a href="">5</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=5">5</a></td>
+                        <!-- <td class="text-right" style="color: red;" v-if="total_imobilizacoes_incorporeas < 0">{{ total_imobilizacoes_incorporeas * -1}}</td> -->
+                        <td class="text-right" style="color: blue;">{{ total_imobilizacoes_incorporeas }}</td>
+                        <td class="text-right">-</td>
                       </tr>
                
                       <tr>
                         <td>Investimentos em subsidiárias e associadas ....................................</td>
-                        <td class="text-center"><a href="">6</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=6">6</a></td>
+                        <td class="text-right">{{ formatarValorMonetario(total_subssidiarias) }}</td>
+                        <td class="text-right">-</td>
                       </tr>
                       
                       <tr>
                         <td>Outros activos financeiros ....................................</td>
-                        <td class="text-center"><a href="">7</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=7">7</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                       <tr>
                         <td>Outros activos não correntes ....................................</td>
-                        <td class="text-center"><a href="">9</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=0">9</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                
                       <tr>
+                        <th>Total de Activos não Correntes</th>
                         <th></th>
-                        <th></th>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
+                        <th class="text-right">{{ formatarValorMonetario(total_subssidiarias+total_imobilizacoes_incorporeas+(total_imobilizacoes_corporeas*-1)) }}</th>
+                        <th class="text-right">-</th>
                       </tr>
                       <!-- </template> -->
                       <!-- ================================================================================ -->
@@ -170,37 +174,37 @@
                       
                       <tr>
                         <td>Existências ....................................</td>
-                        <td class="text-center"><a href="">8</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=8">8</a></td>
+                        <td class="text-right" style="color: blue;">{{ formatarValorMonetario(total_existencias) }}</td>
+                        <td class="text-right">-</td>
                       </tr>
 
                       <tr>
                         <td>Contas a receber ....................................</td>
-                        <td class="text-center"><a href="">9</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=9">9</a></td>
+                        <td class="text-right" style="color: blue;">{{ formatarValorMonetario(contas_receber) }}</td>
+                        <td class="text-right">-</td>
                       </tr>
                       
                       <tr>
                         <td>Disponibilidades ....................................</td>
-                        <td class="text-center"><a href="">10</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=10">10</a></td>
+                        <td class="text-right" style="color: blue;">{{ formatarValorMonetario(total_disponibilidade) }}</td>
+                        <td class="text-right">-</td>
                       </tr>
                       
                       <tr>
                         <td>Outros activos correntes  ....................................</td>
-                        <td class="text-center"><a href="">11</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=11">11</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                    
                       <tr>
                         <th>Total do activo</th>
                         <th class="text-center"></th>
-                        <th class="text-right">0</th>
-                        <th class="text-right">0</th>
+                        <th class="text-right">{{ formatarValorMonetario(total_disponibilidade + contas_receber + total_existencias) }}</th>
+                        <th class="text-right">-</th>
                       </tr>
                       <!-- </template> -->
 
@@ -215,39 +219,39 @@
                       </tr>
                       <tr>
                         <td>Capital ....................................</td>
-                        <td class="text-center"><a href="">12</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=12">12</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
 
                       <tr>
                         <!-- ---------------------------------------- -->
                         <td>Reservas ....................................</td>
-                        <td class="text-center"><a href="">13</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=13">13</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                       
                       <tr>
                         <!-- ---------------------------------------- -->
                         <td>Resultados transitados ....................................</td>
-                        <td class="text-center"><a href="">14</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=14">14</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                       <tr>
                         <!-- ---------------------------------------- -->
                         <td>Resultados do exercício ....................................</td>
-                        <td class="text-center"><a href="">13</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=13">13</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
 
                       <tr>
                         <th></th>
                         <th class="text-center"></th>
                         <th class="text-right"></th>
-                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
+                        <th class="text-right">-</th>
                       </tr>
 
                       <!-- ================================================================================ -->
@@ -258,30 +262,30 @@
                       
                       <tr>
                         <td>Impostos diferidos. . . .</td>
-                        <td class="text-center"><a href="">16</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=16">16</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                       
                       <tr>
                         <td>Provisões para pensões. . . .</td>
-                        <td class="text-center"><a href="">17</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=17">17</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                         
                       <tr>
                         <td>Provisões para outros riscos e encargos. . . .</td>
-                        <td class="text-center"><a href="">18</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=18">18</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                       
                       <tr>
                         <td>Outros passivos não correntes. . . .</td>
-                        <td class="text-center"><a href="">19</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=19">19</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                       <!-- <tr v-for="(item, index) in conta_do_passivos_nao_corrente" :key="index">
                         <td>{{ item.conta.numero ?? "" }} - {{ item.conta.designacao ?? "" }}</td>
@@ -293,8 +297,8 @@
                       <tr>
                         <th></th>
                         <th class="text-center"></th>
-                        <th class="text-right">0</th>
-                        <th class="text-right">0</th>
+                        <th class="text-right">-</th>
+                        <th class="text-right">-</th>
                       </tr>
 
                       <!-- ================================================================================ -->
@@ -305,31 +309,31 @@
                       
                       <tr>
                         <td>Contas a pagar. . . . .</td>
-                        <td class="text-center"><a href="">19</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=19">19</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                       
                       <tr>
                         <td>Empréstimos de curto prazo. . . . .</td>
-                        <td class="text-center"><a href="">20</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=20">20</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                       
                       
                       <tr>
                         <td>Parte cor. dos empr. a médio e longo prazos. . . . .</td>
-                        <td class="text-center"><a href="">15</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=15">15</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                       
                       <tr>
                         <td>Outros passivos correntes. . . . .</td>
-                        <td class="text-center"><a href="">21</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(0) }}</td>
+                        <td class="text-center"><a href="get-subcontas?nota=21">21</a></td>
+                        <td class="text-right">-</td>
+                        <td class="text-right">-</td>
                       </tr>
                       
                       <!-- <tr v-for="(item, index) in conta_do_passivos_corrente" :key="index">
@@ -342,15 +346,15 @@
                       <tr>
                         <th></th>
                         <th class="text-center"></th>
-                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
-                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
+                        <th class="text-right">-</th>
+                        <th class="text-right">-</th>
                       </tr>
                  
                       <tr>
                         <th></th>
                         <th class="text-center">Total do capital próprio e passivo</th>
-                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
-                        <th class="text-right">{{ formatarValorMonetario(0) }}</th>
+                        <th class="text-right">-</th>
+                        <th class="text-right">-</th>
                       </tr>
                       <!-- </template> -->
                     </tbody>
@@ -380,7 +384,12 @@
 import Paginacao from "../../components/Paginacao.vue";
 
 export default {
-  props: ["exercicios", "periodos",  "conta_do_activos_corrente", "conta_do_activos_nao_corrente" ,"conta_do_passivos_corrente", "conta_do_passivos_nao_corrente"],
+  props: ["exercicios", "periodos", "contas_receber", "total_imobilizacoes_corporeas" , 
+   "total_imobilizacoes_incorporeas", "conta_do_activos_nao_corrente", 
+   "subcontas_movimentos" ,"conta_do_passivos_corrente","total_existencias" , 
+   "conta_do_passivos_nao_corrente", "total_disponibilidade", "total_subssidiarias", 
+   "exercicio_anterior", "exercicio_actual",
+  ],
   components: {
     Paginacao,
   },
@@ -446,6 +455,7 @@ export default {
     },
 
     periodo_id: function (val) {
+      
       this.params.periodo_id = val;
       this.updateData();
     },
@@ -461,6 +471,7 @@ export default {
   },
 
   methods: {
+  
     updateData() {
       this.$Progress.start();
       this.$inertia.get("/balancos", this.params, {
@@ -505,6 +516,11 @@ export default {
       window.open(
         `imprimir-balanco?exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`
       );
+    },
+
+    buscarSubcontas(nota){
+      this.$Progress.start();
+      this.$inertia.get(`get-subcontas?nota=${nota}`);
     },
 
   },

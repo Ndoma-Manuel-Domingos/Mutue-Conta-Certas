@@ -124,12 +124,14 @@ export default {
         designacao: this.subconta.designacao ?? "",
         numero: this.subconta.numero ?? "",
         estado: this.subconta.estado ?? "",
-        tipo: this.tipo ?? "",
+        tipo: this.subconta.tipo ?? "",
         itemId: this.subconta.id ?? "",
       },
     };
   },
-  mounted() {},
+  mounted() {
+    // console.log()
+  },
   methods: {
     submit() {
       this.$Progress.start();

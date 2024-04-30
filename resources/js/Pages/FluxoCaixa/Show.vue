@@ -117,15 +117,15 @@
                       <table class="table">
                         <tr>
                           <th style="width: 50%">Total Débito:</th>
-                          <td>{{ formatValor(movimento.debito) }}</td>
+                          <td>{{ formatarValorMonetario(resultado.debito) }} <small>{{ sessions.moeda.base.sigla ?? "" }}</small></td>
                         </tr>
                         <tr>
                           <th>Total Crédito:</th>
-                          <td>{{ formatValor(movimento.credito) }}</td>
+                          <td>{{ formatarValorMonetario(resultado.credito) }} <small>{{ sessions.moeda.base.sigla ?? "" }}</small></td>
                         </tr>
                         <tr>
                           <th>Total IVA:</th>
-                          <td>{{ formatValor(movimento.iva) }}</td>
+                          <td>{{ formatarValorMonetario(resultado.iva) }} <small>{{ sessions.moeda.base.sigla ?? "" }}</small></td>
                         </tr>
                       </table>
                     </div>
@@ -135,8 +135,7 @@
                 <div class="row">
                     <div class="col-12 col-md-12">
                         <!-- <button type="button" class="btn btn-info float-left"><i class="fas fa-print"></i> Imprimir </button> -->
-                        
-                        <a href="" class="btn btn-sm btn-success mr-2"><i class="fas fa-edit"></i> Editar</a>
+                        <!-- <a href="" class="btn btn-sm btn-success mr-2"><i class="fas fa-edit"></i> Editar</a> -->
                         <a class="btn btn-sm btn-danger mr-2" @click="imprimirDetalhePDF()"><i class="fas fa-file-pdf"></i> Imprimir</a>
                     </div>
                 </div>
@@ -153,7 +152,7 @@
 import Paginacao from "../../components/Paginacao.vue";
 
 export default {
-  props: ["movimento"],
+  props: ["movimento", "resultado"],
   components: {
     Paginacao,
   },

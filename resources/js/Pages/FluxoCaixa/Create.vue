@@ -30,7 +30,8 @@
                     <span class="text-info">50.000,00</span>  -->
                     ||
                     <span>Saldo Actual: </span>
-                    <span class="text-info"> {{ formatarValorMonetario(saldo_actual) }}</span>
+                    <span class="text-info"> {{ formatarValorMonetario(saldo_final) }}</span>
+                    <!-- <span class="text-info"> {{ formatarValorMonetario(saldo_actual) }}</span> -->
 
                     <span class="float-right"
                       >MOEDA: <strong class="text-info">{{ sessions ? (sessions.moeda ? (sessions.moeda.base ? sessions.moeda.base.sigla : "Sem moeda principal") : "Sem moeda principal") : "Sem moeda principal" }}</strong></span
@@ -65,6 +66,7 @@
                         v-model="form.valor"
                         class="form-control"
                         placeholder="Informe o Valor"
+                        @input="entrada_valor_operacao()"
                       />
                       <span
                         class="text-danger"
@@ -217,23 +219,6 @@
                       </div>
                     </div>
                     
-                    <!-- <div class="col-12 col-md-3 mb-4">
-                      <label for="taxa_iva_id" class="form-label"
-                        >Taxa do IVA</label
-                      >
-                      <Select2
-                        v-model="form.taxa_iva_id"
-                        id="taxa_iva_id"
-                        class="col-12 col-md-12"
-                        :options="taxas"
-                        :settings="{ width: '100%' }"
-                      />
-                      <span
-                        class="text-danger"
-                        v-if="form.errors && form.errors.taxa_iva_id"
-                        >{{ form.errors.taxa_iva_id }}</span
-                      >
-                    </div> -->
                   </div>
                 </div>
                 <div class="card-footer">
@@ -271,8 +256,9 @@
                       <td colspan="3" class="text-right">Total</td>
                       <td class="text-right text-primary">{{ resultados.total_debito == null ? 0 : formatarValorMonetario(resultados.total_debito) }}</td>
                       <td class="text-right text-danger">{{ resultados.total_credito == null ? 0 : formatarValorMonetario(resultados.total_credito) }}</td>
-                      <td class="text-right text-primary" v-if="resultados.total_debito > resultados.total_credito">{{ resultados ? formatarValorMonetario(((resultados.total_debito + saldo_actual) - resultados.total_credito)) : "-"  }}</td>
-                      <td class="text-right text-danger" v-if="resultados.total_credito > resultados.total_debito">{{ resultados ? formatarValorMonetario(((resultados.total_credito + saldo_actual) - resultados.total_debito)) : "-" }}</td>
+                      <td class="text-right text-primary">{{ formatarValorMonetario(saldo_final) }}</td>
+                      <!-- <td class="text-right text-primary" v-if="resultados.total_debito > resultados.total_credito">{{ resultados ? formatarValorMonetario(((resultados.total_debito + saldo_final) - resultados.total_credito)) : "-"  }}</td> -->
+                      <!-- <td class="text-right text-danger" v-if="resultados.total_credito > resultados.total_debito">{{ resultados ? formatarValorMonetario(((resultados.total_credito + saldo_final) - resultados.total_debito)) : "-" }}</td> -->
                       <td></td>
                     </tr>
                     <tr v-for="(item, index) in item_movimentos" :key="index">
@@ -315,7 +301,8 @@ export default {
     "contrapartidas",
     "saldo",
     "item_movimentos", "resultados",
-    "taxas"
+    "taxas",
+    "saldo_final"
   ],
   components: {},
   computed: {
@@ -334,7 +321,8 @@ export default {
       
       if (this.saldo.debito > this.saldo.credito) {
         saldo = this.saldo.debito - this.saldo.credito
-      }else if(this.saldo.credito > this.saldo.debito){
+      }
+      if(this.saldo.credito > this.saldo.debito){
         saldo = this.saldo.credito - this.saldo.debito
       }
       
@@ -371,19 +359,11 @@ export default {
       tipo_credito_id: "",
       sub_conta_id: "",
       
-      // item_movimentos: this.item_movimentos,
-      // resultados: this.resultados,
-
       params: {},
   
     };
   },
-  mounted() {
-    // console.log(this.item_movimentos);
-    // this.item_movimentos = [];
-    // this.item_movimentos = this.item_movimentos;
-    // this.resultados = this.resultados;
-  },
+  mounted() {},
   watch: {
     options: function (val) {
       this.params.page = val.page;
@@ -452,7 +432,29 @@ export default {
     //   }
    
     // },
-    
+    entrada_valor_operacao(){
+      // Recupera o valor introduzido
+      const valorIntroduzido = this.form.valor;
+      
+      if( valorIntroduzido > this.saldo_final ){
+        Swal.fire({
+          toast: true,
+          icon: "error",
+          title: "Operação Invalida, saldo insuficiente para este operação!",
+          animation: false,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 4000,
+        });
+        
+        this.form.valor = 0;
+        
+      }
+      
+      // console.log("Valor introduzido:", valorIntroduzido);
+      
+    },
+            
     editar_fluxo_caixa_item(item){
         this.form.valor = (item.tipo_movimento.sigla == "D" ? item.debito : item.credito);
        
@@ -489,6 +491,21 @@ export default {
     },    
 
     submit() {
+      
+      // if(this.form.valor == 0) {
+        
+      //   Swal.fire({
+      //     toast: true,
+      //     icon: "error",
+      //     title: "O valor não pode ser zero(0)!",
+      //     animation: false,
+      //     position: "top-end",
+      //     showConfirmButton: false,
+      //     timer: 4000,
+      //   });
+        
+      //   return
+      // }
       
       this.form.tipo_credito_id = this.tipo_credito_id;
       this.form.contrapartida_id = this.contrapartida_id;

@@ -121,11 +121,20 @@
                       <th class="text-right">Débito</th>
                       <th class="text-right">Crédito</th>
                       <th class="text-right">Saldo</th>
-                      <th class="text-right">Exercício</th>
-                      <th class="text-right">Período</th>
-                      <th class="text-right">Data</th>
-                      <th class="text-right" style="width: 300px">Ações</th>
+                      <th class="text-right" rowspan="2">Exercício</th>
+                      <th class="text-right" rowspan="2">Período</th>
+                      <th class="text-right" rowspan="2">Data</th>
+                      <th class="text-right" rowspan="2" style="width: 300px">Ações</th>
                     </tr>
+                    
+                    <tr>
+                      <th class="text-right" colspan="2">TOTAL</th>
+                      <th class="text-right text-primary">{{ formatarValorMonetario(resultado.debito ?? 0) }}</th>
+                      <th class="text-right text-danger">{{ formatarValorMonetario(resultado.credito ?? 0) }}</th>
+                      <th class="text-right text-primary" v-if="resultado.debito > resultado.credito">{{ formatarValorMonetario(resultado.debito - resultado.credito) }}</th>
+                      <th class="text-right text-danger" v-if="resultado.credito > resultado.debito">{{ formatarValorMonetario(resultado.credito - resultado.debito) }}</th>
+                    </tr>
+                    
                   </thead>
 
                   <tbody>
@@ -183,7 +192,7 @@
 import Paginacao from "../../components/Paginacao.vue";
 
 export default {
-  props: ["movimentos", "exercicios", "periodos"],
+  props: ["movimentos", "resultado", "exercicios", "periodos", "periodo"],
   components: {
     Paginacao,
   },
@@ -217,11 +226,18 @@ export default {
     this.periodo_id = this.periodo_sessao ? this.periodo_sessao.id : "";
     
     const year = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
+    const month = this.periodo.numero;
+        
+    this.data_inicio = `${year}-04-01`;
+    this.data_final = `${year}-04-30`;
     
-    this.data_inicio = `${year}-01-01`;
-    this.data_final = `${year}-12-31`;
+    // this.data_inicio = `${year}-${month}-01`;
+    // this.data_final = `${year}-${month}-30`;
     
     this.userYear = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
+    this.userMonth = this.periodo.numero;
+    
+    
   
     $("#tabela_de_diarias").DataTable({
       responsive: true,
@@ -273,12 +289,19 @@ export default {
     },
     
     minDate(year) {
-      return `${year}-01-01`; // Primeiro dia do ano especificado
+      return `${year}-04-01`; // Primeiro dia do ano especificado
     },
     
     maxDate(year) {
-      return `${year}-12-31`; // Último dia do ano especificado
+      return `${year}-04-30`; // Último dia do ano especificado
     },
+    // minDate(year) {
+    //   return `${year}-01-01`; // Primeiro dia do ano especificado
+    // },
+    
+    // maxDate(year) {
+    //   return `${year}-12-31`; // Último dia do ano especificado
+    // },
 
     formatarValorMonetario(valor) {
       // Converter o número para uma string e separar parte inteira da parte decimal

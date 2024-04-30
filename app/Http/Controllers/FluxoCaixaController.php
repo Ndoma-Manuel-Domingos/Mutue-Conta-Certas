@@ -37,6 +37,12 @@ class FluxoCaixaController extends Controller
         $data['exercicios'] = Exercicio::select('id', 'designacao AS text')->where('empresa_id', $this->empresaLogada())->get();
         $data['periodos'] = Periodo::select('id', 'designacao AS text')->where('empresa_id', $this->empresaLogada())->get();
         
+        if($request->periodo_id){
+            $data['periodo'] = Periodo::where('empresa_id', $this->empresaLogada())->find($request->periodo_id);
+        }else{
+            $data['periodo'] = Periodo::where('empresa_id', $this->empresaLogada())->where('numero', date("m"))->first();
+        }
+        
         $data['movimentos'] = Movimento::when($request->exercicio_id, function($query, $value){
             $query->where('exercicio_id', $value);
         })
@@ -55,6 +61,25 @@ class FluxoCaixaController extends Controller
         ->orderBy('id', 'desc')
         ->get();
         
+        
+        $data['resultado'] = Movimento::when($request->exercicio_id, function($query, $value){
+            $query->where('exercicio_id', $value);
+        })
+        ->when($request->periodo_id, function($query, $value){
+            $query->where('periodo_id', $value);
+        })
+        ->when($request->data_inicio, function($query, $value){
+            $query->whereDate('data_lancamento',  ">=" ,$value);
+        })
+        ->when($request->data_final, function($query, $value){
+            $query->whereDate('data_lancamento', "<=" ,$value);
+        })
+        ->with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
+        ->where('origem', 'fluxocaixa')
+        ->where('empresa_id', $this->empresaLogada())
+        ->select(DB::raw('SUM(debito) AS debito'), DB::raw('SUM(credito) AS credito'), DB::raw('SUM(iva) AS iva'))
+        ->first();
+                
         return Inertia::render('FluxoCaixa/Index', $data);
     }
     
@@ -263,49 +288,98 @@ class FluxoCaixaController extends Controller
             $conta_salario = Conta::where('numero', '72')->first();
             $subconta_salario = SubConta::where('tipo', 'M')->where('numero', 'like', '72.2.'. "%")->orWhere('numero', 'like', '72.1.'. "%")->where('conta_id', $conta_salario->id)->pluck('id');
             
-            $dinheiro_subconta_custo_operacionais = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])
-            ->whereHas('movimento', function($query) use($request){
-                $query->when($request->exercicio_id, function($query, $value){
-                    $query->where('exercicio_id', $value);
-                });
-                $query->when($request->periodo_id, function($query, $value){
-                    $query->where('periodo_id', $value);
-                });
+            
+            // $data['item_movimentos'] = MovimentoItem::with(['subconta.conta', 'empresa', 'documento', 'tipo_movimento', 'movimento'])
+            //     ->whereHas('movimento', function($query) use ($request) {
+            //         $query->when($request->exercicio_id, function($query, $value) {
+            //             $query->where('exercicio_id', $value);
+            //         });
+            //         $query->when($request->periodo_id, function($query, $value) {
+            //             $query->where('periodo_id', $value);
+            //         });
+            //         $query->when($request->data_inicio, function($query, $value) {
+            //             $query->whereDate('data_lancamento', '>=', $value);
+            //         });
+            //         $query->when($request->data_final, function($query, $value) {
+            //             $query->whereDate('data_lancamento', '<=', $value);
+            //         });
+            //     })
+            //     ->where('origem', 'fluxocaixa')
+            //     ->whereIn('subconta_id', function($query) use ($subconta_custo_operacionais, $subconta_salario) {
+            //         $query->select('id')
+            //             ->from('subcontas')
+            //             ->where('tipo', 'M')
+            //             ->where(function ($query) use ($subconta_custo_operacionais, $subconta_salario) {
+            //                 $query->whereIn('numero', $subconta_custo_operacionais)
+            //                       ->orWhereIn('numero', $subconta_salario);
+            //             });
+            //     })
+            //     ->get();
                 
-                $query->when($request->data_inicio, function($query, $value){
-                    $query->whereDate('data_lancamento',  ">=" ,$value);
-                });
-                $query->when($request->data_final, function($query, $value){
-                    $query->whereDate('data_lancamento', "<=" ,$value);
-                });
-            })
-            ->where('origem', 'fluxocaixa')
-            ->whereIn('subconta_id', $subconta_custo_operacionais)
-            ->get();
+            $data['item_movimentos'] = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])
+                ->whereHas('movimento', function($query) use($request){
+                    $query->when($request->exercicio_id, function($query, $value){
+                        $query->where('exercicio_id', $value);
+                    });
+                    $query->when($request->periodo_id, function($query, $value){
+                        $query->where('periodo_id', $value);
+                    });
+                    
+                    $query->when($request->data_inicio, function($query, $value){
+                        $query->whereDate('data_lancamento',  ">=" ,$value);
+                    });
+                    $query->when($request->data_final, function($query, $value){
+                        $query->whereDate('data_lancamento', "<=" ,$value);
+                    });
+                })
+                ->where('origem', 'fluxocaixa')
+                ->whereIn('subconta_id', $subconta_custo_operacionais)
+                ->get();
+            
+            // $dinheiro_subconta_custo_operacionais = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])
+            // ->whereHas('movimento', function($query) use($request){
+            //     $query->when($request->exercicio_id, function($query, $value){
+            //         $query->where('exercicio_id', $value);
+            //     });
+            //     $query->when($request->periodo_id, function($query, $value){
+            //         $query->where('periodo_id', $value);
+            //     });
+                
+            //     $query->when($request->data_inicio, function($query, $value){
+            //         $query->whereDate('data_lancamento',  ">=" ,$value);
+            //     });
+            //     $query->when($request->data_final, function($query, $value){
+            //         $query->whereDate('data_lancamento', "<=" ,$value);
+            //     });
+            // })
+            // ->where('origem', 'fluxocaixa')
+            // ->whereIn('subconta_id', $subconta_custo_operacionais)
+            // ->get();
             // ->sum('debito');
             
-            $dinheiro_subconta_salario = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])
-            ->whereHas('movimento', function($query) use($request){
-                $query->when($request->exercicio_id, function($query, $value){
-                    $query->where('exercicio_id', $value);
-                });
-                $query->when($request->periodo_id, function($query, $value){
-                    $query->where('periodo_id', $value);
-                });
+            // $dinheiro_subconta_salario = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])
+            // ->whereHas('movimento', function($query) use($request){
+            //     $query->when($request->exercicio_id, function($query, $value){
+            //         $query->where('exercicio_id', $value);
+            //     });
+            //     $query->when($request->periodo_id, function($query, $value){
+            //         $query->where('periodo_id', $value);
+            //     });
                 
-                $query->when($request->data_inicio, function($query, $value){
-                    $query->whereDate('data_lancamento',  ">=" ,$value);
-                });
-                $query->when($request->data_final, function($query, $value){
-                    $query->whereDate('data_lancamento', "<=" ,$value);
-                });
-            })
-            ->where('origem', 'fluxocaixa')
-            ->whereIn('subconta_id', $subconta_salario)
-            ->get();
+            //     $query->when($request->data_inicio, function($query, $value){
+            //         $query->whereDate('data_lancamento',  ">=" ,$value);
+            //     });
+            //     $query->when($request->data_final, function($query, $value){
+            //         $query->whereDate('data_lancamento', "<=" ,$value);
+            //     });
+            // })
+            // ->where('origem', 'fluxocaixa')
+            // ->whereIn('subconta_id', $subconta_salario)
+            // ->get();
+            
             // ->sum('debito');
             
-            $data['dinheiro_custo'] = $dinheiro_subconta_custo_operacionais + $dinheiro_subconta_salario;
+            // $data['dinheiro_custo'] = $dinheiro_subconta_custo_operacionais + $dinheiro_subconta_salario;
         }
         
         if($request->demonstracao == "jursos"){
@@ -394,11 +468,41 @@ class FluxoCaixaController extends Controller
         
         $data['resultados'] = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])->where('created_at', '>=', Carbon::createFromDate($data_created))->where('apresentar', 'S')->where('origem', 'fluxocaixa')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
         
+        $movimentos = MovimentoItem::when($request->sub_conta_id, function($query, $value){
+            $query->where('subconta_id', $value);
+        })
+        ->where('origem', 'fluxocaixa')
+        ->where('empresa_id', $this->empresaLogada())
+        ->where('user_id', $user->id)
+        ->selectRaw('SUM(debito) AS debito, SUM(credito) AS credito')
+        ->first();
+        
+        if($movimentos->debito > $movimentos->credito){
+            $data['saldo_final'] = $movimentos->debito - $movimentos->credito;
+        }else if($movimentos->credito > $movimentos->debito){
+            $data['saldo_final'] = $movimentos->credito - $movimentos->debito;
+        }else{
+            $data['saldo_final'] = 0;
+        }
+        
         return Inertia::render('FluxoCaixa/Create', $data);
     }
 
     public function store(Request $request)
     {
+    
+        $request->validate([
+            "tipo_movimento_id" => "required",
+            "sub_conta_id" => "required",
+            "valor" => "required",
+            "documento_id" => "required"
+        ], [
+            
+            "tipo_movimento_id.required" => "Campo Obrigatório",
+            "sub_conta_id.required" => "Campo Obrigatório",
+            "valor.required" => "Campo Obrigatório",
+            "documento_id.required" => "Campo Obrigatório",
+        ]);
 
         $user = User::findOrFail(auth()->user()->id);
         
@@ -1654,6 +1758,8 @@ class FluxoCaixaController extends Controller
             
         ->where('origem', 'fluxocaixa')->findOrFail($id);
         
+        $data['resultado'] = MovimentoItem::select(\DB::raw('SUM(debito) AS debito'), \DB::raw('SUM(credito) AS credito'), \DB::raw('SUM(iva) AS iva'))->where('movimento_id', $id)->first();
+        
         return Inertia::render('FluxoCaixa/Show', $data);
     }
      
@@ -1726,6 +1832,25 @@ class FluxoCaixaController extends Controller
         
         $data['exercicio'] = Exercicio::find($request->exercicio_id);
         $data['periodo'] = Periodo::find($request->periodo_id);
+        
+                
+        $data['resultado'] = Movimento::when($request->exercicio_id, function($query, $value){
+            $query->where('exercicio_id', $value);
+        })
+        ->when($request->periodo_id, function($query, $value){
+            $query->where('periodo_id', $value);
+        })
+        ->when($request->data_inicio, function($query, $value){
+            $query->whereDate('data_lancamento',  ">=" ,$value);
+        })
+        ->when($request->data_final, function($query, $value){
+            $query->whereDate('data_lancamento', "<=" ,$value);
+        })
+        ->with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
+        ->where('origem', 'fluxocaixa')
+        ->where('empresa_id', $this->empresaLogada())
+        ->select(DB::raw('SUM(debito) AS debito'), DB::raw('SUM(credito) AS credito'), DB::raw('SUM(iva) AS iva'))
+        ->first();
         
         
         $pdf = PDF::loadView('pdf.contas.FluxoCaixa', $data)->setPaper('a4', 'landscape');

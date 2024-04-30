@@ -33,5 +33,11 @@ class Conta extends Model
     {
         return $this->belongsTo(Classe::class, 'classe_id', 'id');
     }
+
+    public function subconta()
+    {
+        return $this->hasMany(SubConta::class, 'conta_id', 'id');
+    } 
+
     
 }

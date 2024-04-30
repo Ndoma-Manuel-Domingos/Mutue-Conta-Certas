@@ -36,7 +36,6 @@
             width: 90%;
             text-align: center;
         }
-
     </style>
 </head>
 

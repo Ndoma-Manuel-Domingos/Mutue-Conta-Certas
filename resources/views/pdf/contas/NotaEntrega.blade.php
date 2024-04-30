@@ -61,7 +61,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Lista de Fluxo de caixa</title>
+    <title>NOTA DE SAÍDA DE CAIXA</title>
 
     <link rel="stylesheet" href="css/style.css" media="all" />
     <style>
@@ -120,7 +120,7 @@
         </div>
     </header>
     <main>
-        <h2 style="text-align: left;border-bottom: 1px solid #c2c2c2;padding-bottom: 2px;text-transform: uppercase;font-size: 11pt;font-weight: 100"> NOTA DE ENTREGA DE CAIXA</h2>
+        <h2 style="text-align: left;border-bottom: 1px solid #c2c2c2;padding-bottom: 2px;text-transform: uppercase;font-size: 11pt;font-weight: 100">NOTA DE SAÍDA DE CAIXA</h2>
         <h3 style="text-transform: uppercase;">{{ $dados_empresa->nome_empresa }}-Sáida Nº: <strong>{{ $movimento->lancamento_atual }}</strong></h3>
 
         <div style="margin:auto 0px"> </div>
@@ -137,10 +137,9 @@
             @endforeach
         </p>
         <p style="line-height: 30px;border-bottom: 1px solid #dadada"><strong>Valor (AKz):</strong> {{ number_format($movimento->credito, 2, '.', ',')  }}</p>
-        <p style="line-height: 30px;border-bottom: 1px solid #dadada"><strong>Extenso: </strong> {{ valor_por_extenso($movimento->credito) }}</p>
+        <p style="line-height: 30px;border-bottom: 1px solid #dadada"><strong>Extenso: </strong> {{ valor_por_extenso($movimento->credito) }} kwanzas</p>
             
         <div style="margin:auto 0px"> </div>
-
 
     </main>
 

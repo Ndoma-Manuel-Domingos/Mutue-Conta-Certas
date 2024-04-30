@@ -195,8 +195,8 @@ export default {
     
     const year = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
     
-    this.data_inicio = `${year}-01-01`;
-    this.data_final = `${year}-12-31`;
+    this.data_inicio = `${year}-04-01`;
+    this.data_final = `${year}-04-30`;
         
     this.userYear = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
   
@@ -250,11 +250,11 @@ export default {
     },
     
     minDate(year) {
-      return `${year}-01-01`; // Primeiro dia do ano especificado
+      return `${year}-04-01`; // Primeiro dia do ano especificado
     },
     
     maxDate(year) {
-      return `${year}-12-31`; // Último dia do ano especificado
+      return `${year}-04-30`; // Último dia do ano especificado
     },
 
     formatarValorMonetario(valor) {

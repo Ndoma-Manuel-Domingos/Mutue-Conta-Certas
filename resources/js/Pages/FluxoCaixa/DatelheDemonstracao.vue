@@ -9,7 +9,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item">
-                <a href="/fluxos-caixas">Fluxo de Caixa</a>
+                <a href="/demonstracao-fluxo-caixa">Fluxo de Caixa</a>
               </li>
               <li class="breadcrumb-item active">Listagem</li>
             </ol>

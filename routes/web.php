@@ -119,6 +119,8 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('imprimir-fluxo-caixa', [FluxoCaixaController::class, 'imprimirPDF']);
     Route::get('imprimir-controlo-fluxo-caixa', [FluxoCaixaController::class, 'imprimircontrolePDF']);
     Route::get('imprimir-extrato-excel', [ExtratoContaController::class, 'imprimirExtratoExcel']);
+
+    Route::get('get-subcontas', [BalancoController::class, 'getSubcontas']);
     
     // Rotas Tabela de apoio
     Route::resource('tipos-creditos', TipoCreditoController::class);

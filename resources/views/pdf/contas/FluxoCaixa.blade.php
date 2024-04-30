@@ -79,7 +79,17 @@
                     <th style="text-align: right;">Débito</th>
                     <th style="text-align: right;">Crédito</th>
                     <th style="text-align: right;">Saldo</th>
-                    {{-- <th style="text-align: right;">Operador</th> --}}
+                </tr>
+                <tr class="">
+                    <th colspan="6" style="text-align: right;">TOTAL</th>
+                    <th style="text-align: right;color: blue">{{ number_format($resultado->debito, 2, ',', '.') }}</th>
+                    <th style="text-align: right;color: red">{{ number_format($resultado->credito, 2, ',', '.') }}</th>
+                    @if ($resultado->debito > $resultado->credito)
+                       <th style="text-align: right;color: blue">{{ number_format($resultado->debito - $resultado->credito, 2, ',', '.') }}</th>    
+                    @endif
+                    @if ($resultado->credito > $resultado->debito)
+                        <th style="text-align: right;color: red">{{ number_format($resultado->credito - $resultado->debito, 2, ',', '.') }}</th>  
+                    @endif
                 </tr>
             </thead>
 
@@ -92,16 +102,14 @@
                     <td style="text-align: left;">{{$item->tipo_documento->numero}} - {{$item->tipo_documento->designacao}}</td>
                     <td style="text-align: right;">{{$item->data_lancamento}}</td>
                     <td style="text-align: right;">{{$item->exercicio->designacao}}</td>
-                    <td style="text-align: right;color: blue">{{number_format($item->debito, 2, ',', '.')}}</td>
-                    <td style="text-align: right;color: red">{{number_format($item->credito, 2, ',', '.')}}</td>
+                    <td style="text-align: right;color: blue">{{ number_format($item->debito, 2, ',', '.') }}</td>
+                    <td style="text-align: right;color: red">{{ number_format($item->credito, 2, ',', '.') }}</td>
                     @if ($item->debito > $item->credito)
-                    <td style="text-align: right;color: blue">{{number_format($item->debito - $item->credito, 2, ',', '.')}}</td>
+                    <td style="text-align: right;color: blue">{{ number_format($item->debito - $item->credito, 2, ',', '.') }}</td>
                     @endif
                     @if ($item->credito > $item->debito)
-                    <td style="text-align: right;color: red">{{number_format($item->credito - $item->debito , 2, ',', '.')}}</td>
+                    <td style="text-align: right;color: red">{{ number_format($item->credito - $item->debito , 2, ',', '.') }}</td>
                     @endif
-
-                    {{-- <td style="text-align: right;">{{$item->criador->name}}</td> --}}
                 </tr>
                 @endforeach
             </tbody>
