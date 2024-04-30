@@ -48,21 +48,26 @@ class BalancoController extends Controller
 
         $conta_imobilizacoes_corporeas = ContaEmpresa::
             with(['sub_contas_empresa.items_movimentos'])->with(['sub_contas_empresa.items_movimentos.movimento'])
+            ->with(['sub_contas_empresa' => function ($query) { $query->where('tipo', 'M');}])
             ->where('conta_id', 3)
             ->get();
 
-        $conta_imobilizacoes_corporeas_exercicio_anterior = ContaEmpresa::
-            with(['sub_contas_empresa.items_movimentos'])->with([
-                    'sub_contas_empresa.items_movimentos.movimento'
-                    => function ($querey) use ($exercicio_anterior) {
-                        $querey->where('exercicio_id', $exercicio_anterior->id);
-                    }
-                ])
-            ->where('conta_id', 3)
-            ->get();
+        // $conta_imobilizacoes_corporeas_exercicio_anterior = ContaEmpresa::
+        //     with(['sub_contas_empresa.items_movimentos'])->with([
+        //             'sub_contas_empresa.items_movimentos.movimento'
+        //             => function ($querey) use ($exercicio_anterior) {
+        //                 $querey->where('exercicio_id', $exercicio_anterior->id);
+        //             }
+        //         ])
+        //     ->where('conta_id', 3)
+        //     ->get();
 
+        // dd($exercicio_anterior);
 
-        $conta_imobilizacoes_incorporeas = ContaEmpresa::with(['sub_contas_empresa.items_movimentos', 'sub_contas_empresa.items_movimentos.movimento'])->where('conta_id', 4)->get();
+        $conta_imobilizacoes_incorporeas = ContaEmpresa::
+        with(['sub_contas_empresa.items_movimentos', 'sub_contas_empresa.items_movimentos.movimento'])
+        ->with(['sub_contas_empresa' => function ($query) { $query->where('tipo', 'M');}])
+        ->where('conta_id', 4)->get();
 
         $exercicioId = $request->exercicio_id;
 
@@ -147,8 +152,6 @@ class BalancoController extends Controller
 
 
         // chamda do metodo para calcular o total
-
-        $teste = $this->conversaoValores($conta_imobilizacoes_corporeas_exercicio_anterior);
 
 
         $resultado_corporeas = $this->conversaoValores($conta_imobilizacoes_corporeas);
@@ -236,7 +239,12 @@ class BalancoController extends Controller
                 ];
             }
         }
-        $resultado = $valoresBalnco['debito'] - $valoresBalnco['credito'];
+        if ($valoresBalnco['debito'] > $valoresBalnco['credito']) {
+            $resultado = $valoresBalnco['debito'] - $valoresBalnco['credito'];
+        }
+        if ($valoresBalnco['credito'] > $valoresBalnco['debito']) {
+            $resultado = $valoresBalnco['credito'] - $valoresBalnco['debito'];
+        }
 
         return $resultado;
     }
@@ -492,61 +500,67 @@ class BalancoController extends Controller
             $users = User::with('empresa')->findOrFail(auth()->user()->id);
 
             $conta = Conta::where('nota', $request->nota)->select('id', 'numero', 'nota', 'designacao')->first();
+            if (!$conta) {
+                return redirect()->back();
+            } else {
 
-            $data['sub_contas'] = SubConta::with([
-                'conta',
-                'items_movimentos'
-                => function ($query) {
-                    $query->select(
-                        'subconta_id',
-                        DB::raw('sum(debito) as TotalDebito'),
-                        DB::raw('sum(credito) as TotalCredito'),
-                    )->groupBy('subconta_id');
-                }
-            ])->where('conta_id', $conta->id)->where('tipo', 'M')
-                ->get();
-
-            $data['subcontas'] = SubConta::with([
-                'conta',
-                'items_movimentos'
-                => function ($query) {
-                    $query->select(
-                        'subconta_id',
-                        DB::raw('sum(debito) as TotalDebito'),
-                        DB::raw('sum(credito) as TotalCredito'),
-                    )->groupBy('subconta_id');
-                }
-            ])->where('conta_id', $conta->id)
-                ->get();
-
-            $collect = collect([]);
-
-            $subconta = 0;
-            $debito = 0;
-            $credito = 0;
-
-            foreach ($data['sub_contas'] as $movimentos_item) {
-                // dd($data['sub_contas']);
-                foreach ($movimentos_item->items_movimentos as $item) {
-
-                    $item->TotalDebito ? $debito = $item->TotalDebito : $debito = 0;
-                    $item->TotalCredito ? $credito = $item->TotalCredito : $credito = 0;
-
-                    if ($item->TotalDebito > $item->TotalCredito) {
-                        $debito = $item->TotalDebito - $item->TotalCredito;
+                $data['sub_contas'] = SubConta::with([
+                    'conta',
+                    'items_movimentos'
+                    => function ($query) {
+                        $query->select(
+                            'subconta_id',
+                            DB::raw('sum(debito) as TotalDebito'),
+                            DB::raw('sum(credito) as TotalCredito'),
+                        )->groupBy('subconta_id');
                     }
-                    if ($item->TotalCredito > $item->TotalDebito) {
+                ])->where('conta_id', $conta->id)->where('tipo', 'M')
+                    ->get();
 
-                        $credito = $item->TotalCredito - $item->TotalDebito;
+                $data['subcontas'] = SubConta::with([
+                    'conta',
+                    'items_movimentos'
+                    => function ($query) {
+                        $query->select(
+                            'subconta_id',
+                            DB::raw('sum(debito) as TotalDebito'),
+                            DB::raw('sum(credito) as TotalCredito'),
+                        )->groupBy('subconta_id');
                     }
-                }
+                ])->where('conta_id', $conta->id)
+                    ->get();
 
-                $collect->push(['numSubConta' => $movimentos_item->numero . ' - ' . $movimentos_item->designacao, 'debito' => $debito, 'credito' => $credito]);
+                $collect = collect([]);
+
+                $subconta = 0;
                 $debito = 0;
                 $credito = 0;
+
+                foreach ($data['sub_contas'] as $movimentos_item) {
+                    // dd($data['sub_contas']);
+                    foreach ($movimentos_item->items_movimentos as $item) {
+
+                        $item->TotalDebito ? $debito = $item->TotalDebito : $debito = 0;
+                        $item->TotalCredito ? $credito = $item->TotalCredito : $credito = 0;
+
+                        if ($item->TotalDebito > $item->TotalCredito) {
+
+                            $debito = $item->TotalDebito - $item->TotalCredito;
+                            $credito = 0;
+                        }
+                        if ($item->TotalCredito > $item->TotalDebito) {
+                            $credito = $item->TotalCredito - $item->TotalDebito;
+                            $debito = 0;
+                        }
+                    }
+                    $collect->push(['numSubConta' => $movimentos_item->numero . ' - ' . $movimentos_item->designacao, 'debito' => $debito, 'credito' => $credito]);
+                    $debito = 0;
+                    $credito = 0;
+                }
+                $data['subcontas1'] = $collect;
+                // dd($data['subcontas1']);
+                $data['count'] = 3;
             }
-            $data['subcontas1'] = $collect;
-            $data['count'] = 3;
         }
 
         return Inertia::render('Balancos/Notas', $data);

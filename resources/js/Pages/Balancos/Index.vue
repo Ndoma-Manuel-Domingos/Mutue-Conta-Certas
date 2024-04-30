@@ -120,7 +120,7 @@
                         <td>Imobilizações corpóreas ....................................</td>
                         <td class="text-center"><a href="get-subcontas?nota=4">4</a></td>
                         <!-- <td class="text-right" style="color: red;" v-if="total_imobilizacoes_corporeas < 0">{{ total_imobilizacoes_corporeas * -1}}</td> -->
-                        <td class="text-right" style="color: blue;">{{ total_imobilizacoes_corporeas*-1 }}</td>
+                        <td class="text-right" style="color: blue;">{{ total_imobilizacoes_corporeas }}</td>
                         <td class="text-right">-</td>
                       </tr>
                
@@ -135,7 +135,7 @@
                       <tr>
                         <td>Investimentos em subsidiárias e associadas ....................................</td>
                         <td class="text-center"><a href="get-subcontas?nota=6">6</a></td>
-                        <td class="text-right">{{ formatarValorMonetario(total_subssidiarias) }}</td>
+                        <td class="text-right" style="color: blue;">{{ formatarValorMonetario(total_subssidiarias) }}</td>
                         <td class="text-right">-</td>
                       </tr>
                       
@@ -155,7 +155,7 @@
                       <tr>
                         <th>Total de Activos não Correntes</th>
                         <th></th>
-                        <th class="text-right">{{ formatarValorMonetario(total_subssidiarias+total_imobilizacoes_incorporeas+(total_imobilizacoes_corporeas*-1)) }}</th>
+                        <th class="text-right">{{ formatarValorMonetario(total_subssidiarias+total_imobilizacoes_incorporeas+total_imobilizacoes_corporeas) }}</th>
                         <th class="text-right">-</th>
                       </tr>
                       <!-- </template> -->
@@ -388,7 +388,7 @@ export default {
    "total_imobilizacoes_incorporeas", "conta_do_activos_nao_corrente", 
    "subcontas_movimentos" ,"conta_do_passivos_corrente","total_existencias" , 
    "conta_do_passivos_nao_corrente", "total_disponibilidade", "total_subssidiarias", 
-   "exercicio_anterior", "exercicio_actual",
+   "exercicio_anterior", "exercicio_actual", "mensagem"
   ],
   components: {
     Paginacao,

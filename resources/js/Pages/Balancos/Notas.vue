@@ -48,7 +48,6 @@
                                     <tbody>
                                         <template v-for="subContas in subcontas1" :key="subContas">
                                             <tr class="btn-light">
-
                                                 <td style="padding-left: 60px">
                                                     {{ subContas.numSubConta }}
                                                 </td>
