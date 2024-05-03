@@ -48,26 +48,18 @@ class BalancoController extends Controller
 
         $conta_imobilizacoes_corporeas = ContaEmpresa::
             with(['sub_contas_empresa.items_movimentos'])->with(['sub_contas_empresa.items_movimentos.movimento'])
-            ->with(['sub_contas_empresa' => function ($query) { $query->where('tipo', 'M');}])
+            ->with(['sub_contas_empresa' => function ($query) {
+                $query->where('tipo', 'M'); }])
             ->where('conta_id', 3)
             ->get();
 
-        // $conta_imobilizacoes_corporeas_exercicio_anterior = ContaEmpresa::
-        //     with(['sub_contas_empresa.items_movimentos'])->with([
-        //             'sub_contas_empresa.items_movimentos.movimento'
-        //             => function ($querey) use ($exercicio_anterior) {
-        //                 $querey->where('exercicio_id', $exercicio_anterior->id);
-        //             }
-        //         ])
-        //     ->where('conta_id', 3)
-        //     ->get();
-
-        // dd($exercicio_anterior);
+        // dd($conta_imobilizacoes_corporeas_exercicio_anterior);
 
         $conta_imobilizacoes_incorporeas = ContaEmpresa::
-        with(['sub_contas_empresa.items_movimentos', 'sub_contas_empresa.items_movimentos.movimento'])
-        ->with(['sub_contas_empresa' => function ($query) { $query->where('tipo', 'M');}])
-        ->where('conta_id', 4)->get();
+            with(['sub_contas_empresa.items_movimentos', 'sub_contas_empresa.items_movimentos.movimento'])
+            ->with(['sub_contas_empresa' => function ($query) {
+                $query->where('tipo', 'M'); }])
+            ->where('conta_id', 4)->get();
 
         $exercicioId = $request->exercicio_id;
 
@@ -500,6 +492,7 @@ class BalancoController extends Controller
             $users = User::with('empresa')->findOrFail(auth()->user()->id);
 
             $conta = Conta::where('nota', $request->nota)->select('id', 'numero', 'nota', 'designacao')->first();
+
             if (!$conta) {
                 return redirect()->back();
             } else {
@@ -530,6 +523,9 @@ class BalancoController extends Controller
                 ])->where('conta_id', $conta->id)
                     ->get();
 
+                if (!$data['sub_contas'] || $data['subcontas']) {
+                    return redirect()->back();
+                }
                 $collect = collect([]);
 
                 $subconta = 0;
@@ -557,6 +553,7 @@ class BalancoController extends Controller
                     $debito = 0;
                     $credito = 0;
                 }
+
                 $data['subcontas1'] = $collect;
                 // dd($data['subcontas1']);
                 $data['count'] = 3;
