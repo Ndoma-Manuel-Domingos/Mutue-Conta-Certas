@@ -26,6 +26,19 @@
               <div class="card-body">
                 <form action="">
                   <div class="row">
+                  
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="subconta_id" class="form-label"
+                        >Contas</label
+                      >
+                      <Select2
+                        id="subconta_id"
+                        v-model="subconta_id"
+                        :options="subcontas"
+                        :settings="{ width: '100%' }"
+                      />
+                    </div>
+                  
                     <div class="col-12 col-md-3 mb-4">
                       <label for="exercicio_id" class="form-label"
                         >Exercícios</label
@@ -38,7 +51,7 @@
                       />
                     </div>
 
-                    <div class="col-12 col-md-3 mb-4">
+                    <div class="col-12 col-md-2 mb-4">
                       <label for="periodo_id" class="form-label"
                         >Períodos</label
                       >
@@ -50,7 +63,7 @@
                       />
                     </div>
 
-                    <div class="col-12 col-md-3 mb-4">
+                    <div class="col-12 col-md-2 mb-4">
                       <label for="data_inicio" class="form-label"
                         >Data Inicio</label
                       >
@@ -64,7 +77,7 @@
                       />
                     </div>
 
-                    <div class="col-12 col-md-3 mb-4">
+                    <div class="col-12 col-md-2 mb-4">
                       <label for="data_final" class="form-label"
                         >Final Inicio</label
                       >
@@ -192,7 +205,7 @@
 import Paginacao from "../../components/Paginacao.vue";
 
 export default {
-  props: ["movimentos", "resultado", "exercicios", "periodos", "periodo"],
+  props: ["movimentos", "resultado", "exercicios", "periodos", "periodo", "subcontas"],
   components: {
     Paginacao,
   },
@@ -213,6 +226,7 @@ export default {
   data() {
     return {
       exercicio_id: "",
+      subconta_id: "",
       periodo_id: "",
       data_inicio: "",
       data_final: "",
@@ -228,16 +242,15 @@ export default {
     const year = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
     const month = this.periodo.numero;
         
-    this.data_inicio = `${year}-04-01`;
-    this.data_final = `${year}-04-30`;
+    this.data_inicio = `${year}-05-01`;
+    this.data_final = `${year}-05-30`;
     
     // this.data_inicio = `${year}-${month}-01`;
     // this.data_final = `${year}-${month}-30`;
     
     this.userYear = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
     this.userMonth = this.periodo.numero;
-    
-    
+       
   
     $("#tabela_de_diarias").DataTable({
       responsive: true,
@@ -258,7 +271,10 @@ export default {
       }
       this.updateData();
     },
-
+    subconta_id: function (val) {
+      this.params.subconta_id = val;
+      this.updateData();
+    },
     exercicio_id: function (val) {
       this.params.exercicio_id = val;
       this.updateData();
@@ -289,11 +305,11 @@ export default {
     },
     
     minDate(year) {
-      return `${year}-04-01`; // Primeiro dia do ano especificado
+      return `${year}-05-01`; // Primeiro dia do ano especificado
     },
     
     maxDate(year) {
-      return `${year}-04-30`; // Último dia do ano especificado
+      return `${year}-05-30`; // Último dia do ano especificado
     },
     // minDate(year) {
     //   return `${year}-01-01`; // Primeiro dia do ano especificado

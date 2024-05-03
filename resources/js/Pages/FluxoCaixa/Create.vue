@@ -61,12 +61,13 @@
                     <div class="col-12 col-md-3 mb-4">
                       <label for="valor" class="form-label">Valor</label>
                       <input
-                        type="number"
+                        type="text"
                         id="valor"
                         v-model="form.valor"
                         class="form-control"
                         placeholder="Informe o Valor"
                         @input="entrada_valor_operacao()"
+                        @keyup="formatarMoeda()"
                       />
                       <span
                         class="text-danger"
@@ -226,7 +227,7 @@
                     <i class="fas fa-plus"></i> {{ title_botao }}</a
                   > -->
                   <button  type="submit" class="btn btn-success btn-sm ml-2">
-                    <i class="fas fa-plus"></i> FINALIZAR O LANÇAMENTO</button
+                    <i class="fas fa-save"></i> SALVAR</button
                   >
                 </div>
               </div>
@@ -334,6 +335,7 @@ export default {
         ? "EDITAR"
         : "ADICIONAR";
     },
+    
   },
   data() {
     return {
@@ -363,7 +365,9 @@ export default {
   
     };
   },
-  mounted() {},
+  mounted() {
+    // this.form.valor = this.formatValor(this.form.valor);
+  },
   watch: {
     options: function (val) {
       this.params.page = val.page;
@@ -399,6 +403,20 @@ export default {
       });
     },
     
+    // formatarMoeda() {
+    //   // Remover caracteres que não são números
+    //   let valor_formatado = this.form.valor.replace(/\D/g, "");
+
+    //   // Converter o valor para número
+    //   let novo_valor = Number(valor_formatado) / 100; // Dividir por 100 para ter o valor em reais
+
+    //   // Formatar o número para moeda
+    //   this.form.valor = novo_valor.toLocaleString("pt-BR", {
+    //     style: "currency",
+    //     currency: "AOA",
+    //   });
+    // },
+
     // addSubContaMovimento() {
     //   this.form.tipo_credito_id = this.tipo_credito_id;
     //   this.form.contrapartida_id = this.contrapartida_id;
@@ -527,9 +545,9 @@ export default {
             timer: 4000,
           });
           
-          if(this.form.tipo_movimento_id == 1){
+          // if(this.form.tipo_movimento_id == 1){
             this.imprimirComprovativo();
-          }
+          // }
           
           window.location.reload();
           this.$Progress.finish();

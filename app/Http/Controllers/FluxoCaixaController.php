@@ -43,7 +43,12 @@ class FluxoCaixaController extends Controller
             $data['periodo'] = Periodo::where('empresa_id', $this->empresaLogada())->where('numero', date("m"))->first();
         }
         
-        $data['movimentos'] = Movimento::when($request->exercicio_id, function($query, $value){
+        $data['movimentos'] = Movimento::whereHas('items', function ($query) use ($request) {
+            $query->when($request->subconta_id, function ($query, $value) {
+                $query->where('subconta_id',  $value);
+            });
+        })
+        ->when($request->exercicio_id, function($query, $value){
             $query->where('exercicio_id', $value);
         })
         ->when($request->periodo_id, function($query, $value){
@@ -79,6 +84,10 @@ class FluxoCaixaController extends Controller
         ->where('empresa_id', $this->empresaLogada())
         ->select(DB::raw('SUM(debito) AS debito'), DB::raw('SUM(credito) AS credito'), DB::raw('SUM(iva) AS iva'))
         ->first();
+        
+        $conta = Conta::where('numero', '45')->first();
+        
+        $data['subcontas'] = SubConta::where('tipo', 'M')->where('conta_id', $conta->id)->select('id', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->orderBy('numero','asc')->get();
                 
         return Inertia::render('FluxoCaixa/Index', $data);
     }
@@ -454,7 +463,7 @@ class FluxoCaixaController extends Controller
         ->groupBy('conta_id', 'empresa_id', 'subconta_id', 'origem')
         ->where('empresa_id', $this->empresaLogada())
         ->first();
-  
+
         $data['contrapartidas'] = Contrapartida::when($request->tipo_credito_id, function($query, $value){
             $query->where('tipo_credito_id' ,$value);
         })
@@ -473,7 +482,7 @@ class FluxoCaixaController extends Controller
         })
         ->where('origem', 'fluxocaixa')
         ->where('empresa_id', $this->empresaLogada())
-        ->where('user_id', $user->id)
+        // ->where('user_id', $user->id)
         ->selectRaw('SUM(debito) AS debito, SUM(credito) AS credito')
         ->first();
         
@@ -485,12 +494,13 @@ class FluxoCaixaController extends Controller
             $data['saldo_final'] = 0;
         }
         
+                
         return Inertia::render('FluxoCaixa/Create', $data);
     }
 
     public function store(Request $request)
     {
-    
+        
         $request->validate([
             "tipo_movimento_id" => "required",
             "sub_conta_id" => "required",
@@ -519,6 +529,9 @@ class FluxoCaixaController extends Controller
         
         $conta_cliente = SubConta::where('numero', '31.1')->first();
         
+         
+        $ultimo_movimento = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $this->empresaLogada())->count();
+        
         $novo_valor_com_iva = (($request->valor ?? 0) * (($taxa_iva->taxa ?? 0) / 100));
         
         try {
@@ -532,512 +545,220 @@ class FluxoCaixaController extends Controller
                 // CASO O TIPO DE PROVEITO FOR VENDA DE PRODUTO VAMOS CREDITAR NA CONTA 61
                 
                 $hash = time();
-            
-                $verificar_movimento = MovimentoItem::where('movimento_id', NULL)->where('origem', 'fluxocaixa')->where('user_id', $user->id)->where('empresa_id', $this->empresaLogada())->first();
+                    
+                $create = Movimento::create([
+                    'hash' => $hash,
+                    'debito' => $request->valor,
+                    'credito' => $request->valor,
+                    'iva' => $novo_valor_com_iva,
+                    'empresa_id' => $this->empresaLogada(),
+                    'descricao' => $request->designacao,
+                    'requisitante' => $request->requisitante,
+                    'centro_custo' => $request->centro_custo,
+                    'origem' => "fluxocaixa",
+                    'exercicio_id' => $this->exercicioActivo(),
+                    'periodo_id' =>  $this->periodoActivo(),
+                    'dia_id' => date("d"),
+                    'data_lancamento' => date("Y-m-d"),
+                    'lancamento_atual' => $ultimo_movimento + 1,
+                    'diario_id' => 2, // $request->diario_id,
+                    'tipo_documento_id' => 2, //$request->tipo_documento_id,
+                    'user_id' => $user->id,
+                    'created_by' => $user->id,
+                ]);
+  
+                MovimentoItem::create([
+                    'hash' => $hash,
+                    'debito' => $request->valor + $novo_valor_com_iva,
+                    'credito' => 0,
+                    'iva' => 0,
+                    'descricao' => $request->designacao,
+                    'origem' => "fluxocaixa",
+                    'empresa_id' => $this->empresaLogada(),
+                    'subconta_id' => $subconta->id,
+                    'conta_id' => $subconta->conta_id,
+                    'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
+                    'documento_id' => $documento ? $documento->id : NULL,
+                    'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
+                    'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
+                    'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
+                    'taxta_iva_id' => $taxa_iva->id ?? 1,
+                    'apresentar' => 'S',
+                    'movimento_id' => $create->id,
+                    'user_id' => $user->id,
+                    'created_by' => $user->id,
+                ]);
                 
-                if($verificar_movimento){
-                    MovimentoItem::create([
-                        'hash' => $verificar_movimento->hash,
-                        'debito' => $request->valor + $novo_valor_com_iva,
-                        'credito' => 0,
-                        'iva' => $novo_valor_com_iva,
-                        'descricao' => $request->designacao,
-                        'origem' => "fluxocaixa",
-                        'empresa_id' => $this->empresaLogada(),
-                        'subconta_id' => $subconta->id,
-                        'conta_id' => $subconta->conta_id,
-                        'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
-                        'documento_id' => $documento ? $documento->id : NULL,
-                        'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                        'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                        'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                        'taxta_iva_id' => $taxa_iva->id ?? 1,
-                        'apresentar' => 'S',
-                        'movimento_id' => NULL,
-                        'user_id' => $user->id,
-                        'created_by' => $user->id,
-                    ]);
-                    
-                    $tipo_movimento_c = TipoMovimento::where('sigla', 'C')->first();
-                    
-                    if($tipo_proveito->sigla == "P"){
-                        
-                        // Retirar no conta 61
-                        $subconta_movimentar = SubConta::where('numero', '61.1.1')->where('tipo', 'M')->first();
-                        
-                        if($subconta_movimentar){
-                            MovimentoItem::create([
-                                'hash' => $verificar_movimento->hash,
-                                'debito' => 0,
-                                'credito' => $request->valor,
-                                'iva' => 0,
-                                'descricao' => $request->designacao,
-                                'empresa_id' => $this->empresaLogada(),
-                                'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
-                                'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
-                                'documento_id' => $documento ? $documento->id : NULL,
-                                'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                                'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                                'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                                'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                'origem' => 'fluxocaixa',
-                                'movimento_id' => NULL,
-                                'apresentar' => 'N',
-                                'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
-                                'user_id' => $user->id,
-                                'created_by' => $user->id,
-                            ]);
-                            
-                            MovimentoItem::create([
-                                'hash' => $verificar_movimento->hash,
-                                'debito' => $request->valor,
-                                'credito' => $request->valor,
-                                'iva' => 0,
-                                'descricao' => $request->designacao,
-                                'empresa_id' => $this->empresaLogada(),
-                                'subconta_id' => $conta_cliente ? $conta_cliente->id : NULL,
-                                'conta_id' => $conta_cliente ? $conta_cliente->conta_id : NULL,
-                                // 'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
-                                // 'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
-                                'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
-                                'documento_id' => $documento ? $documento->id : NULL,
-                                'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                                'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                                'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                                'taxta_iva_id' => 1,
-                                'origem' => 'fluxocaixa',
-                                'movimento_id' => NULL,
-                                'apresentar' => 'N',
-                                'user_id' => $user->id,
-                                'created_by' => $user->id,
-                            ]);
-                            
-                            if($novo_valor_com_iva > 0){
-                                MovimentoItem::create([
-                                    'hash' => $verificar_movimento->hash,
-                                    'debito' => 0,
-                                    'credito' => $novo_valor_com_iva,
-                                    'iva' => 0,
-                                    'descricao' => $request->designacao,
-                                    'empresa_id' => $this->empresaLogada(),
-                                    'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                    'subconta_id' => $subconta_do_iva_debito ? $subconta_do_iva_debito->id : NULL,
-                                    'conta_id' => $subconta_do_iva_debito ? $subconta_do_iva_debito->conta_id : NULL,
-                                    // 'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
-                                    // 'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
-                                    'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
-                                    'documento_id' => $documento ? $documento->id : NULL,
-                                    'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                                    'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                                    'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                                    'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                    'origem' => 'fluxocaixa',
-                                    'movimento_id' => NULL,
-                                    'apresentar' => 'N',
-                                    'user_id' => $user->id,
-                                    'created_by' => $user->id,
-                                ]);
-                            }
-                        }
-                        
-                    }
-                    
-                    if($tipo_proveito->sigla == "S"){
-                        // Retirar no conta 62
-                        $subconta_movimentar = SubConta::where('numero', '62.1.1')->where('tipo', 'M')->first();
-                        
-                        if($subconta_movimentar){
-                            MovimentoItem::create([
-                                'hash' => $verificar_movimento->hash,
-                                'debito' => 0,
-                                'credito' => $request->valor,
-                                'iva' => 0,
-                                'descricao' => $request->designacao,
-                                'empresa_id' => $this->empresaLogada(),
-                                'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
-                                'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
-                                'documento_id' => $documento ? $documento->id : NULL,
-                                'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                                'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                                'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                                'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                'origem' => 'fluxocaixa',
-                                'movimento_id' => NULL,
-                                'apresentar' => 'N',
-                                'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
-                                'user_id' => $user->id,
-                                'created_by' => $user->id,
-                            ]);
-                            
-                            if($novo_valor_com_iva > 0){
-                                MovimentoItem::create([
-                                    'hash' => $verificar_movimento->hash,
-                                    'debito' => 0,
-                                    'credito' => $novo_valor_com_iva,
-                                    'iva' => 0,
-                                    'descricao' => $request->designacao,
-                                    'empresa_id' => $this->empresaLogada(),
-                                    'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                    'subconta_id' => $subconta_do_iva_debito ? $subconta_do_iva_debito->id : NULL,
-                                    'conta_id' => $subconta_do_iva_debito ? $subconta_do_iva_debito->conta_id : NULL,
-                                    // 'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
-                                    // 'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
-                                    'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
-                                    'documento_id' => $documento ? $documento->id : NULL,
-                                    'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                                    'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                                    'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                                    'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                    'origem' => 'fluxocaixa',
-                                    'movimento_id' => NULL,
-                                    'apresentar' => 'N',
-                                    'user_id' => $user->id,
-                                    'created_by' => $user->id,
-                                ]);
-                            }
-                        }
-                        
-                    }
-                    
-                    // dd("dentro antigo");  
-                }else{
-                    
-                    MovimentoItem::create([
-                        'hash' => $hash,
-                        'debito' => $request->valor + $novo_valor_com_iva,
-                        'credito' => 0,
-                        'iva' => 0,
-                        'descricao' => $request->designacao,
-                        'origem' => "fluxocaixa",
-                        'empresa_id' => $this->empresaLogada(),
-                        'subconta_id' => $subconta->id,
-                        'conta_id' => $subconta->conta_id,
-                        'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
-                        'documento_id' => $documento ? $documento->id : NULL,
-                        'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                        'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                        'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                        'taxta_iva_id' => $taxa_iva->id ?? 1,
-                        'apresentar' => 'S',
-                        'movimento_id' => NULL,
-                        'user_id' => $user->id,
-                        'created_by' => $user->id,
-                    ]);
-                    
-                    $tipo_movimento_c = TipoMovimento::where('sigla', 'C')->first();
-                    
-                    if($tipo_proveito->sigla == "P"){
-                        // Retirar no conta 61
-                        $subconta_movimentar = SubConta::where('numero', '61.1.1')->where('tipo', 'M')->first();
-                        if($subconta_movimentar){
-                            MovimentoItem::create([
-                                'hash' => $hash,
-                                'debito' => 0,
-                                'credito' => $request->valor,
-                                'iva' => 0,
-                                'descricao' => $request->designacao,
-                                'empresa_id' => $this->empresaLogada(),
-                                'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
-                                'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
-                                'documento_id' => $documento ? $documento->id : NULL,
-                                'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                                'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                                'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                                'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                'origem' => 'fluxocaixa',
-                                'movimento_id' => NULL,
-                                'apresentar' => 'N',
-                                'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
-                                'user_id' => $user->id,
-                                'created_by' => $user->id,
-                            ]);
-                            if($novo_valor_com_iva > 0){
-                                MovimentoItem::create([
-                                    'hash' => $hash,
-                                    'debito' => 0,
-                                    'credito' => $novo_valor_com_iva,
-                                    'iva' => 0,
-                                    'descricao' => $request->designacao,
-                                    'empresa_id' => $this->empresaLogada(),
-                                    'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                    'subconta_id' => $subconta_do_iva_debito ? $subconta_do_iva_debito->id : NULL,
-                                    'conta_id' => $subconta_do_iva_debito ? $subconta_do_iva_debito->conta_id : NULL,
-                                    // 'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
-                                    // 'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
-                                    'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
-                                    'documento_id' => $documento ? $documento->id : NULL,
-                                    'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                                    'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                                    'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                                    'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                    'origem' => 'fluxocaixa',
-                                    'movimento_id' => NULL,
-                                    'apresentar' => 'N',
-                                    'user_id' => $user->id,
-                                    'created_by' => $user->id,
-                                ]);
-                            
-                            }
-                        }
-                    }
-                    
-                    if($tipo_proveito->sigla == "S"){
-                        // Retirar no conta 62
-                        $subconta_movimentar = SubConta::where('numero', '62.1.1')->where('tipo', 'M')->first();
-                        
-                        if($subconta_movimentar){
-                            MovimentoItem::create([
-                                'hash' => $hash,
-                                'debito' => 0,
-                                'credito' => $request->valor,
-                                'iva' => 0,
-                                'descricao' => $request->designacao,
-                                'empresa_id' => $this->empresaLogada(),
-                                'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
-                                'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
-                                'documento_id' => $documento ? $documento->id : NULL,
-                                'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                                'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                                'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                                'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                'origem' => 'fluxocaixa',
-                                'movimento_id' => NULL,
-                                'apresentar' => 'N',
-                                'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
-                                'user_id' => $user->id,
-                                'created_by' => $user->id,
-                            ]);
-                            
-                            if($novo_valor_com_iva > 0){
-                                MovimentoItem::create([
-                                    'hash' => $hash,
-                                    'debito' => 0,
-                                    'credito' => $novo_valor_com_iva,
-                                    'iva' => 0,
-                                    'descricao' => $request->designacao,
-                                    'empresa_id' => $this->empresaLogada(),
-                                    
-                                    'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                    'subconta_id' => $subconta_do_iva_debito ? $subconta_do_iva_debito->id : NULL,
-                                    'conta_id' => $subconta_do_iva_debito ? $subconta_do_iva_debito->conta_id : NULL,
-                                    
-                                    // 'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
-                                    // 'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
-                                    'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
-                                    'documento_id' => $documento ? $documento->id : NULL,
-                                    'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                                    'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                                    'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                                    'taxta_iva_id' => $taxa_iva->id ?? 1,
-                                    'origem' => 'fluxocaixa',
-                                    'movimento_id' => NULL,
-                                    'apresentar' => 'N',
-                                    'user_id' => $user->id,
-                                    'created_by' => $user->id,
-                                ]);
-                            
-                            }
-                        }
-                    }
-                    
-                }
+                $tipo_movimento_c = TipoMovimento::where('sigla', 'C')->first();
                 
-     
-            }else if($tipo_movimento->sigla == "C"){
-                
-                // SE ESTIVEMOS A  CRÉDITAR ENTÃO VAMOS DEBITA EM UMA CONTRAPARTIDA
-                $hash = time();
-            
-                $verificar_movimento = MovimentoItem::where('movimento_id', NULL)->where('origem', 'fluxocaixa')->where('user_id', $user->id)->where('empresa_id', $this->empresaLogada())->first();
-                
-                if($verificar_movimento){
-                     
-                    $contrapartida = Contrapartida::find($request->contrapartida_id);
-                    $subconta = SubConta::find($contrapartida->sub_conta_id);
-                    $subconta_principal = SubConta::find($request->sub_conta_id);
-                    
-                    MovimentoItem::create([
-                        'hash' => $verificar_movimento->hash,
-                        'debito' => 0,
-                        'credito' => $request->valor + $novo_valor_com_iva,
-                        'iva' => $novo_valor_com_iva,
-                        'descricao' => $request->designacao,
-                        'origem' => "fluxocaixa",
-                        'empresa_id' => $this->empresaLogada(),
-                        'taxta_iva_id' => $taxa_iva->id ?? 1,
-                        'subconta_id' => $subconta_principal->id,
-                        'conta_id' => $subconta_principal->conta_id,
-                        'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
-                        'documento_id' => $documento ? $documento->id : NULL,
-                        'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                        'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                        'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                        'apresentar' => 'S',
-                        'movimento_id' => NULL,
-                        'user_id' => $user->id,
-                        'created_by' => $user->id,
-                    ]);
-                    
-                    $tipo_movimento_d = TipoMovimento::where('sigla', 'D')->first();
-                    
-                    MovimentoItem::create([
-                        'hash' => $verificar_movimento->hash,
-                        'debito' => $request->valor,
-                        'credito' => 0,
-                        'iva' => 0,
-                        'descricao' => $request->designacao,
-                        'empresa_id' => $this->empresaLogada(),
-                        'taxta_iva_id' => $taxa_iva->id ?? 1,
-                        'subconta_id' => $subconta ? $subconta->id : NULL,
-                        'conta_id' => $subconta ? $subconta->conta_id : NULL,
-                        'tipo_movimento_id' => $tipo_movimento_d ? $tipo_movimento_d->id : NULL,
-                        'documento_id' => $documento ? $documento->id : NULL,
-                        'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                        'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                        'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                        'origem' => 'fluxocaixa',
-                        'movimento_id' => NULL,
-                        'apresentar' => 'N',
-                        'user_id' => $user->id,
-                        'created_by' => $user->id,
-                    ]);
-                    
-                    if($novo_valor_com_iva > 0){
-                        MovimentoItem::create([
-                            'hash' => $verificar_movimento->hash,
-                            'debito' => $novo_valor_com_iva,
-                            'credito' => 0,
-                            'iva' => 0,
-                            'descricao' => $request->designacao,
-                            'empresa_id' => $this->empresaLogada(),
-                            'taxta_iva_id' => $taxa_iva->id ?? 1,
-                            'subconta_id' => $subconta_do_iva ? $subconta_do_iva->id : NULL,
-                            'conta_id' => $subconta_do_iva ? $subconta_do_iva->conta_id : NULL,
-                            'tipo_movimento_id' => $tipo_movimento_d ? $tipo_movimento_d->id : NULL,
-                            'documento_id' => $documento ? $documento->id : NULL,
-                            'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                            'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                            'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                            'origem' => 'fluxocaixa',
-                            'movimento_id' => NULL,
-                            'apresentar' => 'N',
-                            'user_id' => $user->id,
-                            'created_by' => $user->id,
-                        ]);
-                    }
-                    
-                }else{
-                                    
-                    $contrapartida = Contrapartida::find($request->contrapartida_id);
-                    $subconta = SubConta::find($contrapartida->sub_conta_id);
-                    $subconta_principal = SubConta::find($request->sub_conta_id);
-                
-                    MovimentoItem::create([
-                        'hash' => $hash,
-                        'debito' => 0,
-                        'credito' => $request->valor + $novo_valor_com_iva,
-                        'iva' => $novo_valor_com_iva,
-                        'descricao' => $request->designacao,
-                        'empresa_id' => $this->empresaLogada(),
-                        'conta_id' => $subconta_principal ? $subconta_principal->conta_id : NULL,
-                        'subconta_id' => $subconta_principal ? $subconta_principal->id : NULL,
-                        'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
-                        'documento_id' => $documento ? $documento->id : NULL,
-                        'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                        'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                        'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                        'taxta_iva_id' => $taxa_iva->id ?? 1,
-                        'origem' => 'fluxocaixa',
-                        'movimento_id' => NULL,
-                        'apresentar' => 'S',
-                        'user_id' => $user->id,
-                        'created_by' => $user->id,
-                    ]);
-                    
-                    $tipo_movimento_d = TipoMovimento::where('sigla', 'D')->first();
-                    
-                    MovimentoItem::create([
-                        'hash' => $hash,
-                        'debito' => $request->valor,
-                        'credito' => 0,
-                        'iva' => 0,
-                        'descricao' => $request->designacao,
-                        'empresa_id' => $this->empresaLogada(),
-                        'subconta_id' => $subconta ? $subconta->id : NULL,
-                        'conta_id' => $subconta ? $subconta->conta_id : NULL,
-                        'tipo_movimento_id' => $tipo_movimento_d ? $tipo_movimento_d->id : NULL,
-                        'documento_id' => $documento ? $documento->id : NULL,
-                        'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
-                        'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
-                        'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
-                        'taxta_iva_id' => $taxa_iva->id ?? 1,
-                        'origem' => 'fluxocaixa',
-                        'movimento_id' => NULL,
-                        'apresentar' => 'N',
-                        'user_id' => $user->id,
-                        'created_by' => $user->id,
-                    ]);
-                                        
-                    if($novo_valor_com_iva > 0){
+                if($tipo_proveito->sigla == "P"){
+                    // Retirar no conta 61
+                    $subconta_movimentar = SubConta::where('numero', '61.1.1')->where('tipo', 'M')->first();
+                    if($subconta_movimentar){
                         MovimentoItem::create([
                             'hash' => $hash,
-                            'debito' => $novo_valor_com_iva,
-                            'credito' => 0,
+                            'debito' => 0,
+                            'credito' => $request->valor,
                             'iva' => 0,
                             'descricao' => $request->designacao,
                             'empresa_id' => $this->empresaLogada(),
-                            'subconta_id' => $subconta_do_iva ? $subconta_do_iva->id : NULL,
-                            'conta_id' => $subconta_do_iva ? $subconta_do_iva->conta_id : NULL,
-                            'tipo_movimento_id' => $tipo_movimento_d ? $tipo_movimento_d->id : NULL,
+                            'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
+                            'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
                             'documento_id' => $documento ? $documento->id : NULL,
                             'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
                             'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
                             'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
                             'taxta_iva_id' => $taxa_iva->id ?? 1,
                             'origem' => 'fluxocaixa',
-                            'movimento_id' => NULL,
+                            'movimento_id' => $create->id,
                             'apresentar' => 'N',
+                            'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
                             'user_id' => $user->id,
                             'created_by' => $user->id,
                         ]);
                     }
                 }
+                
+                if($tipo_proveito->sigla == "S"){
+                    // Retirar no conta 62
+                    $subconta_movimentar = SubConta::where('numero', '62.1.1')->where('tipo', 'M')->first();
+                    
+                    if($subconta_movimentar){
+                        MovimentoItem::create([
+                            'hash' => $hash,
+                            'debito' => 0,
+                            'credito' => $request->valor,
+                            'iva' => 0,
+                            'descricao' => $request->designacao,
+                            'empresa_id' => $this->empresaLogada(),
+                            'subconta_id' => $subconta_movimentar ? $subconta_movimentar->id : NULL,
+                            'tipo_movimento_id' => $tipo_movimento_c ? $tipo_movimento_c->id : NULL,
+                            'documento_id' => $documento ? $documento->id : NULL,
+                            'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
+                            'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
+                            'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
+                            'taxta_iva_id' => $taxa_iva->id ?? 1,
+                            'origem' => 'fluxocaixa',
+                            'movimento_id' => $create->id,
+                            'apresentar' => 'N',
+                            'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
+                            'user_id' => $user->id,
+                            'created_by' => $user->id,
+                        ]);
+                        
+                    }
+                }
+     
+            }else if($tipo_movimento->sigla == "C"){
+                // SE ESTIVEMOS A  CRÉDITAR ENTÃO VAMOS DEBITA EM UMA CONTRAPARTIDA
+                $hash = time();
+                                        
+                $contrapartida = Contrapartida::find($request->contrapartida_id);
+                $subconta = SubConta::find($contrapartida->sub_conta_id);
+                $subconta_principal = SubConta::find($request->sub_conta_id);
+               
+                $create = Movimento::create([
+                    'hash' => $hash,
+                    'debito' => $request->valor,
+                    'credito' => $request->valor,
+                    'iva' => $novo_valor_com_iva,
+                    'empresa_id' => $this->empresaLogada(),
+                    'descricao' => $request->designacao,
+                    'requisitante' => $request->requisitante,
+                    'centro_custo' => $request->centro_custo,
+                    'origem' => "fluxocaixa",
+                    'exercicio_id' => $this->exercicioActivo(),
+                    'periodo_id' =>  $this->periodoActivo(),
+                    'dia_id' => date("d"),
+                    'data_lancamento' => date("Y-m-d"),
+                    'lancamento_atual' => $ultimo_movimento + 1,
+                    'diario_id' => 2, // $request->diario_id,
+                    'tipo_documento_id' => 2, //$request->tipo_documento_id,
+                    'user_id' => $user->id,
+                    'created_by' => $user->id,
+                ]);
+                  
+                MovimentoItem::create([
+                    'hash' => $hash,
+                    'debito' => 0,
+                    'credito' => $request->valor + $novo_valor_com_iva,
+                    'iva' => $novo_valor_com_iva,
+                    'descricao' => $request->designacao,
+                    'empresa_id' => $this->empresaLogada(),
+                    'conta_id' => $subconta_principal ? $subconta_principal->conta_id : NULL,
+                    'subconta_id' => $subconta_principal ? $subconta_principal->id : NULL,
+                    'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
+                    'documento_id' => $documento ? $documento->id : NULL,
+                    'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
+                    'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
+                    'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
+                    'taxta_iva_id' => $taxa_iva->id ?? 1,
+                    'origem' => 'fluxocaixa',
+                    'movimento_id' => $create->id,
+                    'apresentar' => 'S',
+                    'user_id' => $user->id,
+                    'created_by' => $user->id,
+                ]);
+                
+                $tipo_movimento_d = TipoMovimento::where('sigla', 'D')->first();
+                
+                MovimentoItem::create([
+                    'hash' => $hash,
+                    'debito' => $request->valor,
+                    'credito' => 0,
+                    'iva' => 0,
+                    'descricao' => $request->designacao,
+                    'empresa_id' => $this->empresaLogada(),
+                    'subconta_id' => $subconta ? $subconta->id : NULL,
+                    'conta_id' => $subconta ? $subconta->conta_id : NULL,
+                    'tipo_movimento_id' => $tipo_movimento_d ? $tipo_movimento_d->id : NULL,
+                    'documento_id' => $documento ? $documento->id : NULL,
+                    'tipo_credito_id' => $tipo_credito ? $tipo_credito->id : NULL,
+                    'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
+                    'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
+                    'taxta_iva_id' => $taxa_iva->id ?? 1,
+                    'origem' => 'fluxocaixa',
+                    'movimento_id' => $create->id,
+                    'apresentar' => 'N',
+                    'user_id' => $user->id,
+                    'created_by' => $user->id,
+                ]);
             }            
             
-            $codigo = time();
+            // $codigo = time();
             
-            $resultado = MovimentoItem::with(['subconta.conta', 'empresa'])->where('apresentar', 'S')->where('origem', 'fluxocaixa')->whereNull('movimento_id')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito, SUM(iva) AS total_iva')->first();
+            // $resultado = MovimentoItem::with(['subconta.conta', 'empresa'])->where('apresentar', 'S')->where('origem', 'fluxocaixa')->whereNull('movimento_id')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito, SUM(iva) AS total_iva')->first();
             
-            $ultimo_movimento = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $this->empresaLogada())->count();
+            // $ultimo_movimento = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $this->empresaLogada())->count();
              
-            $create = Movimento::create([
-                'hash' => $codigo,
-                'debito' => $resultado->total_debito,
-                'credito' => $resultado->total_credito,
-                'iva' => $resultado->total_iva,
-                'empresa_id' => $this->empresaLogada(),
-                'descricao' => $request->designacao,
-                'requisitante' => $request->requisitante,
-                'centro_custo' => $request->centro_custo,
-                'origem' => "fluxocaixa",
-                'exercicio_id' => $this->exercicioActivo(),
-                'periodo_id' =>  $this->periodoActivo(),
-                'dia_id' => date("d"),
-                'data_lancamento' => date("Y-m-d"),
-                'lancamento_atual' => $ultimo_movimento + 1,
-                'diario_id' => 2, // $request->diario_id,
-                'tipo_documento_id' => 2, //$request->tipo_documento_id,
-                'user_id' => $user->id,
-                'created_by' => $user->id,
-            ]);
+            // $create = Movimento::create([
+            //     'hash' => $codigo,
+            //     'debito' => $resultado->total_debito,
+            //     'credito' => $resultado->total_credito,
+            //     'iva' => $resultado->total_iva,
+            //     'empresa_id' => $this->empresaLogada(),
+            //     'descricao' => $request->designacao,
+            //     'requisitante' => $request->requisitante,
+            //     'centro_custo' => $request->centro_custo,
+            //     'origem' => "fluxocaixa",
+            //     'exercicio_id' => $this->exercicioActivo(),
+            //     'periodo_id' =>  $this->periodoActivo(),
+            //     'dia_id' => date("d"),
+            //     'data_lancamento' => date("Y-m-d"),
+            //     'lancamento_atual' => $ultimo_movimento + 1,
+            //     'diario_id' => 2, // $request->diario_id,
+            //     'tipo_documento_id' => 2, //$request->tipo_documento_id,
+            //     'user_id' => $user->id,
+            //     'created_by' => $user->id,
+            // ]);
             
-            $items = MovimentoItem::with(['subconta.conta', 'empresa'])->where('origem', 'fluxocaixa')->whereNull('movimento_id')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->get();
-            foreach ($items as $item) {
-                $update = MovimentoItem::findOrFail($item->id);
-                $update->hash = $codigo;
-                $update->movimento_id = $create->id;
-                $update->update();
-            }            
+            // $items = MovimentoItem::with(['subconta.conta', 'empresa'])->where('origem', 'fluxocaixa')->whereNull('movimento_id')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->get();
+            // foreach ($items as $item) {
+            //     $update = MovimentoItem::findOrFail($item->id);
+            //     $update->hash = $codigo;
+            //     $update->movimento_id = $create->id;
+            //     $update->update();
+            // }            
             
             // Confirmar a transação
             DB::commit();
