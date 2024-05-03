@@ -22,11 +22,12 @@
                     <div class="col-12 col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="/provincia/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i>NOVA PROVÍNCIA </a>
+                                <a href="/provincia/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i>NOVA
+                                    PROVÍNCIA </a>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive p-0">
-                                    <table class="table table-hover text-nowrap">
+                                    <table class="table table-bordered table-hover" id="tabela_provincias">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -57,16 +58,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-
-                            <div class="card-footer">
-                                <Link href="" class="text-secondary">
-                                Total Registro: {{ provincia.total }}</Link>
-                                <!-- <Paginacao
-                    :links="periodos.links"
-                    :prev="periodos.prev_page_url"
-                    :next="periodos.next_page_url"
-                  /> -->
                             </div>
                         </div>
                     </div>
@@ -99,7 +90,11 @@ export default {
     data() {
         return {};
     },
-    mounted() { },
+    mounted() {
+        $('#tabela_provincias').DataTable({
+            "responsive": true, "lengthChange": true, "autoWidth": true,
+        });
+    },
     methods: {
         deleteItem(item) {
             console.log(item.id)

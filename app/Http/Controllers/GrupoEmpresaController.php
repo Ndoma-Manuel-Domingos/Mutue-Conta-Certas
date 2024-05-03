@@ -18,7 +18,7 @@ class GrupoEmpresaController extends Controller
         $data['grupos_empresas'] = GrupoEmpresa::when($request->input_busca_grupos_empresas, function($query, $value){
             $query->where('designacao', 'like', "%".$value."%");
         })
-        ->paginate(10);
+        ->get();
 
         return Inertia::render('GrupoEmpresas/Index', $data);
     }

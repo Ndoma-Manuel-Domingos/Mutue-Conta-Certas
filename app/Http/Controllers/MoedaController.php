@@ -21,7 +21,7 @@ class MoedaController extends Controller
             $query->orWhere('sigla', 'like', "%".$value."%");
             $query->orWhere('pais', 'like', "%".$value."%");
         })
-        ->paginate(10);
+        ->get();
 
         return Inertia::render('Moeda/Index', $data);
     }

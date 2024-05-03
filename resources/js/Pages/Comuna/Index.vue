@@ -27,7 +27,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive p-0">
-                                    <table class="table table-hover text-nowrap">
+                                    <table class="table table-bordered table-hover" id="tabela_comunas">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -58,13 +58,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-
-                            <div class="card-footer">
-                                <Link href="" class="text-secondary">
-                                Total Registro: {{ cont_comuna }}</Link>
-                                <!-- <Paginacao :links="comuna.links" :prev="comuna.prev_page_url"
-                                    :next="comuna.next_page_url" /> -->
                             </div>
                         </div>
                     </div>
@@ -98,7 +91,11 @@ export default {
     data() {
         return {};
     },
-    mounted() { },
+    mounted() {
+        $('#tabela_comunas').DataTable({
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+    });
+     },
     methods: {
         deleteItem(item) {
             console.log(item.id)

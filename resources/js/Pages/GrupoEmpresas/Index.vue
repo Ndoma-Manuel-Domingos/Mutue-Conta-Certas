@@ -22,30 +22,27 @@
                     <div class="col-12 col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="/grupos-empresas/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR GRUPO DE EMPRESA </a>
+                                <a href="/grupos-empresas/create" class="btn btn-info btn-sm"> <i
+                                        class="fas fa-plus"></i> CRIAR GRUPO DE EMPRESA </a>
                                 <button class="btn btn-sm btn-danger mx-1">
                                     <i class="fas fa-file-pdf"></i> Imprimir
                                 </button>
-                                
+
                                 <div class="card-tools">
-                                  <div class="input-group input-group" style="width: 450px">
-                                    <input
-                                      type="text"
-                                      v-model="input_busca_grupos_empresas"
-                                      class="form-control float-right"
-                                      placeholder="Informe a campo"
-                                    />
-                                    <div class="input-group-append">
-                                      <button type="submit" class="btn btn-default">
-                                        <i class="fas fa-search"></i>
-                                      </button>
+                                    <div class="input-group input-group" style="width: 450px">
+                                        <input type="text" v-model="input_busca_grupos_empresas"
+                                            class="form-control float-right" placeholder="Informe a campo" />
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-default">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                  </div>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive p-0">
-                                    <table class="table table-hover text-nowrap">
+                                    <table class="table table-bordered table-hover" id="tabele_de_grupo_de_empresas">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -56,7 +53,7 @@
                                         </thead>
 
                                         <tbody>
-                                            <tr v-for="item in grupos_empresas.data" :key="item">
+                                            <tr v-for="item in grupos_empresas" :key="item">
                                                 <td>#</td>
                                                 <td>{{ item.id }}</td>
                                                 <td>{{ item.designacao }}</td>
@@ -71,15 +68,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-
-                            <div class="card-footer">
-                                <Link href="" class="text-secondary">
-                                Total Registro: {{ grupos_empresas.total }}</Link>
-                                <Paginacao :links="grupos_empresas.links" 
-                                    :prev="grupos_empresas.prev_page_url"
-                                    :next="grupos_empresas.next_page_url" 
-                                />
                             </div>
                         </div>
                     </div>
@@ -105,10 +93,10 @@ export default {
             return this.$page.props.auth.user;
         },
         sessions() {
-          return this.$page.props.sessions.empresa_sessao;
+            return this.$page.props.sessions.empresa_sessao;
         },
         sessions_exercicio() {
-          return this.$page.props.sessions.exercicio_sessao;
+            return this.$page.props.sessions.exercicio_sessao;
         },
     },
     data() {
@@ -117,43 +105,47 @@ export default {
             params: {},
         };
     },
-    
+
     watch: {
         options: function (val) {
-          this.params.page = val.page;
-          this.params.page_size = val.itemsPerPage;
-          if (val.sortBy.length != 0) {
-            this.params.sort_by = val.sortBy[0];
-            this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
-          } else {
-            this.params.sort_by = null;
-            this.params.order_by = null;
-          }
-          this.updateData();
+            this.params.page = val.page;
+            this.params.page_size = val.itemsPerPage;
+            if (val.sortBy.length != 0) {
+                this.params.sort_by = val.sortBy[0];
+                this.params.order_by = val.sortDesc[0] ? "desc" : "asc";
+            } else {
+                this.params.sort_by = null;
+                this.params.order_by = null;
+            }
+            this.updateData();
         },
-        
+
         input_busca_grupos_empresas: function (val) {
-          this.params.input_busca_grupos_empresas = val;
-          this.updateData();
+            this.params.input_busca_grupos_empresas = val;
+            this.updateData();
         },
-    
+
     },
-    
-    mounted() { },
+
+    mounted() {
+        $('#tabele_de_grupo_de_empresas').DataTable({
+            "responsive": true, "lengthChange": true, "autoWidth": true,
+        });
+    },
     methods: {
-            
+
         updateData() {
-          this.$Progress.start();
-          this.$inertia.get("/grupos-empresas", this.params, {
-            preserveState: true,
-            preverseScroll: true,
-            onSuccess: () => {
-              this.$Progress.finish();
-            },
-          });
+            this.$Progress.start();
+            this.$inertia.get("/grupos-empresas", this.params, {
+                preserveState: true,
+                preverseScroll: true,
+                onSuccess: () => {
+                    this.$Progress.finish();
+                },
+            });
         },
-    
-        
+
+
         imprimirPeriodos() {
             window.open("imprimir-periodos");
         },
