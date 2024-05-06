@@ -61,12 +61,13 @@
                     <div class="col-12 col-md-3 mb-4">
                       <label for="valor" class="form-label">Valor</label>
                       <input
-                        type="number"
+                        type="text"
                         id="valor"
                         v-model="form.valor"
                         class="form-control"
                         placeholder="Informe o Valor"
-                        @input="entrada_valor_operacao()"
+                        @input="formatInput"
+                        @keypress="validateInput"
                       />
                       <span
                         class="text-danger"
@@ -121,6 +122,7 @@
                         class="col-12 col-md-12"
                         :options="tipo_movimentos"
                         :settings="{ width: '100%' }"
+                        @select="selecinarTipoMovimento($event)"  
                       />
                       <span
                         class="text-danger"
@@ -222,11 +224,8 @@
                   </div>
                 </div>
                 <div class="card-footer">
-                  <!-- <a @click="addSubContaMovimento()" class="btn btn-info btn-sm ml-2">
-                    <i class="fas fa-plus"></i> {{ title_botao }}</a
-                  > -->
                   <button  type="submit" class="btn btn-success btn-sm ml-2">
-                    <i class="fas fa-plus"></i> FINALIZAR O LANÇAMENTO</button
+                    <i class="fas fa-save"></i> SALVAR</button
                   >
                 </div>
               </div>
@@ -334,6 +333,7 @@ export default {
         ? "EDITAR"
         : "ADICIONAR";
     },
+    
   },
   data() {
     return {
@@ -343,7 +343,7 @@ export default {
     
       form: this.$inertia.form({
         sub_conta_id: this.sub_conta_id,
-        valor: "",
+        valor: 0,
         designacao: "",
         documento_id: "",
         tipo_credito_id: this.tipo_credito_id,
@@ -363,7 +363,9 @@ export default {
   
     };
   },
-  mounted() {},
+  mounted() {
+    // this.form.valor = this.formatValor(this.form.valor);
+  },
   watch: {
     options: function (val) {
       this.params.page = val.page;
@@ -388,6 +390,44 @@ export default {
   },
 
   methods: {
+    formatInput() {
+      // Implemente aqui a lógica de formatação desejada
+      // Por exemplo, para formatar como moeda
+      this.form.valor = this.form.valor.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    },
+    
+    removeFormatting() {
+      // Remover a formatação
+      this.form.valor = this.form.valor.replace(/\D/g, '');
+    },
+    
+    selecinarTipoMovimento({id, text}){
+    
+      this.removeFormatting();
+      const valorIntroduzido = this.form.valor;
+      
+      if(this.form.tipo_movimento_id == 1){
+      
+        if( valorIntroduzido > this.saldo_final ){
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            title: "Operação Invalida, saldo insuficiente para este operação!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 10000,
+          });
+          
+          this.form.tipo_movimento_id = "";
+          this.formatInput()
+        }
+      }else {
+        this.formatInput()
+      }
+      
+    },
+    
     updateData() {
       this.$Progress.start();
       this.$inertia.get("/fluxos-caixas/create", this.params, {
@@ -399,65 +439,16 @@ export default {
       });
     },
     
-    // addSubContaMovimento() {
-    //   this.form.tipo_credito_id = this.tipo_credito_id;
-    //   this.form.contrapartida_id = this.contrapartida_id;
-    //   this.form.sub_conta_id = this.sub_conta_id;
-      
-    //   if (this.isUpdate) {
-    //     axios
-    //       .put(`/editar-fluxo-caixa/${this.itemId}`, this.form)
-    //       .then((response) => {
-            
-    //         this.item_movimentos = [];
-    //         this.item_movimentos = response.data.item_movimentos;
-    //         this.resultados = response.data.resultados;
-              
-    //         this.isUpdate = false; 
-    //         this.itemId = null; 
-            
-    //       })
-    //       .catch((error) => {});
-    //   } else {
-    //     axios
-    //       .post(`/adicionar-fluxo-caixa`, this.form)
-    //       .then((response) => {
-            
-    //         this.item_movimentos = [];
-    //         this.item_movimentos = response.data.item_movimentos;
-    //         this.resultados = response.data.resultados;
-            
-    //       })
-    //       .catch((error) => {});
-    //   }
-   
-    // },
-    entrada_valor_operacao(){
-      // Recupera o valor introduzido
-      const valorIntroduzido = this.form.valor;
-      alert(JSON.stringify(valorIntroduzido))
-      if( valorIntroduzido > this.saldo_final ){
-        Swal.fire({
-          toast: true,
-          icon: "error",
-          title: "Operação Invalida, saldo insuficiente para este operação!",
-          animation: false,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 4000,
-        });
-        
-        this.form.valor = 0;
-        
+    validateInput(event) {
+      // Permitir apenas números
+      const keyCode = event.keyCode;
+      if ((keyCode < 48 || keyCode > 57) && keyCode !== 8 && keyCode !== 9 && keyCode !== 37 && keyCode !== 39) {
+        event.preventDefault();
       }
-      
-      // console.log("Valor introduzido:", valorIntroduzido);
-      
     },
             
     editar_fluxo_caixa_item(item){
         this.form.valor = (item.tipo_movimento.sigla == "D" ? item.debito : item.credito);
-       
         
         this.form.sub_conta_id = item.subconta_id;
         this.form.documento_id = item.documento_id;
@@ -491,27 +482,35 @@ export default {
     },    
 
     submit() {
-      
-      // if(this.form.valor == 0) {
-        
-      //   Swal.fire({
-      //     toast: true,
-      //     icon: "error",
-      //     title: "O valor não pode ser zero(0)!",
-      //     animation: false,
-      //     position: "top-end",
-      //     showConfirmButton: false,
-      //     timer: 4000,
-      //   });
-        
-      //   return
-      // }
-      
+            
+           
+      this.$Progress.start(); 
+            
       this.form.tipo_credito_id = this.tipo_credito_id;
       this.form.contrapartida_id = this.contrapartida_id;
       this.form.sub_conta_id = this.sub_conta_id;
     
-      this.$Progress.start();
+      this.removeFormatting();
+      
+      if(this.form.tipo_movimento_id == 1){
+        if( valorIntroduzido > this.saldo_final ){
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            title: "Operação Invalida, saldo insuficiente para este operação!",
+            animation: false,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 10000,
+          });
+          
+          this.form.tipo_movimento_id = "";
+          this.form.valor = 0;
+        }
+      }
+    
+      return
+    
       this.form.post(route("fluxos-caixas.store"), {
         preverseScroll: true,
         onSuccess: () => {
@@ -527,9 +526,9 @@ export default {
             timer: 4000,
           });
           
-          if(this.form.tipo_movimento_id == 1){
+          // if(this.form.tipo_movimento_id == 1){
             this.imprimirComprovativo();
-          }
+          // }
           
           window.location.reload();
           this.$Progress.finish();

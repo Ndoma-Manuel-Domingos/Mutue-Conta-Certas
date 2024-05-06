@@ -32,6 +32,7 @@ use App\Http\Controllers\{
     TipoMovimentoController,
     TipoProveitoController,
     UtilizadorController,
+    CentroDeCustoController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -130,6 +131,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('documentos', DocumentoController::class);
     Route::resource('regime-empresa', RegimeController::class);
     Route::resource('moeda', MoedaController::class);
+    Route::resource('centro_de_custo', CentroDeCustoController::class);
     Route::resource('paises', PaisesController::class);
     Route::resource('municipio', MunicipioController::class);
     Route::resource('provincia', ProvinciaController::class);

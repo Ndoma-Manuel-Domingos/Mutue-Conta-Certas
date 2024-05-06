@@ -336,6 +336,18 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Contrapartidas</p>
             </Link>
+
+
+            <Link
+              href="/centro_de_custo"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'CentroDeCusto/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Centro de Custos</p>
+            </Link>
             
             <Link
               href="/tipos-movimentos"
