@@ -1525,7 +1525,7 @@ class FluxoCaixaController extends Controller
 
     public function update(Request $request, $id)
     {
-        dd($id);
+        // dd($id);
     }
 
     public function imprimirPDF(Request $request)
