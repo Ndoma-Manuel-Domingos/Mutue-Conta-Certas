@@ -435,7 +435,7 @@ export default {
     entrada_valor_operacao(){
       // Recupera o valor introduzido
       const valorIntroduzido = this.form.valor;
-      
+      alert(JSON.stringify(valorIntroduzido))
       if( valorIntroduzido > this.saldo_final ){
         Swal.fire({
           toast: true,
