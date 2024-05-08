@@ -8,7 +8,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="/moeda">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="/centro_de_custo">Dashboard</a></li>
               <li class="breadcrumb-item active">Listagem</li>
             </ol>
           </div>
@@ -33,28 +33,12 @@
                   <i class="fas fa-file-pdf"></i> Visualizar
                 </button>
 
-                <div class="card-tools">
-                  <div class="input-group input-group" style="width: 450px">
-                    <input
-                      type="text"
-                      v-model="input_busca_moedas"
-                      class="form-control float-right"
-                      placeholder="Informe a campo"
-                    />
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
               <div class="card-body">
                 <div class="table-responsive p-0">
                   <table class="table table-bordered table-hover" id="tabela_dos_tipos_de_moedas">
                     <thead>
                       <tr>
-                        <th>#</th>
                         <th>Id</th>
                         <th>Designação</th>
                         <th class="text-right">Ações</th>
@@ -63,11 +47,9 @@
 
                     <tbody>
                       <tr v-for="item in centro_de_custo" :key="item">
-                        <td>#</td>
                         <td>{{ item.id }}</td>
                         <td>{{ item.designacao }}</td>
                         <td>
-                          <div class="float-right">
                             <a
                               :href="`/centro_de_custo/${item.id}/edit`"
                               class="btn btn-sm btn-success"
@@ -75,10 +57,9 @@
                             >
                             <a
                               @click="deleteItem(item)"
-                              class="btn btn-sm btn-danger mx-1"
+                               class="btn btn-sm btn-danger mx-1"
                               ><i class="fas fa-trash"></i> Apagar</a
                             >
-                          </div>
                         </td>
                       </tr>
                     </tbody>

@@ -23,8 +23,11 @@
             <div class="card">
               <div class="card-header"> 
                 <a href="/empresas/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR EMPRESA</a>
-                <button class="btn btn-danger btn-sm mx-1" >
+                <button class="btn btn-danger btn-sm mx-1" @click="imprimirPDF()">
                   <i class="fas fa-file-pdf"></i> Imprimir
+                </button>
+                <button class="btn btn-success btn-sm mx-1" @click="imprimirExcel()">
+                  <i class="fas fa-file-excel"></i> Imprimir
                 </button>
               </div>
               <div class="card-body">
@@ -202,6 +205,18 @@ export default {
           })
           
         });
+    },
+    
+    
+    imprimirPDF(){
+      window.open(`empresas-imprimir-pdf`);
+      // window.open(`imprimir-fluxo-caixa?exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`);
+    },
+    
+    
+    imprimirExcel(){
+      window.open(`empresas-imprimir-excel`);
+      // window.open(`imprimir-fluxo-caixa?exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`);
     },
     
     verificar_sessao_empresa(item){

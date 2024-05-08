@@ -472,6 +472,36 @@
           </li>
         </ul>
       </li>
+      
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+          <i class="nav-icon fas fa-users"></i>
+          <p>
+            Operadores
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item" title="Operadores">
+            <Link
+              href="/operadores"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Operadores/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Listagem</p>
+            </Link>
+          </li>
+        </ul>
+      </li>
+
+      
     </ul>
   </nav>
 </template>

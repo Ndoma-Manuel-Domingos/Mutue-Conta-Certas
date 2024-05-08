@@ -33,6 +33,7 @@ use App\Http\Controllers\{
     TipoProveitoController,
     UtilizadorController,
     CentroDeCustoController,
+    OperadorController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -70,6 +71,8 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('sub-contas', SubContaController::class);
     Route::resource('empresas', EmpresaController::class);
     Route::get('/empresas-mudar-estado/{id}', [EmpresaController::class, 'mudar_estado']);
+    Route::get('/empresas-imprimir-pdf', [EmpresaController::class, 'pdf']);
+    Route::get('/empresas-imprimir-excel', [EmpresaController::class, 'excel']);
     
     Route::get('/empresas/iniciar-sessão/{id}', [EmpresaController::class, 'iniciar_sessao']);
     Route::post('/logout-empresa', [EmpresaController::class, 'logout_empresa'])->name('mf.logout_empresa');
@@ -102,6 +105,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('grupos-empresas', GrupoEmpresaController::class);
     
     Route::resource('utilizadores', UtilizadorController::class);
+    Route::resource('operadores', OperadorController::class);
 
     // Rotas de impressao de documentos-Ednilson
     Route::get('imprimir-contas', [ContaController::class, 'imprimirContas']);

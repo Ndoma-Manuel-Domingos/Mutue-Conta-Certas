@@ -183,6 +183,21 @@
                       >
                     </div>
                     
+                    <div class="col-12 col-md-3 mb-4" >
+                      <label for="centro_custo" class="form-label"
+                        >Centro Custo</label
+                      >
+                      <Select2
+                        v-model="form.centro_custo"
+                        id="centro_custo"
+                        class="col-12 col-md-12"
+                        :options="centro_custo"
+                        :settings="{ width: '100%' }"
+                      />
+                      <span></span>
+                    </div>
+                    
+                    
                     <div class="col-12 col-md-12">
                       <div class="row">
                         <div class="col-12 col-md-6 mb-4">
@@ -199,23 +214,6 @@
                             class="text-danger"
                             v-if="form.errors && form.errors.requisitante"
                             >{{ form.errors.requisitante }}</span
-                          >
-                        </div>
-                        
-                        <div class="col-12 col-md-6 mb-4">
-                          <label for="centro_custo" class="form-label"
-                            >Centro Custo</label
-                          >
-                          <textarea
-                            id="centro_custo"
-                            v-model="form.centro_custo"
-                            class="form-control"
-                            placeholder="Centro de Custo"
-                          ></textarea>
-                          <span
-                            class="text-danger"
-                            v-if="form.errors && form.errors.centro_custo"
-                            >{{ form.errors.centro_custo }}</span
                           >
                         </div>
                       </div>
@@ -296,6 +294,7 @@ export default {
     "documentos",
     "tipo_movimentos",
     "tipo_creditos",
+    "centro_custo",
     "tipo_proveitos",
     "contrapartidas",
     "saldo",
@@ -482,7 +481,6 @@ export default {
     },    
 
     submit() {
-            
            
       this.$Progress.start(); 
             
@@ -491,7 +489,7 @@ export default {
       this.form.sub_conta_id = this.sub_conta_id;
     
       this.removeFormatting();
-      
+    
       if(this.form.tipo_movimento_id == 1){
         if( valorIntroduzido > this.saldo_final ){
           Swal.fire({
@@ -508,8 +506,6 @@ export default {
           this.form.valor = 0;
         }
       }
-    
-      return
     
       this.form.post(route("fluxos-caixas.store"), {
         preverseScroll: true,

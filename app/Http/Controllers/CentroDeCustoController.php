@@ -7,7 +7,9 @@ use App\Models\CentroDeCusto;
 use Inertia\Inertia;
 
 class CentroDeCustoController extends Controller
-{
+{    
+    use Config;
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +17,7 @@ class CentroDeCustoController extends Controller
      */
     public function index(Request $request)
     {
-        $data['centro_de_custo'] = CentroDeCusto::get();
+        $data['centro_de_custo'] = CentroDeCusto::where('empresa_id', $this->empresaLogada())->get();
 
         return Inertia::render('CentroDeCusto/Index', $data);
     }
@@ -44,6 +46,7 @@ class CentroDeCustoController extends Controller
 
             $data = CentroDeCusto::create([
                 'designacao' => $request->designacao,
+                'empresa_id' => $this->empresaLogada()
             ]);
 
             return response()->json(['message' => 'Registo salvo com sucesso!'], 200);

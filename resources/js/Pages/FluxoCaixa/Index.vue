@@ -158,7 +158,8 @@
                       <td class="text-right text-danger">{{ item.credito == 0 ? "-" : formatarValorMonetario(item.credito) }}</td>
                       
                       <td class="text-right text-primary" v-if="item.debito > item.credito">{{ formatarValorMonetario(item.debito - item.credito) }}</td>
-                      <td class="text-right text-danger" v-if="item.credito > item.debito">{{ formatarValorMonetario(item.credito - item.debito) }}</td>
+                      <td class="text-right text-primary" v-if="item.debito == item.credito">{{ '-' }}</td>
+                      <td class="text-right text-danger" v-if="item.credito > item.debito">{{  formatarValorMonetario(item.credito - item.debito) }}</td>
                       <td class="text-right">
                         {{ item.exercicio.designacao ?? "" }}
                       </td>

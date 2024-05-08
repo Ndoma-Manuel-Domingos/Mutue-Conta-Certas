@@ -127,7 +127,7 @@
         
         <p style="line-height: 30px;border-bottom: 1px solid #dadada;padding-bottom: 60px"><strong style="">Requisitante:</strong> <br> {{ $movimento->requisitante }}  </p>
         
-        <p style="line-height: 30px;border-bottom: 1px solid #dadada;padding-bottom: 60px"><strong>Centro de Custo:</strong> <br> {{ $movimento->centro_custo }}  </p>
+        <p style="line-height: 30px;border-bottom: 1px solid #dadada;padding-bottom: 60px"><strong>Centro de Custo:</strong> <br> {{ $movimento->centro_de_custo->designacao ?? "" }}  </p>
             
         <p style="line-height: 30px;border-bottom: 1px solid #dadada"><strong>Referente à Saída: </strong> 
             @foreach ($movimento->items as $item)

@@ -8,7 +8,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/moeda">Listagem</a></li>
+                            <li class="breadcrumb-item"><a href="/centro_de_custo">Listagem</a></li>
                             <li class="breadcrumb-item active">Criar Centro de Custo</li>
                         </ol>
                     </div>

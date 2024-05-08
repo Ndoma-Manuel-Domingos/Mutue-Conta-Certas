@@ -15,8 +15,14 @@ class CentroDeCusto extends Model
     
     protected $fillable = [
         'designacao',
+        'empresa_id',
         'created_by',
         'updated_by',
         'deleted_by',
     ];
+    
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'empresa_id', 'id');
+    }  
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CentroCusto;
+use App\Models\CentroDeCusto;
 use App\Models\Conta;
 use App\Models\Contrapartida;
 use App\Models\Documento;
@@ -452,6 +454,8 @@ class FluxoCaixaController extends Controller
         $data['tipo_movimentos'] = TipoMovimento::select('id', 'designacao AS text')->orderBy('id', 'desc')->get();
         $data['tipo_creditos'] = TipoCredito::select('id', 'designacao AS text')->get();
         $data['tipo_proveitos'] = TipoProveito::select('id', 'designacao AS text')->get();
+        $data['centro_custo'] = CentroDeCusto::select('id', 'designacao AS text')->get();
+        
         $data['taxas'] = Taxa::select('id', 'designacao AS text')->get();
         
         $data['saldo'] = MovimentoItem::with(['conta'])
@@ -549,7 +553,7 @@ class FluxoCaixaController extends Controller
                 $create = Movimento::create([
                     'hash' => $hash,
                     'debito' => $request->valor,
-                    'credito' => $request->valor,
+                    'credito' => 0,
                     'iva' => $novo_valor_com_iva,
                     'empresa_id' => $this->empresaLogada(),
                     'descricao' => $request->designacao,
@@ -1750,12 +1754,12 @@ class FluxoCaixaController extends Controller
     
         if($request->id == 0){
         
-            $data['movimento'] = Movimento::with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
+            $data['movimento'] = Movimento::with(['items', 'centro_de_custo', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
             ->where('origem', 'fluxocaixa')
             ->where('empresa_id', $this->empresaLogada())
             ->latest()->first();
         }else{
-            $data['movimento'] = Movimento::with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
+            $data['movimento'] = Movimento::with(['items', 'centro_de_custo', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
             ->where('origem', 'fluxocaixa')
             ->where('empresa_id', $this->empresaLogada())
             ->findOrFail($request->id);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ListagemEmpresaExport;
 use App\Models\Comuna;
 use App\Models\ContactoEmpresa;
 use App\Models\DocumentoEmpresa;
@@ -24,10 +25,13 @@ use App\Models\UserEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Inertia\Inertia;
 
 class EmpresaController extends Controller
 {
+    use Config;
+    
     //
     public function index(Request $request)
     {
@@ -422,6 +426,34 @@ class EmpresaController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+    }
+    
+
+    public function pdf(Request $request)
+    {
+        // Exclui um post específico do banco de dados
+        $user = User::with('empresa')->findOrFail(auth()->user()->id);
+                 
+        $data['empresas'] = Empresa::when($request->input_busca_empresas, function($query, $value){
+            $query->where('nome_empresa', 'like', "%".$value."%");
+            $query->orWhere('codigo_empresa', $value);
+        })
+        ->with(['endereco', 'regime', 'moeda.base', 'moeda.alternativa', 'moeda.cambio', 'tipo', 'grupo'])
+        ->where('user_id', $user->id)
+        ->get();
+        
+        $data['dados_empresa'] = $this->dadosEmpresaLogada();
+        
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadView('pdf.listagem-empresas', $data);
+        $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
+        return $pdf->stream();
+    }
+    
+
+    public function excel(Request $request)
+    {
+        return Excel::download(new ListagemEmpresaExport($request), 'listagem-empresas.xlsx');
     }
     
 }

@@ -45,6 +45,11 @@ class Movimento extends Model
         return $this->belongsTo(Exercicio::class, 'exercicio_id', 'id');
     } 
     
+    public function centro_de_custo()
+    {
+        return $this->belongsTo(CentroDeCusto::class, 'centro_custo', 'id');
+    } 
+    
     public function periodo()
     {
         return $this->belongsTo(Periodo::class, 'periodo_id', 'id');

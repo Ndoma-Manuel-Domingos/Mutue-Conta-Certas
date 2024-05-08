@@ -46,7 +46,6 @@
                             <div class="col-12 mb-3">
                                 <label for="" class="form-label">Confirmar Senha</label>
                                 <div class="input-group">
-                                    
                                     <input type="confirm_password" v-model="form.confirm_password" :class="{'is-invalid' : form.errors.confirm_password}"  class="form-control form-control-sm " placeholder="Confirmar Senha" />
                                 </div>
                                 <span v-if="form.errors.confirm_password" class="login-box-msg text-danger" >{{ form.errors.confirm_password }}</span>
