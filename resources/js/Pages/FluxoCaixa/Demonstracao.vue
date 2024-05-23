@@ -90,6 +90,9 @@
                   <a class="btn btn-sm float-right btn-danger mx-1" @click="imprimirPDF()">
                     <i class="fas fa-file-pdf"></i> Imprimir
                   </a>
+                  <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelDemonstracao()">
+                  <i class="fas fa-file-excel"></i> Exportar</a
+                >
               </div>
               <div class="card-body">
                 <table
@@ -129,7 +132,7 @@
                         <td class="text-right">{{ formatarValorMonetario(outros) }}</td>
                     </tr>
                   </tbody>
-                  
+
                   <tfoot>
                     <tr>
                         <th>Caixa liquida gerada nas actividades operacionais</th>
@@ -154,11 +157,11 @@ export default {
   props: [
     "exercicios",
     "periodos",
-    "dinheiro_recebido_clientes", 
-    "dinheiro_recebido_fornecedores", 
-    "dinheiro_custo", 
-    "dinheiro_imposto", 
-    "dinheiro_pagos_juros", 
+    "dinheiro_recebido_clientes",
+    "dinheiro_recebido_fornecedores",
+    "dinheiro_custo",
+    "dinheiro_imposto",
+    "dinheiro_pagos_juros",
     "outros"
   ],
   components: {
@@ -189,17 +192,17 @@ export default {
     };
   },
   mounted() {
-    
+
     this.exercicio_id = this.sessions_exercicio ? this.sessions_exercicio.id : "";
     this.periodo_id = this.periodo_sessao ? this.periodo_sessao.id : "";
-    
+
     const year = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
-    
+
     this.data_inicio = `${year}-04-01`;
     this.data_final = `${year}-04-30`;
-        
+
     this.userYear = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
-  
+
     // $("#tabela_de_diarias").DataTable({
     //   responsive: true,
     //   lengthChange: true,
@@ -248,11 +251,17 @@ export default {
         },
       });
     },
-    
+
+    ExportarExcelDemonstracao() {
+      window.open(
+        `exportar-demonstracao-excel`
+      );
+    },
+
     minDate(year) {
       return `${year}-04-01`; // Primeiro dia do ano especificado
     },
-    
+
     maxDate(year) {
       return `${year}-04-30`; // Último dia do ano especificado
     },

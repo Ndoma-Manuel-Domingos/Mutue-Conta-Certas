@@ -17,6 +17,8 @@ use Inertia\Inertia;
 use PDF;
 use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 use Carbon\Carbon;
+use App\Exports\CentroDeCustoExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BalancoController extends Controller
 {
@@ -48,8 +50,11 @@ class BalancoController extends Controller
 
         $conta_imobilizacoes_corporeas = ContaEmpresa::
             with(['sub_contas_empresa.items_movimentos'])->with(['sub_contas_empresa.items_movimentos.movimento'])
-            ->with(['sub_contas_empresa' => function ($query) {
-                $query->where('tipo', 'M'); }])
+            ->with([
+                'sub_contas_empresa' => function ($query) {
+                    $query->where('tipo', 'M');
+                }
+            ])
             ->where('conta_id', 3)
             ->get();
 
@@ -57,8 +62,11 @@ class BalancoController extends Controller
 
         $conta_imobilizacoes_incorporeas = ContaEmpresa::
             with(['sub_contas_empresa.items_movimentos', 'sub_contas_empresa.items_movimentos.movimento'])
-            ->with(['sub_contas_empresa' => function ($query) {
-                $query->where('tipo', 'M'); }])
+            ->with([
+                'sub_contas_empresa' => function ($query) {
+                    $query->where('tipo', 'M');
+                }
+            ])
             ->where('conta_id', 4)->get();
 
         $exercicioId = $request->exercicio_id;
@@ -342,6 +350,18 @@ class BalancoController extends Controller
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Balanco.pdf');
     }
+    public function exportarExcel(Request $request)
+    {
+        dd($request);
+        $data['dados'] = $request;
+        $data_inicio = $data['dados']->data_inicio;
+        $data_final = $data['dados']->data_final;
+        $exercicio_id = $data['dados']->exercicio_id;
+        $tipo_balancete_id = $data['dados']->tipo_balancete_id;
+        $periodo_id = $data['dados']->periodo_id;
+
+        return Excel::download(new CentroDeCustoExport($data_inicio, $data_final, (int)$exercicio_id, $tipo_balancete_id, $periodo_id), 'users.xlsx');
+    }
 
     public function getSubcontas(Request $request)
     {
@@ -523,7 +543,7 @@ class BalancoController extends Controller
                 ])->where('conta_id', $conta->id)
                     ->get();
 
-                if (!$data['sub_contas'] || $data['subcontas']) {
+                if (!($data['sub_contas'] || $data['subcontas'])) {
                     return redirect()->back();
                 }
                 $collect = collect([]);

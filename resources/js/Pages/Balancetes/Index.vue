@@ -41,7 +41,7 @@
                     <!-- <div class="col-12 col-md-4 mb-4">
                         <label for="subconta_id" class="form-label">Contas</label>
                         <Select2  id="subconta_id" v-model="subconta_id"
-                          :options="contas" :settings="{ width: '100%' }" 
+                          :options="contas" :settings="{ width: '100%' }"
                         />
                     </div> -->
 
@@ -112,13 +112,13 @@
                 >
                   <i class="fas fa-file-pdf"></i> Visualizar</a
                 >
-                <a href="" class="btn btn-sm mx-1 btn-success float-right">
-                  <i class="fas fa-file-excel"></i> Exportar</a
+                <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelBalanco()">
+                  <i class="fas fa-file-excel"></i> Exportar Balanço</a
                 >
               </div>
               <div class="card-body">
                 <table
-                  class="table table-bordered table-hover" 
+                  class="table table-bordered table-hover"
                 >
                   <thead>
                     <tr>
@@ -129,7 +129,7 @@
                       <th colspan="2" class="text-center">Movimentos</th>
                       <th colspan="2" class="text-center">Saldo</th>
                     </tr>
-                    
+
                     <tr>
                       <th class="text-left" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">Débito</th>
                       <th class="text-left" v-show="tipo_balancete_id == 3 || tipo_balancete_id == 1">Crébito</th>
@@ -138,7 +138,7 @@
                       <th class="text-left">Devedor</th>
                       <th class="text-left">Credor</th>
                     </tr>
-                    
+
                     <tr>
                       <th></th>
                       <th></th>
@@ -149,15 +149,15 @@
                       <th class="text-danger text-right">{{ resultado_por_conta.total_credito == 0 ? '-' : formatarValorMonetario(resultado_por_conta.total_credito) }}</th>
                       <th class="text-primary text-right">{{ resultado_por_conta.total_debito > resultado_por_conta.total_credito ? formatarValorMonetario(resultado_por_conta.total_debito - resultado_por_conta.total_credito) : '-' }}</th>
                       <th class="text-danger text-right">{{ resultado_por_conta.total_credito > resultado_por_conta.total_debito ? formatarValorMonetario(resultado_por_conta.total_credito - resultado_por_conta.total_debito) : '-'  }}</th>
-                      
-                      
+
+
                       <!-- <th class="text-primary text-right">{{ resultado.total_movimento_debito == 0 ? '-' : formatarValorMonetario(resultado.total_movimento_debito) }}</th>
                       <th class="text-danger text-right">{{ resultado.total_movimento_credito == 0 ? '-' : formatarValorMonetario(resultado.total_movimento_credito) }}</th> -->
                       <!-- <th class="text-primary text-right">{{ resultado.total_movimento_debito > resultado.total_movimento_credito ? formatarValorMonetario(resultado.total_movimento_debito - resultado.total_movimento_credito) : '-' }}</th>
                       <th class="text-danger text-right">{{ resultado.total_movimento_credito > resultado.total_movimento_debito ? formatarValorMonetario(resultado.total_movimento_credito - resultado.total_movimento_debito) : '-'  }}</th> -->
-                      
+
                     </tr>
-                    
+
                     <template v-for="(item, index) in registros.data" :key="index">
                       <!-- CLASSES -->
                       <tr v-show="tipo_balancete_id == 3 || tipo_balancete_id == 4">
@@ -194,13 +194,13 @@
                           <td class="text-danger  text-right">{{ item2.items_movimentos[0] ?  (item2.items_movimentos[0].total_credito > item2.items_movimentos[0].total_debito ? formatarValorMonetario(item2.items_movimentos[0].total_credito - item2.items_movimentos[0].total_debito) :'-' ) : '-' }}</td>
                         </tr>
                       </template>
-                      
+
                     </template>
                   </thead>
                 </table>
 
               </div>
-              
+
             </div>
           </div>
         </div>
@@ -208,7 +208,7 @@
     </div>
   </MainLayouts>
 </template>
-  
+
 <script>
 import Paginacao from "../../components/Paginacao.vue";
 
@@ -251,12 +251,12 @@ export default {
 
       exercicio_id: "",
       periodo_id: "",
-      
+
       userYear: "",
-      
+
       data_inicio: "", // new Date().toISOString().substr(0, 10),
       data_final:  "", // new Date().toISOString().substr(0, 10),
-      
+
       subconta_id: "",
 
       params: {},
@@ -266,12 +266,12 @@ export default {
     this.exercicio_id = this.sessions_exercicio ? this.sessions_exercicio.id : "";
     this.periodo_id = this.periodo_sessao ? this.periodo_sessao.id : "";
     this.tipo_balancete_id = "3";
-    
+
     const year = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
-    
+
     this.data_inicio = `${year}-01-01`;
     this.data_final = `${year}-12-31`;
-    
+
     this.userYear = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
 
     $("#tabela_de_balancetes").DataTable({
@@ -299,12 +299,12 @@ export default {
       this.params.exercicio_id = val;
       this.updateData();
     },
-    
+
     tipo_balancete_id: function (val) {
       this.params.tipo_balancete_id = val;
       this.updateData();
     },
-    
+
     subconta_id: function (val) {
       this.params.subconta_id = val;
       this.updateData();
@@ -337,11 +337,11 @@ export default {
         },
       });
     },
-        
+
     minDate(year) {
       return `${year}-01-01`; // Primeiro dia do ano especificado
     },
-    
+
     maxDate(year) {
       return `${year}-12-31`; // Último dia do ano especificado
     },
@@ -349,6 +349,11 @@ export default {
     imprimirBalancete() {
       window.open(
         `imprimir-balancete?tipo_balancete_id=${this.tipo_balancete_id}&exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`
+      );
+    },
+    ExportarExcelBalanco() {
+      window.open(
+        `exportar-balancete-excel?tipo_balancete_id=${this.tipo_balancete_id}&exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`
       );
     },
 
@@ -387,5 +392,4 @@ export default {
   },
 };
 </script>
-  
-  
+

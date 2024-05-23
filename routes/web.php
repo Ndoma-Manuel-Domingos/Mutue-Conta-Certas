@@ -73,11 +73,11 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/empresas-mudar-estado/{id}', [EmpresaController::class, 'mudar_estado']);
     Route::get('/empresas-imprimir-pdf', [EmpresaController::class, 'pdf']);
     Route::get('/empresas-imprimir-excel', [EmpresaController::class, 'excel']);
-    
+
     Route::get('/empresas/iniciar-sessão/{id}', [EmpresaController::class, 'iniciar_sessao']);
     Route::post('/logout-empresa', [EmpresaController::class, 'logout_empresa'])->name('mf.logout_empresa');
     Route::get('/escolher-empresa-operar', [EmpresaController::class, 'escolher_empresa_operar']);
-    
+
     Route::resource('diarios', DiarioController::class);
     Route::get('/get-diario/{id}', [DiarioController::class, 'get_diario']);
     Route::resource('tipos-documentos', TipoDocumentoController::class);
@@ -89,7 +89,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/demonstracao-fluxo-caixa', [FluxoCaixaController::class, 'demonstracaoFluxoCaixa']);
     Route::get('/demonstracao-fluxo-caixa-detalhe', [FluxoCaixaController::class, 'demonstracaoFluxoCaixaDetalhe']);
     Route::get('/fluxos-caixas-imprimir-nota-entregue', [FluxoCaixaController::class, 'imprimirNotaEntregue']);
-    
+
     Route::resource('balancetes', BalanceteController::class);
     Route::resource('balancos', BalancoController::class);
     Route::resource('extratos-contas', ExtratoContaController::class);
@@ -103,7 +103,7 @@ Route::group(["middleware" => "auth"], function () {
     // Route::get('/movimentos', [OperacaoController::class, 'movimentos']);
     Route::resource('tipos-empresas', TipoEmpresaController::class);
     Route::resource('grupos-empresas', GrupoEmpresaController::class);
-    
+
     Route::resource('utilizadores', UtilizadorController::class);
     Route::resource('operadores', OperadorController::class);
 
@@ -112,7 +112,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('imprimir-sub-contas', [SubContaController::class, 'imprimirSubContas']);
     Route::get('imprimir-classes', [ClasseController::class, 'imprimirClasses']);
     Route::get('imprimir-exercicios', [ExercicioController::class, 'imprimirExercicios']);
-    Route::get('imprimir-periodos', [PeriodoController::class, 'imprimirPeriodo']); 
+    Route::get('imprimir-periodos', [PeriodoController::class, 'imprimirPeriodo']);
     Route::get('imprimir-plano', [PlanoGeralContaController::class, 'imprimirPlano']);
     Route::get('imprimir-diario', [DiarioController::class, 'imprimirDiario']);
     Route::get('imprimir-movimentos', [MovimentoController::class, 'imprimirMovimento']);
@@ -126,7 +126,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('imprimir-extrato-excel', [ExtratoContaController::class, 'imprimirExtratoExcel']);
 
     Route::get('get-subcontas', [BalancoController::class, 'getSubcontas']);
-    
+
     // Rotas Tabela de apoio
     Route::resource('tipos-creditos', TipoCreditoController::class);
     Route::resource('tipos-proveitos', TipoProveitoController::class);
@@ -140,8 +140,21 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('municipio', MunicipioController::class);
     Route::resource('provincia', ProvinciaController::class);
     Route::resource('comuna', ComunaController::class);
-    
+
+
+    // Exportar Excell
+    Route::get('exportar-balancete-excel', [BalanceteController::class, 'exportarExcel']);
+    Route::get('exportar-movimento-excel', [MovimentoController::class, 'exportarExcel']);
+    Route::get('exportar-diario-excel', [DiarioController::class, 'exportarExcel']);
+    Route::get('exportar-tipo-documento-excel', [TipoDocumentoController::class, 'exportarExcel']);
+    // Route::get('exportar-demonstracao-excel', [FluxoCaixaController::class, 'exportarExcel']);
+    Route::get('exportar-demonstracao-detalhe-excel', [FluxoCaixaController::class, 'exportarExcel']);
+    Route::get('exportar-exercicio-excel', [ExercicioController::class, 'exportarExcel']);
+    Route::get('exportar-periodo-excel', [PeriodoController::class, 'exportarExcel']);
+    Route::get('exportar-contra-partida-excel', [ContrapartidaController::class, 'exportarExcel']);
+
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');
+
 
 });

@@ -21,8 +21,11 @@
         <div class="row">
           <div class="col-12 col-md-12">
             <div class="card">
-              <div class="card-header"> 
+              <div class="card-header">
                 <a href="/tipos-documentos/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR TIPO DE DOCUMENTO</a>
+                <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelTipoDocumento()">
+                  <i class="fas fa-file-excel"></i> Exportar</a
+                >
                 <button class="btn btn-sm btn-danger mx-1">
                     <i class="fas fa-file-pdf"></i> Imprimir
                   </button>
@@ -39,7 +42,7 @@
                       <th class="text-right">Ações</th>
                     </tr>
                   </thead>
-                  
+
                   <tbody>
                     <tr v-for="item in tipos_documentos" :key="item">
                       <td>#</td>
@@ -65,7 +68,7 @@
     </div>
   </MainLayouts>
 </template>
-  
+
 <script>
 
 import Paginacao from "../../components/Paginacao.vue";
@@ -116,9 +119,9 @@ export default {
       this.updateData();
     },
   },
-  
+
   methods: {
-  
+
     updateData() {
       this.$Progress.start();
       this.$inertia.get("/tipos-documentos", this.params, {
@@ -129,8 +132,14 @@ export default {
         },
       });
     },
-    
-  
+
+    ExportarExcelTipoDocumento() {
+      window.open(
+        `exportar-tipo-documento-excel`
+      );
+    },
+
+
     mudar_estado(item) {
       this.$Progress.start();
 
@@ -146,11 +155,11 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-      
+
           window.location.reload();
         })
         .catch((error) => {
-          
+
           this.$Progress.fail();
           Swal.fire({
             toast: true,
@@ -161,11 +170,10 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-          
+
         });
     },
   },
 };
 </script>
-  
-  
+

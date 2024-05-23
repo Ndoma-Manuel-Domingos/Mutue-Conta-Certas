@@ -21,11 +21,14 @@
         <div class="row">
           <div class="col-12 col-md-12">
             <div class="card">
-              <div class="card-header"> 
+              <div class="card-header">
                 <a href="/periodos/create" class="btn btn-info btn-sm mx-1"> <i class="fas fa-plus"></i> CRIAR PERÍODO</a>
                 <button class="btn btn-danger btn-sm mx-1" @click="imprimirPeriodos()">
                   <i class="fas fa-save"></i> Imprimir Contas
                 </button>
+                <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelPeriodo()">
+                  <i class="fas fa-file-excel"></i> Exportar</a
+                >
               </div>
               <div class="card-body">
                   <table class="table table-bordered table-hover" id="tabela_de_periodos">
@@ -39,7 +42,7 @@
                         <th class="text-right">Ações</th>
                       </tr>
                     </thead>
-                    
+
                     <tbody>
                       <tr v-for="item in periodos" :key="item">
                         <td>#</td>
@@ -58,7 +61,7 @@
                     </tbody>
                   </table>
               </div>
-         
+
             </div>
           </div>
         </div>
@@ -66,7 +69,7 @@
     </div>
   </MainLayouts>
 </template>
-  
+
 <script>
 
 import Paginacao from "../../components/Paginacao.vue";
@@ -114,7 +117,7 @@ export default {
       }
       this.updateData();
     },
-    
+
     input_busca_periodos: function (val) {
       this.params.input_busca_periodos = val;
       this.updateData();
@@ -122,7 +125,7 @@ export default {
 
   },
   methods: {
-      
+
     updateData() {
       this.$Progress.start();
       this.$inertia.get("/periodos", this.params, {
@@ -133,8 +136,13 @@ export default {
         },
       });
     },
-    
-  
+
+    ExportarExcelPeriodo() {
+      window.open(
+        `exportar-periodo-excel`
+      );
+    },
+
     mudar_estado(item) {
       this.$Progress.start();
 
@@ -150,11 +158,11 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-      
+
           window.location.reload();
         })
         .catch((error) => {
-          
+
           this.$Progress.fail();
           Swal.fire({
             toast: true,
@@ -165,15 +173,14 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-          
+
         });
     },
-    
+
     imprimirPeriodos() {
       window.open("imprimir-periodos");
     },
   },
 };
 </script>
-  
-  
+

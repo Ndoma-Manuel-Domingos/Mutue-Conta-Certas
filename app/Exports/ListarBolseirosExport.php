@@ -48,7 +48,7 @@ class ListarBolseirosExport extends DefaultValueBinder implements FromCollection
         $this->estado = $request->estado ?? 0;
         $this->semestre = $request->semestre ?? 0;
         $this->titulo = "LISTAGEM ESTUDANTES BOLSEIROS";
-        
+
     }
 
     public function headings():array
@@ -77,7 +77,7 @@ class ListarBolseirosExport extends DefaultValueBinder implements FromCollection
             $caixa->semestreItem ?? '',
             $caixa->Instituicao ?? '',
         ];
-        
+
     }
 
     /**
@@ -86,24 +86,24 @@ class ListarBolseirosExport extends DefaultValueBinder implements FromCollection
         public function collection()
         {
             $ano = AnoLectivo::where('estado', 'Activo')->first();
-            
-           
+
+
             if($this->instituicao_id == 0){ $this->instituicao_id = ""; }
-            
+
             if($this->semestre == 0){ $this->semestre = ""; }
-        
+
             if($this->percentagem == 120){ $this->percentagem = ""; }
-            
+
             if($this->ano_lectivo_id){
                 $this->ano_lectivo_id = $this->ano_lectivo_id;
             }else{
                 $this->ano_lectivo_id = $ano->Codigo;
             }
-            
+
             if($this->curso_id == 0){ $this->curso_id = ""; }
-            
+
             if($this->tipo_de_bolsa == 0){ $this->tipo_de_bolsa = ""; }
-            
+
             if($this->estado == "0"){
                 $this->estado = [false] ;
             }else if($this->estado == "1"){
@@ -111,7 +111,7 @@ class ListarBolseirosExport extends DefaultValueBinder implements FromCollection
             }else{
                 $this->estado =  [true, false];
             }
-    
+
             return Bolseiro::when($this->ano_lectivo_id, function ($query, $value) {
                 $query->where('tb_bolseiros.codigo_anoLectivo', $value);
             })
@@ -153,11 +153,11 @@ class ListarBolseirosExport extends DefaultValueBinder implements FromCollection
             )
             ->orderBy('tb_bolseiros.codigo', 'desc')
             ->get();
-            
+
             // dd();
-                
+
         }
-      
+
     /**
      * @return array
      */
@@ -199,7 +199,7 @@ class ListarBolseirosExport extends DefaultValueBinder implements FromCollection
     {
         return $this->titulo;
     }
-    
+
     public function startCell(): string
     {
         return 'A10';
@@ -207,10 +207,10 @@ class ListarBolseirosExport extends DefaultValueBinder implements FromCollection
 
     public function styles(Worksheet $sheet)
     {
-    
+
         $ano = AnoLectivo::find($this->ano_lectivo_id);
         $curso = Curso::find($this->curso_id);
-        
+
         $sheet->setCellValue('A7', strtoupper($this->titulo));
         $sheet->setCellValue('E6', 'ANO LECTIVO: ');
         $sheet->setCellValue('F6',  $ano->Designacao);

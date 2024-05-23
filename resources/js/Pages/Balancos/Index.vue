@@ -88,8 +88,8 @@
                 <a class="btn btn-sm mx-1 btn-danger float-right" @click="imprimirBalancete()">
                   <i class="fas fa-file-pdf"></i> Visualizar</a
                 >
-                <a href="" class="btn btn-sm mx-1 btn-success float-right">
-                  <i class="fas fa-file-excel"></i> Exportar</a
+                <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelBalanco()">
+                  <i class="fas fa-file-excel"></i> Exportar Balanço</a
                 >
               </div>
               <div class="card-body">
@@ -515,6 +515,12 @@ export default {
     imprimirBalancete() {
       window.open(
         `imprimir-balanco?exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`
+      );
+    },
+
+    ExportarExcelBalanco() {
+      window.open(
+        `exportar-excel?exercicio_id=${this.exercicio_id}&periodo_id=${this.periodo_id}&data_inicio=${this.data_inicio}&data_final=${this.data_final}`
       );
     },
 

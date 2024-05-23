@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use PDF;
+use App\Exports\CentroDeCustoExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class BalanceteController extends Controller
 {
@@ -38,15 +41,15 @@ class BalanceteController extends Controller
         ->whereHas('sub_contas_empresa.items_movimentos.movimento', function($query) use($request){
             $query->when($request->data_inicio, function($query, $value){
                 $query->whereDate('data_lancamento',  ">=" ,$value);
-            }); 
+            });
         })
         ->whereHas('sub_contas_empresa.items_movimentos.movimento', function($query) use($request){
             $query->when($request->data_final, function($query, $value){
                 $query->whereDate('data_lancamento', "<=" ,$value);
-            }); 
+            });
         })
         ->paginate(100);
-        
+
         // $data['registros_contas'] = ContaEmpresa::with(['classe'])->with(['conta.items_movimentos' => function ($query) {
         //     $query->select(
         //         'conta_id',
@@ -57,17 +60,17 @@ class BalanceteController extends Controller
         // ->whereHas('sub_contas_empresa.items_movimentos.movimento', function($query) use($request){
         //     $query->when($request->data_inicio, function($query, $value){
         //         $query->whereDate('data_lancamento',  ">=" ,$value);
-        //     }); 
+        //     });
         // })
         // ->whereHas('sub_contas_empresa.items_movimentos.movimento', function($query) use($request){
         //     $query->when($request->data_final, function($query, $value){
         //         $query->whereDate('data_lancamento', "<=" ,$value);
-        //     }); 
+        //     });
         // })
         // ->paginate(100);
-        
+
         // dd($data['registros_contas']);
-        
+
         $valores = [];
         $valores_por_conta = [];
 
@@ -80,50 +83,50 @@ class BalanceteController extends Controller
 
         foreach ($data['registros'] as $movimento) {
             foreach ($movimento['conta']['items_movimentos'] as $contas) {
-                
+
                 $total_por_conta_credito += $contas->TotalCredito;
                 $total_por_conta_debito += $contas->TotalDebito;
-                
+
                 $valores_por_conta = [
                     "total_credito" => $total_por_conta_credito,
                     "total_debito" => $total_por_conta_debito,
                 ];
-            
-            }     
-            
+
+            }
+
             foreach ($movimento['sub_contas_empresa'] as $mov) {
-                
+
                 foreach ($mov['items_movimentos'] as $resultado) {
-                    
+
                     if ($resultado->total_debito > $resultado->total_credito) {
                         $movimento_debito += ($resultado->total_debito - $resultado->total_credito);
                     }
-                    
+
                     if ($resultado->total_credito > $resultado->total_debito) {
                         $movimento_credito += ($resultado->total_credito - $resultado->total_debito);
                     }
-                    
+
                     $total_credito += $resultado->total_credito;
                     $total_debito += $resultado->total_debito;
-                    
+
                     $valores = [
                         "total_movimento_credito" => $movimento_credito,
                         "total_movimento_debito" => $movimento_debito,
                         "total_credito" => $total_credito,
                         "total_debito" => $total_debito,
                     ];
-                   
-                }  
+
+                }
             }
         }
 
         $data['resultado'] = $valores;
         $data['resultado_por_conta'] = $valores_por_conta;
-    
+
         $data['exercicios'] = Exercicio::select('id', 'designacao As text')->get();
         $data['periodos'] = Periodo::select('id', 'designacao As text')->get();
         $data['tipos_balancetes'] = TipoBalancete::select('id', 'designacao As text')->get();
-        
+
         $data['requests'] = $request->all('exercicio_id', 'periodo_id', 'data_inicio', 'data_final', 'tipo_balancete_id');
 
         $data['contas'] = SubConta::where('empresa_id', $this->empresaLogada())
@@ -167,7 +170,7 @@ class BalanceteController extends Controller
     {
 
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-        
+
         $data['registros'] = ContaEmpresa::with(['classe', 'conta.items_movimentos' => function ($query) {
             $query->select(
                 'conta_id',
@@ -184,15 +187,15 @@ class BalanceteController extends Controller
         ->whereHas('sub_contas_empresa.items_movimentos.movimento', function($query) use($request){
             $query->when($request->data_inicio, function($query, $value){
                 $query->whereDate('data_lancamento',  ">=" ,$value);
-            }); 
+            });
         })
         ->whereHas('sub_contas_empresa.items_movimentos.movimento', function($query) use($request){
             $query->when($request->data_final, function($query, $value){
                 $query->whereDate('data_lancamento', "<=" ,$value);
-            }); 
+            });
         })
         ->paginate(15);
-        
+
         $valores = [];
         $valores_por_conta = [];
 
@@ -205,40 +208,40 @@ class BalanceteController extends Controller
 
         foreach ($data['registros'] as $movimento) {
             foreach ($movimento['conta']['items_movimentos'] as $contas) {
-                
+
                 $total_por_conta_credito += $contas->TotalCredito;
                 $total_por_conta_debito += $contas->TotalDebito;
-                
+
                 $valores_por_conta = [
                     "total_credito" => $total_por_conta_credito,
                     "total_debito" => $total_por_conta_debito,
                 ];
-            
-            }     
-            
+
+            }
+
             foreach ($movimento['sub_contas_empresa'] as $mov) {
-                
+
                 foreach ($mov['items_movimentos'] as $resultado) {
-                    
+
                     if ($resultado->total_debito > $resultado->total_credito) {
                         $movimento_debito += ($resultado->total_debito - $resultado->total_credito);
                     }
-                    
+
                     if ($resultado->total_credito > $resultado->total_debito) {
                         $movimento_credito += ($resultado->total_credito - $resultado->total_debito);
                     }
-                    
+
                     $total_credito += $resultado->total_credito;
                     $total_debito += $resultado->total_debito;
-                    
+
                     $valores = [
                         "total_movimento_credito" => $movimento_credito,
                         "total_movimento_debito" => $movimento_debito,
                         "total_credito" => $total_credito,
                         "total_debito" => $total_debito,
                     ];
-                   
-                }  
+
+                }
             }
         }
 
@@ -254,5 +257,16 @@ class BalanceteController extends Controller
         $pdf = PDF::loadView('pdf.contas.Balancete', $data)->setPaper('a4', 'landscape');
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Balancete.pdf');
+    }
+    public function exportarExcel(Request $request)
+    {
+        $data['dados'] = $request;
+        $data_inicio = $data['dados']->data_inicio;
+        $data_final = $data['dados']->data_final;
+        $exercicio_id = $data['dados']->exercicio_id;
+        $tipo_balancete_id = $data['dados']->tipo_balancete_id;
+        $periodo_id = $data['dados']->periodo_id;
+
+        return Excel::download(new CentroDeCustoExport($data_inicio, $data_final, (int)$exercicio_id, $tipo_balancete_id, $periodo_id), 'users.xlsx');
     }
 }

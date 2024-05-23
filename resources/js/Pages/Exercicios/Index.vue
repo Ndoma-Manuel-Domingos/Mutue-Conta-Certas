@@ -21,13 +21,15 @@
         <div class="row">
           <div class="col-12 col-md-12">
             <div class="card">
-              <div class="card-header"> 
+              <div class="card-header">
                 <a href="/exercicios/create" class="btn btn-info btn-sm mx-1"> <i class="fas fa-plus"></i> CRIAR EXERCÍCIO</a>
 
                 <button class="btn btn-danger btn-sm mx-1" @click="imprimirContas()">
                   <i class="fas fa-save"></i> Imprimir Contas
                 </button>
-                
+                <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelExercicio()">
+                  <i class="fas fa-file-excel"></i> Exportar</a
+                >
               </div>
               <div class="card-body">
                 <table class="table table-bordered table-hover" id="tabela_de_exercicios">
@@ -39,7 +41,7 @@
                       <th class="text-right">Ações</th>
                     </tr>
                   </thead>
-                  
+
                   <tbody>
                     <tr v-for="item in exercicios" :key="item" :style="{ backgroundColor: verificar_sessao_exercicio(item) ? '#D3D3D3' : '' }" >
                       <td>#</td>
@@ -57,7 +59,7 @@
                   </tbody>
                 </table>
               </div>
-             
+
             </div>
           </div>
         </div>
@@ -65,7 +67,7 @@
     </div>
   </MainLayouts>
 </template>
-  
+
 <script>
 
 import Paginacao from "../../components/Paginacao.vue";
@@ -114,9 +116,9 @@ export default {
       this.updateData();
     },
   },
-  
-  methods: {   
-  
+
+  methods: {
+
     updateData() {
       this.$Progress.start();
       this.$inertia.get("/exercicios", this.params, {
@@ -127,7 +129,7 @@ export default {
         },
       });
     },
-      
+
     mudar_estado_exercicio(item) {
       this.$Progress.start();
 
@@ -143,11 +145,11 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-      
+
           window.location.reload();
         })
         .catch((error) => {
-          
+
           this.$Progress.fail();
           Swal.fire({
             toast: true,
@@ -158,10 +160,10 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-          
+
         });
     },
-    
+
     iniciar_sessao_exercicio(item) {
       this.$Progress.start();
 
@@ -177,11 +179,11 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-      
+
           window.location.reload();
         })
         .catch((error) => {
-          
+
           this.$Progress.fail();
           Swal.fire({
             toast: true,
@@ -192,10 +194,10 @@ export default {
             showConfirmButton: false,
             timer: 4000
           })
-          
+
         });
     },
-    
+
     verificar_sessao_exercicio(item){
       return this.sessions_exercicio && this.sessions_exercicio.id == item.id ? true : false
     },
@@ -203,8 +205,12 @@ export default {
     imprimirContas() {
       window.open("imprimir-exercicios");
     },
+    ExportarExcelExercicio() {
+      window.open(
+        `exportar-exercicio-excel`
+      );
+    },
   },
 };
 </script>
-  
-  
+
