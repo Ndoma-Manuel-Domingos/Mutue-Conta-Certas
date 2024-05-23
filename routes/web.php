@@ -5,6 +5,7 @@ use App\Http\Controllers\{
     AuthController,
     BalanceteController,
     BalancoController,
+    ClassificacaoImobilizadosController,
     ClasseController,
     ContaController,
     DashboardController,
@@ -33,7 +34,10 @@ use App\Http\Controllers\{
     TipoProveitoController,
     UtilizadorController,
     CentroDeCustoController,
+    ImobilizadosController,
     OperadorController,
+    TabelaAmortizacaoController,
+    TabelaAmortizacaoItemsController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -62,9 +66,11 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('classes', ClasseController::class);
     Route::resource('plano-geral-contas', PlanoGeralContaController::class);
     Route::resource('exercicios', ExercicioController::class);
+    Route::get('/get-info-exercicio/{id}', [ExercicioController::class, 'get_info']);
     Route::get('/exercicios/iniciar-sessão/{id}', [ExercicioController::class, 'iniciar_sessao']);
     Route::post('/logout-exercicios', [ExercicioController::class, 'logout_exercicio'])->name('mf.logout_exercicio');
     Route::resource('periodos', PeriodoController::class);
+    Route::get('/get-info-periodo/{id}', [PeriodoController::class, 'get_info']);
     Route::resource('contas', ContaController::class);
     Route::get('/get-conta/{id}', [ContaController::class, 'get_conta']);
     Route::get('/get-subconta/{id}', [ContrapartidaController::class, 'get_subconta']);
@@ -78,6 +84,16 @@ Route::group(["middleware" => "auth"], function () {
     Route::post('/logout-empresa', [EmpresaController::class, 'logout_empresa'])->name('mf.logout_empresa');
     Route::get('/escolher-empresa-operar', [EmpresaController::class, 'escolher_empresa_operar']);
 
+    Route::resource('imobilizados', ImobilizadosController::class);
+    Route::get('/mapa-amortizacoes', [ImobilizadosController::class, 'mapa_amortizacoes']);
+    Route::get('/imprimir-mapa-amortizacoes', [ImobilizadosController::class, 'imprimir_mapa_amortizacoes']);
+    Route::resource('categorias-imobilizados', ClassificacaoImobilizadosController::class);
+    Route::resource('tabela-amortizacoes', TabelaAmortizacaoController::class);
+    Route::resource('tabela-amortizacoes-items', TabelaAmortizacaoItemsController::class);
+    Route::get('/get-dados-tabela-amortizacoes-items/{id}', [TabelaAmortizacaoItemsController::class, 'get_dados_item']);
+    Route::get('/get-items-tabela-amortizacoes/{id}', [TabelaAmortizacaoItemsController::class, 'get_items']);
+    Route::get('/get-dados-sub-contas/{id}', [TabelaAmortizacaoItemsController::class, 'get_dados_sub_conta']);
+    Route::get('/imprimir-ficha-imobilizado', [ImobilizadosController::class, 'imprimirFichaImobilizado']);
     Route::resource('diarios', DiarioController::class);
     Route::get('/get-diario/{id}', [DiarioController::class, 'get_diario']);
     Route::resource('tipos-documentos', TipoDocumentoController::class);

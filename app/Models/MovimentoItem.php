@@ -21,6 +21,7 @@ class MovimentoItem extends Model
         'empresa_id',
         'subconta_id',
         'tipo_movimento_id',
+        'tipo_instituicao',
         'taxta_iva_id',
         'documento_id',
         'tipo_credito_id',

@@ -11,6 +11,9 @@ use PDF;
 
 class PlanoGeralContaController extends Controller
 {
+    
+    use Config;
+
     //
     public function index(Request $request)
     {
@@ -24,8 +27,9 @@ class PlanoGeralContaController extends Controller
                 $query->orWhere('numero', 'like', "%" . $value . "%");
             });
         })
-            ->with(['empresa', 'classe.contas_empresa.conta', 'classe.contas_empresa.sub_contas_empresa'])
-            ->get();
+        ->with(['empresa', 'classe.contas_empresa.conta', 'classe.contas_empresa.sub_contas_empresa'])
+        ->where('empresa_id', $this->empresaLogada())
+        ->get();
 
         // dd($data['plano']);
 

@@ -125,9 +125,9 @@
                               <tbody v-for="item in item_movimentos" :key="item">
                                 <tr>
                                   <td class="pt-3">{{ item.subconta.numero }} - {{ item.subconta.designacao }}</td>
-                                  <td><input type="number" class="form-control border-0 py-0" v-model="item.debito" @keydown.enter="input_valor_debito(item)"></td>
-                                  <td><input type="number" class="form-control border-0" v-model="item.credito" @keydown.enter="input_valor_credito(item)"></td>
-                                  <td><input type="text" class="form-control border-0" v-model="item.iva" @keydown.enter="input_valor_iva(item)"></td>
+                                  <td><input type="text" class="form-control border-0 py-0" v-model="item.debito" @keypress="validateInput" @input="formatInputDebito(item)" @keydown.enter="input_valor_debito(item)"></td>
+                                  <td><input type="text" class="form-control border-0" v-model="item.credito" @keypress="validateInput" @input="formatInputCredito(item)" @keydown.enter="input_valor_credito(item)"></td>
+                                  <td><input type="text" class="form-control border-0" v-model="item.iva" @keypress="validateInput" @keydown.enter="input_valor_iva(item)"></td>
                                   <td><input type="text" class="form-control border-0" v-model="item.descricao" @keydown.enter="input_valor_descricao(item)" placeholder="Descrição"></td>
                                   <td class="d-flex">
                                     <a @click="remover_item_movimento(item)" class="text-danger pt-3"><i class="fas fa-times"></i></a>
@@ -299,6 +299,32 @@ export default {
      console.log(item)
     },    
 
+    formatInputCredito(item) {
+      // Implemente aqui a lógica de formatação desejada
+      // Por exemplo, para formatar como moeda
+      item.credito = item.credito.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    },
+    
+    formatInputDebito(item) {
+      // Implemente aqui a lógica de formatação desejada
+      // Por exemplo, para formatar como moeda
+      item.debito = item.debito.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    },
+    
+    validateInput(event) {
+      // Permitir apenas números
+      const keyCode = event.keyCode;
+      if ((keyCode < 48 || keyCode > 57) && keyCode !== 8 && keyCode !== 9 && keyCode !== 37 && keyCode !== 39) {
+        event.preventDefault();
+      }
+    },
+    
+    removeFormatting(val) {
+      // Remover a formatação
+      return val.replace(/\D/g, '');
+    },
+    
+
     input_valor_debito(item) {
       
       if(item.subconta.tipo == "I"){
@@ -330,8 +356,11 @@ export default {
           event.preventDefault();      
           
         }else {
+          
+          var debito = item.debito.replace(/\D/g, '');
+        
           axios
-            .get(`/alterar-debito-conta-movimento/${item.id}/${item.debito}`)
+            .get(`/alterar-debito-conta-movimento/${item.id}/${debito}`)
             .then((response) => {
               
               this.item_movimentos = [];
@@ -369,8 +398,11 @@ export default {
         event.preventDefault();      
         
       }else{
+    
+        var credito = item.credito.replace(/\D/g, '');
+      
         axios
-          .get(`/alterar-credito-conta-movimento/${item.id}/${item.credito}`)
+          .get(`/alterar-credito-conta-movimento/${item.id}/${credito}`)
           .then((response) => {
             
             this.item_movimentos = [];

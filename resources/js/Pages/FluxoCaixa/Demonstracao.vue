@@ -189,6 +189,7 @@ export default {
       data_final: "",
 
       params: {},
+      ano_lectivo: "",
     };
   },
   mounted() {
@@ -197,17 +198,10 @@ export default {
     this.periodo_id = this.periodo_sessao ? this.periodo_sessao.id : "";
 
     const year = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
-
-    this.data_inicio = `${year}-04-01`;
-    this.data_final = `${year}-04-30`;
-
+    this.ano_lectivo = year;
     this.userYear = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
+    this.userMonth = this.periodo.numero;
 
-    // $("#tabela_de_diarias").DataTable({
-    //   responsive: true,
-    //   lengthChange: true,
-    //   autoWidth: true,
-    // });
   },
   watch: {
     options: function (val) {
@@ -225,10 +219,39 @@ export default {
 
     exercicio_id: function (val) {
       this.params.exercicio_id = val;
+        axios
+        .get(`/get-info-exercicio/${val}`)
+        .then((response) => {
+
+          this.ano_lectivo = response.data.exercicio.designacao;
+          this.userYear = response.data.exercicio.designacao;
+
+          this.data_inicio = `${response.data.exercicio.designacao}-05-01`;
+          this.data_final = `${response.data.exercicio.designacao}-05-30`;
+
+          this.minDate(this.ano_lectivo)
+          this.maxDate(this.ano_lectivo)
+        })
+        .catch((error) => {});
+
       this.updateData();
     },
     periodo_id: function (val) {
       this.params.periodo_id = val;
+      axios
+        .get(`/get-info-periodo/${val}`)
+        .then((response) => {
+
+          this.data_inicio = `${this.ano_lectivo}-${response.data.periodo.numero}-01`;
+          this.data_final = `${this.ano_lectivo}-${response.data.periodo.numero}-30`;
+
+          this.minDate(this.ano_lectivo)
+          this.maxDate(this.ano_lectivo)
+
+          this.userYear = this.ano_lectivo;
+
+        })
+        .catch((error) => {});
       this.updateData();
     },
     data_inicio: function (val) {

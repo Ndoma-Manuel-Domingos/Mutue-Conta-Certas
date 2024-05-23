@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Movimento;
 use App\Models\SubConta;
 use App\Models\SUBCONTATESTE;
 use App\Models\User;
@@ -13,6 +14,8 @@ use Inertia\Inertia;
 class DashboardController extends Controller
 {
 
+    use Config;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -22,33 +25,14 @@ class DashboardController extends Controller
     public function dashboard(Request $request)
     {
     
-        // $sucontas = SUBCONTATESTE::where('CodConta', '71')->get();
+        $data['movimentos'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])
+        ->where('empresa_id', $this->empresaLogada())
+        ->orderBy('id', 'asc')
+        ->limit(5)
+        ->get();
         
-        // foreach ($sucontas as $conta) {
-        //     SubConta::create(
-        //         [
-        //             'numero' => $conta->Numero,
-        //             'designacao' => $conta->Descricao,
-        //             'descricao' => $conta->Descricao,
-        //             'estado' => 'activo',
-        //             'conta_id' => 54,
-        //             'empresa_id' => 1,
-        //         ]
-        //     );
-        // }
-        
-        // dd("finish");
-    
-        
-        $data = [];        
-       
-        // if(!$sua_sessao_global){
-            
-        //     $data['empresas'] = User::with(['empresas'])->findOrFail(Auth::user()->id);
-        
-        //     return Inertia::render('EscolherEmpresa', $data);
-        // }
- 
+        // ->withSum('quantidade', 'quantidade')
+        // ->having('quantidade_sum_quantidade', '>=', 20) 
        
         return Inertia::render('Dashboard', $data);
     }

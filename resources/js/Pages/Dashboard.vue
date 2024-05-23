@@ -24,41 +24,58 @@
                     <table class="table table-hover text-nowrap">
                       <thead>
                         <tr>
-                          <th>Codigo</th>
-                          <th class="text-right">Debito</th>
+                          <th style="cursor: pointer;">Nº</th>
+                          <th style="cursor: pointer;">Diário</th>
+                          <!-- <th style="cursor: pointer;">Documento</th> -->
+                          <th>Data</th>
+                          <th>Exercício</th>
+                          <th>Operador</th>
+                          <th class="text-right">Débito</th>
                           <th class="text-right">Crédito</th>
-                          <th class="text-right">Data</th>
-                          <th class="text-right">Operador</th>
+                          <!-- <th class="text-right">Ações</th> -->
                         </tr>
                       </thead>
                       
                       <tbody>
-                        <tr v-for="i in (6)" :key="i">
-                          <td>##</td>
-                          <td class="text-right">10.000,00</td>
-                          <td class="text-right">9.000,00</td>
-                          <td class="text-right">12-12-2023</td>
-                          <td class="text-right">Teste</td>
+                        <tr v-for="item in movimentos" :key="item">
+                          <td>{{ item.id }}</td>
+                          <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td>
+                          <td>{{ item.data_lancamento }}</td>
+                          <td>{{ item.exercicio.designacao }}</td>
+                          <td>{{ item.criador.name }}</td>
+                          <td>{{ item.tipo_documento.numero }} - {{ item.tipo_documento.designacao }}</td>
+                          <td class="text-info text-right"><strong>{{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
+                          <td class="text-danger text-right"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
+                          <!-- <td>
+                            <div class="float-right">
+                              <a :href="`/movimentos/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>
+                              <a :href="`/movimentos/${item.id}`" class="btn btn-sm btn-info mx-1"><i class="fas fa-info-circle"></i> Detalhe</a>
+                            </div>
+                          </td> -->
                         </tr>
                         
                       </tbody>
                       
                       <tfoot>
-                        <tr>
+                        <!-- <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td> 
                           <td></td>
                           <td class="text-right"><strong>Total Debito: 100.000,00</strong></td>
                           <td class="text-right"><strong>Total Credito: 100.000,00</strong></td>
                           <td></td>
-                          <td></td>
-                        </tr>
+                        </tr> -->
                         
-                        <tr>
+                        <!-- <tr>
                           <td></td>
                           <td></td>
                           <td></td>
                           <td></td>
                           <td class="text-right"><strong>Total Saldo: 100.000,00</strong></td>
-                        </tr>
+                        </tr> -->
                       </tfoot>
                     </table>
                   </div>
@@ -76,6 +93,7 @@
 
 <script>
 export default {
+  props: ["movimentos"],
   computed: {
     user() {
       return this.$page.props.auth.user;
@@ -90,8 +108,25 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
-  methods: {},
+  mounted() {
+    console.log(this.movimentos)
+  },
+  methods: {
+        
+    formatarValorMonetario(valor) {
+        // Converter o número para uma string e separar parte inteira da parte decimal
+        let partes = String(valor).split('.');
+        let parteInteira = partes[0];
+        let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
+    
+        // Adicionar separadores de milhar
+        parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    
+        // Retornar o valor formatado
+        return parteInteira + parteDecimal;
+    },
+    
+  },
 };
 </script>
 
