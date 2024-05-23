@@ -85,6 +85,17 @@ class PeriodoController extends Controller
         
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
+    
+    public function get_info($id)
+    {
+        $periodo = Periodo::findOrFail($id);
+        
+        return response()->json(
+            [
+                'periodo' => $periodo, 
+            ]
+        , 200);
+    }
 
     public function edit($id)
     {

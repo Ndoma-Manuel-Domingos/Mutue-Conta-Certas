@@ -93,34 +93,35 @@
                   </div>
                 </form>
               </div>
-              <!-- <div class="card-footer">
-              <a href="/extratos-contas" class="d-block btn btn-primary text-uppercase"><i class="fas fa-broom"></i> Limpar a Pesquisa</a>
-            </div> -->
+
             </div>
           </div>
 
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">
+                <!-- <h3 class="card-title"> -->
+                  <span class="float-left text-primary h5" v-if="resultado.debito > resultado.credito">SALDO FINAL: {{ formatarValorMonetario(resultado.debito - resultado.credito) }}</span>
+                  <span class="float-left text-danger h5" v-else-if="resultado.credito > resultado.debito">SALDO FINAL: {{ formatarValorMonetario(resultado.credito - resultado.debito) }}</span>
+                  <span class="float-left text-danger h5" v-else>SALDO FINAL: {{ formatarValorMonetario(0) }}</span>
+                  
+                  <a class="btn btn-sm float-right btn-danger mx-1" @click="imprimirPDF()">
+                    <i class="fas fa-file-pdf"></i> Imprimir
+                  </a>
                   <a
                     href="/fluxos-caixas/create"
-                    class="btn btn-sm btn-info mx-1"
+                    class="btn btn-sm btn-info mx-1 float-right"
                   >
                     <i class="fas fa-plus"></i> FLUXO DE CAIXA</a
                   >
                   
                   <a
                     href="/demonstracao-fluxo-caixa"
-                    class="btn btn-sm btn-info mx-1"
+                    class="btn btn-sm btn-info mx-1 float-right"
                   >
                     <i class="fas fa-plus"></i> DEMOSTRAÇÃO DE FLUXO DE CAIXA</a
                   >
-                  
-                  <a class="btn btn-sm float-right btn-danger mx-1" @click="imprimirPDF()">
-                    <i class="fas fa-file-pdf"></i> Imprimir
-                  </a>
-                </h3>
+                <!-- </h3> -->
               </div>
               <div class="card-body">
                 <table
@@ -131,12 +132,12 @@
                     <tr>
                       <th>Nº</th>
                       <th>Diário</th>
-                      <th class="text-right">Débito</th>
-                      <th class="text-right">Crédito</th>
-                      <th class="text-right">Saldo</th>
                       <th class="text-right" rowspan="2">Exercício</th>
                       <th class="text-right" rowspan="2">Período</th>
                       <th class="text-right" rowspan="2">Data</th>
+                      <th class="text-right">Débito</th>
+                      <th class="text-right">Crédito</th>
+                      <th class="text-right">Saldo</th>
                       <th class="text-right" rowspan="2" style="width: 300px">Ações</th>
                     </tr>
                     
@@ -145,7 +146,8 @@
                       <th class="text-right text-primary">{{ formatarValorMonetario(resultado.debito ?? 0) }}</th>
                       <th class="text-right text-danger">{{ formatarValorMonetario(resultado.credito ?? 0) }}</th>
                       <th class="text-right text-primary" v-if="resultado.debito > resultado.credito">{{ formatarValorMonetario(resultado.debito - resultado.credito) }}</th>
-                      <th class="text-right text-danger" v-if="resultado.credito > resultado.debito">{{ formatarValorMonetario(resultado.credito - resultado.debito) }}</th>
+                      <th class="text-right text-danger" v-else-if="resultado.credito > resultado.debito">{{ formatarValorMonetario(resultado.credito - resultado.debito) }}</th>
+                      <th class="text-right text-danger" v-else>{{ formatarValorMonetario(0) }}</th>
                     </tr>
                     
                   </thead>
@@ -154,12 +156,7 @@
                     <tr v-for="item in movimentos" :key="item">
                       <td>{{ item.lancamento_atual ?? "" }}</td>
                       <td>{{ item.diario.designacao ?? "" }}</td>
-                      <td class="text-right text-primary">{{ item.debito == 0 ? "-" : formatarValorMonetario(item.debito) }}</td>
-                      <td class="text-right text-danger">{{ item.credito == 0 ? "-" : formatarValorMonetario(item.credito) }}</td>
-                      
-                      <td class="text-right text-primary" v-if="item.debito > item.credito">{{ formatarValorMonetario(item.debito - item.credito) }}</td>
-                      <td class="text-right text-primary" v-if="item.debito == item.credito">{{ '-' }}</td>
-                      <td class="text-right text-danger" v-if="item.credito > item.debito">{{  formatarValorMonetario(item.credito - item.debito) }}</td>
+
                       <td class="text-right">
                         {{ item.exercicio.designacao ?? "" }}
                       </td>
@@ -169,6 +166,12 @@
                       <td class="text-right">
                         {{ item.data_lancamento ?? '' }}
                       </td>
+                      <td class="text-right text-primary">{{ item.debito == 0 ? "-" : formatarValorMonetario(item.debito) }}</td>
+                      <td class="text-right text-danger">{{ item.credito == 0 ? "-" : formatarValorMonetario(item.credito) }}</td>
+                      
+                      <td class="text-right text-primary" v-if="item.debito > item.credito">{{ formatarValorMonetario(item.debito - item.credito) }}</td>
+                      <td class="text-right text-primary" v-if="item.debito == item.credito">{{ '-' }}</td>
+                      <td class="text-right text-danger" v-if="item.credito > item.debito">{{  formatarValorMonetario(item.credito - item.debito) }}</td>
                       <td>
                         <div class="float-right">
                           <a
@@ -233,25 +236,20 @@ export default {
       data_final: "",
 
       params: {},
+      ano_lectivo: "",
     };
+    
   },
+
   mounted() {
   
     this.exercicio_id = this.sessions_exercicio ? this.sessions_exercicio.id : "";
     this.periodo_id = this.periodo_sessao ? this.periodo_sessao.id : "";
     
     const year = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
-    const month = this.periodo.numero;
-        
-    this.data_inicio = `${year}-05-01`;
-    this.data_final = `${year}-05-30`;
-    
-    // this.data_inicio = `${year}-${month}-01`;
-    // this.data_final = `${year}-${month}-30`;
-    
+    this.ano_lectivo = year;
     this.userYear = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
     this.userMonth = this.periodo.numero;
-       
   
     $("#tabela_de_diarias").DataTable({
       responsive: true,
@@ -278,10 +276,42 @@ export default {
     },
     exercicio_id: function (val) {
       this.params.exercicio_id = val;
+      
+      axios
+        .get(`/get-info-exercicio/${val}`)
+        .then((response) => {
+          
+          this.ano_lectivo = response.data.exercicio.designacao;
+          this.userYear = response.data.exercicio.designacao;
+        
+          this.data_inicio = `${response.data.exercicio.designacao}-05-01`;
+          this.data_final = `${response.data.exercicio.designacao}-05-30`;  
+          
+          this.minDate(this.ano_lectivo)
+          this.maxDate(this.ano_lectivo)
+        })
+        .catch((error) => {});
+      
       this.updateData();
     },
     periodo_id: function (val) {
       this.params.periodo_id = val;
+      
+      axios
+        .get(`/get-info-periodo/${val}`)
+        .then((response) => {
+        
+          this.data_inicio = `${this.ano_lectivo}-${response.data.periodo.numero}-01`;
+          this.data_final = `${this.ano_lectivo}-${response.data.periodo.numero}-30`; 
+          
+          this.minDate(this.ano_lectivo)
+          this.maxDate(this.ano_lectivo)
+          
+          this.userYear = this.ano_lectivo;
+          
+        })
+        .catch((error) => {});
+        
       this.updateData();
     },
     data_inicio: function (val) {
@@ -312,13 +342,6 @@ export default {
     maxDate(year) {
       return `${year}-05-30`; // Último dia do ano especificado
     },
-    // minDate(year) {
-    //   return `${year}-01-01`; // Primeiro dia do ano especificado
-    // },
-    
-    // maxDate(year) {
-    //   return `${year}-12-31`; // Último dia do ano especificado
-    // },
 
     formatarValorMonetario(valor) {
       // Converter o número para uma string e separar parte inteira da parte decimal

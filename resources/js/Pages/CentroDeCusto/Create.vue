@@ -18,6 +18,7 @@
 
         <div class="content">
             <div class="container-fluid">
+            
                 <div class="row">
                     <div class="col-12 col-md-12">
                         <form @submit.prevent="submit">
@@ -44,6 +45,46 @@
                         </form>
                     </div>
                 </div>
+                
+                
+                <div class="row">
+                  <div class="col-12 col-md-12">
+                    <div class="card">
+                      <div class="card-header">
+                    
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive p-0">
+                          <table class="table table-bordered table-hover" id="tabela_dos_tipos_de_moedas">
+                            <thead>
+                              <tr>
+                                <th>Id</th>
+                                <th>Designação</th>
+                                <th class="text-right">Ações</th>
+                              </tr>
+                            </thead>
+        
+                            <tbody>
+                              <tr v-for="item in centro_de_custo" :key="item">
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.designacao }}</td>
+                                <td>
+                                    <div class="text-right">
+                                        <a
+                                          :href="`/centro_de_custo/${item.id}/edit`"
+                                          class="btn btn-sm btn-success"
+                                          ><i class="fas fa-edit"></i> Editar</a
+                                        >
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </div>
         </div>
     </MainLayouts>
@@ -51,9 +92,7 @@
 
 <script>
 export default {
-    props: [
-        "classes",
-    ],
+    props: ["centro_de_custo"],
     computed: {
         user() {
             return this.$page.props.auth.user;

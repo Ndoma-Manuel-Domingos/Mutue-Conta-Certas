@@ -23,6 +23,11 @@ class Conta extends Model
     {
         return $this->hasMany(MovimentoItem::class, 'conta_id', 'id');
     }  
+    
+    public function items_imobilizado()
+    {
+        return $this->hasMany(Imobilizado::class, 'conta_id', 'id');
+    }  
             
     public function empresa()
     {

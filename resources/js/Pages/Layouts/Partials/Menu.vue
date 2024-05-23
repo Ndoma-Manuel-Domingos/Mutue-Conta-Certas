@@ -111,6 +111,47 @@
           </li>
         </ul>
       </li>
+      
+      <li class="nav-item">
+        <a
+          href="#"
+          class="nav-link"
+          :class="{ active: $page.component.startsWith('AreaFinanceira/') }"
+        >
+          <i class="nav-icon fas fa-cogs"></i>
+          <p>
+            Amortização
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item" title="IMOBILIZADOS">
+            <Link
+              href="/imobilizados"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Imobilizados/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Imobilizados</p>
+            </Link>
+          </li>
+          
+          <li class="nav-item" title="MAPA DE AMORTIZAÇÃO">
+            <Link
+              href="/mapa-amortizacoes"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Imobilizados/MapaAmortizacao',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Mapa de Amortização</p>
+            </Link>
+          </li>
+        </ul>
+      </li>
 
       <li class="nav-item">
         <a
@@ -125,6 +166,7 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
+       
           <li class="nav-item" title="DIÁRIOS">
             <Link
               href="/diarios"
@@ -314,6 +356,46 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
+        
+          <li class="nav-item" title="CATEGORIAS DE IMOBILIZADOS">
+            <Link
+              href="/categorias-imobilizados"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'CategoriaImobilizados/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Categorias de Imobilizados</p>
+            </Link>
+          </li>
+          
+          <li class="nav-item" title="TABELA DE AMORITIZAÇÃO">
+            <Link
+              href="/tabela-amortizacoes"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'TabelaAmortizacao/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Tabela Amortização</p>
+            </Link>
+          </li>
+          
+          <li class="nav-item" title="TABELA DE ITEMS DE AMORITIZAÇÃO">
+            <Link
+              href="/tabela-amortizacoes-items"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'TabelaAmortizacaoItem/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Tabela Amortização Itens</p>
+            </Link>
+          </li>
+          
           <li class="nav-item" title="TIPOS DE CRÉDITOS">
             <Link
               href="/tipos-creditos"
@@ -325,6 +407,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Tipos de Créditos</p>
             </Link>
+          </li>
+          
+          <li class="nav-item" title="CONTRAPARTIDAS">
             
             <Link
               href="/contrapartidas"
@@ -336,8 +421,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Contrapartidas</p>
             </Link>
-
-
+          </li>
+          
+          <li class="nav-item" title="CENTRO DE CUSTO">
             <Link
               href="/centro_de_custo"
               class="nav-link"
@@ -348,7 +434,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Centro de Custos</p>
             </Link>
-            
+          </li>
+          
+          <li class="nav-item" title="TIPOS DE MOVIMENTOS">
             <Link
               href="/tipos-movimentos"
               class="nav-link"
@@ -359,7 +447,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Tipos de Movimentos</p>
             </Link>
-            
+          </li>
+          
+          <li class="nav-item" title="DOCUMENTOS">
             <Link
               href="/documentos"
               class="nav-link"
@@ -370,7 +460,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Documentos</p>
             </Link>
-            
+          </li>
+          
+          <li class="nav-item" title="TIPOS DE PROVEITOS">
             <Link
               href="/tipos-proveitos"
               class="nav-link"
@@ -381,7 +473,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Tipos de Proveitos</p>
             </Link>
-            
+          </li>
+          
+          <li class="nav-item" title="REGIME DE EMPRESAS">
             <Link
               href="/regime-empresa"
               class="nav-link"
@@ -392,7 +486,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Regime de Empresa</p>
             </Link>
-            
+          </li>
+          
+          <li class="nav-item" title="TIPOS DE EMPRESAS">
             <Link
               href="/tipos-empresas"
               class="nav-link"
@@ -403,7 +499,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Tipos de Empresas</p>
             </Link>
-            
+          </li>
+          
+          <li class="nav-item" title="GRUPOS DE EMPRESAS">
             <Link
               href="/grupos-empresas"
               class="nav-link"
@@ -414,7 +512,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Grupos de Empresas</p>
             </Link>
+          </li>
 
+          <li class="nav-item" title="MOEDAS">
             <Link
               href="/moeda"
               class="nav-link"
@@ -425,7 +525,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Moedas de Operação</p>
             </Link>
-
+          </li> 
+          
+          <li class="nav-item" title="PAISES">
             <Link
               href="/paises"
               class="nav-link"
@@ -436,7 +538,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Países</p>
             </Link>
+          </li>
 
+          <li class="nav-item" title="PROVINCIA">
             <Link
               href="/provincia"
               class="nav-link"
@@ -447,7 +551,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Provincias</p>
             </Link>
+          </li>
 
+          <li class="nav-item" title="MUNICIPIO">
             <Link
               href="/municipio"
               class="nav-link"
@@ -458,7 +564,9 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Municípios</p>
             </Link>
-
+          </li>
+          
+          <li class="nav-item" title="COMUNAS">
             <Link
               href="/comuna"
               class="nav-link"

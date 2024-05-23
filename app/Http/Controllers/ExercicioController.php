@@ -88,6 +88,18 @@ class ExercicioController extends Controller
         $empresa->update();
         
     }
+        
+    public function get_info($id)
+    {
+        $exercicio = Exercicio::findOrFail($id);
+        
+        return response()->json(
+            [
+                'exercicio' => $exercicio, 
+            ]
+        , 200);
+    }
+
 
     public function edit($id)
     {

@@ -79,7 +79,7 @@ class SubContaController extends Controller
             'numero' => $request->numero,
             'estado' => $request->estado,
             'tipo' => $request->tipo,
-            'empresa_id' => auth()->user()->empresa_id,
+            'empresa_id' => $this->empresaLogada(),
         ]);
         
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);

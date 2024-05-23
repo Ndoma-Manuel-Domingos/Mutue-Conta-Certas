@@ -59,28 +59,37 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => 'required|min:3|max:20|same:password',
+            'r_password' => 'required|min:3|max:20',
         ]);
+               
         
-        $empresa = Empresa::create([
-            'nome' => $request->name,
-            'email' => $request->email,
-            'nif' => $request->nif,
-        ]);
+        // $empresa = Empresa::create([
+        //     'nome' => $request->name,
+        //     'email' => $request->email,
+        //     'nif' => $request->nif,
+        // ]);
+        
+        $usernames = preg_split('/\s+/', strtolower($request->name), -1, PREG_SPLIT_NO_EMPTY);
+        $username = head($usernames) . '.' . last($usernames);
+        
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'username' => $username,
+            'telefone' => '000-000-000',
             'password' => Hash::make($request->password),
-            'empresa_id' => $empresa->id,
+            // 'empresa_id' => $empresa->id,
             'is_admin' => 1,
         ]);
         
-        $user_empresa = UserEmpresa::create([
-            'estado' => 1,
-            'empresa_id' => $empresa->id,
-            'user_id' => $user->id,
-        ]);
+        // $user_empresa = UserEmpresa::create([
+        //     'estado' => 1,
+        //     'empresa_id' => $empresa->id,
+        //     'user_id' => $user->id,
+        // ]);
 
         // event(new Registered($user));
 

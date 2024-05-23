@@ -31,6 +31,7 @@ class FluxoCaixaController extends Controller
     //
     public function index(Request $request)
     {
+
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
@@ -69,7 +70,12 @@ class FluxoCaixaController extends Controller
         ->get();
         
         
-        $data['resultado'] = Movimento::when($request->exercicio_id, function($query, $value){
+        $data['resultado'] = Movimento::whereHas('items', function ($query) use ($request) {
+            $query->when($request->subconta_id, function ($query, $value) {
+                $query->where('subconta_id',  $value);
+            });
+        })
+        ->when($request->exercicio_id, function($query, $value){
             $query->where('exercicio_id', $value);
         })
         ->when($request->periodo_id, function($query, $value){
@@ -481,14 +487,49 @@ class FluxoCaixaController extends Controller
         
         $data['resultados'] = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])->where('created_at', '>=', Carbon::createFromDate($data_created))->where('apresentar', 'S')->where('origem', 'fluxocaixa')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
         
-        $movimentos = MovimentoItem::when($request->sub_conta_id, function($query, $value){
-            $query->where('subconta_id', $value);
+        // $movimentos = MovimentoItem::when($request->sub_conta_id, function($query, $value){
+        //     $query->where('subconta_id', $value);
+        // })
+        // ->where('origem', 'fluxocaixa')
+        // ->where('empresa_id', $this->empresaLogada())
+        // // ->where('user_id', $user->id)
+        // ->selectRaw('SUM(debito) AS debito, SUM(credito) AS credito')
+        // ->first();
+        
+        
+        $movimentos = Movimento::whereHas('items', function ($query) use ($request) {
+            $query->when($request->sub_conta_id, function ($query, $value) {
+                $query->where('subconta_id',  $value);
+            });
         })
+        ->with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
         ->where('origem', 'fluxocaixa')
         ->where('empresa_id', $this->empresaLogada())
-        // ->where('user_id', $user->id)
-        ->selectRaw('SUM(debito) AS debito, SUM(credito) AS credito')
+        ->select(DB::raw('SUM(debito) AS debito'), DB::raw('SUM(credito) AS credito'), DB::raw('SUM(iva) AS iva'))
         ->first();
+        
+        // dd($movimentos);
+        
+        
+        // $movimentos = Movimento::whereHas('items', function ($query) use ($request) {
+        //     $query->when($request->sub_conta_id, function ($query, $value) {
+        //         $query->where('subconta_id',  $value);
+        //     });
+        // })
+        // ->where('created_at', '>=', Carbon::createFromDate($data_created))
+        // ->where('origem', 'fluxocaixa')
+        // // ->when($request->data_inicio, function($query, $value){
+        // //     $query->whereDate('data_lancamento',  ">=" ,$value);
+        // // })
+        // // ->when($request->data_final, function($query, $value){
+        // //     $query->whereDate('data_lancamento', "<=" ,$value);
+        // // })
+        // ->with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
+        // ->where('origem', 'fluxocaixa')
+        // ->where('empresa_id', $this->empresaLogada())
+        // ->select(DB::raw('SUM(debito) AS debito'), DB::raw('SUM(credito) AS credito'), DB::raw('SUM(iva) AS iva'))
+        // ->first();
+        
         
         if($movimentos->debito > $movimentos->credito){
             $data['saldo_final'] = $movimentos->debito - $movimentos->credito;

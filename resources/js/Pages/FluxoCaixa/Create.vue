@@ -232,19 +232,24 @@
 
           <div class="col-12 col-md-12">
             <div class="card">
-              <div class="card-header">
+              <div class="card-header"> 
+                <h6>Listagem de Movimento</h6>
               </div>
               <div class="card-body">
                 <table class="table table-bordered table-sm" style="width: 100%">
                   <thead>
                     <tr>
-                      <th class="text-center">Nº</th>
-                      <th class="text-center" style="width: 100px;">Nº Mov</th>
-                      <th>Descrição</th>
-                      <th class="text-right">Débito</th>
-                      <th class="text-right">Crédito</th>
-                      <th class="text-right">Saldo</th>
-                      <th style="width: 150px;">Acções</th>
+                      <th class="text-center" rowspan="2">Nº</th>
+                      <th class="text-center" rowspan="2" style="width: 100px;">Nº Mov</th>
+                      <th rowspan="2">Descrição</th>
+                      <th rowspan="2" class="text-right">Débito</th>
+                      <th rowspan="2" class="text-right">Crédito</th>
+                      <th class="text-center" colspan="2">Saldo</th>
+                      <th rowspan="2" style="width: 150px;">Acções</th>
+                    </tr>
+                    <tr>
+                      <th class="text-right">Antes do Movimento</th>
+                      <th class="text-right">Após Movimento</th>
                     </tr>
                   </thead>
                   
@@ -253,6 +258,7 @@
                       <td colspan="3" class="text-right">Total</td>
                       <td class="text-right text-primary">{{ resultados.total_debito == null ? 0 : formatarValorMonetario(resultados.total_debito) }}</td>
                       <td class="text-right text-danger">{{ resultados.total_credito == null ? 0 : formatarValorMonetario(resultados.total_credito) }}</td>
+                      <td class="text-right text-primary">{{ formatarValorMonetario(saldo_final) }}</td>
                       <td class="text-right text-primary">{{ formatarValorMonetario(saldo_final) }}</td>
                       <!-- <td class="text-right text-primary" v-if="resultados.total_debito > resultados.total_credito">{{ resultados ? formatarValorMonetario(((resultados.total_debito + saldo_final) - resultados.total_credito)) : "-"  }}</td> -->
                       <!-- <td class="text-right text-danger" v-if="resultados.total_credito > resultados.total_debito">{{ resultados ? formatarValorMonetario(((resultados.total_credito + saldo_final) - resultados.total_debito)) : "-" }}</td> -->
@@ -358,6 +364,8 @@ export default {
       tipo_credito_id: "",
       sub_conta_id: "",
       
+      valorIntroduzido: 0,
+      
       params: {},
   
     };
@@ -403,11 +411,10 @@ export default {
     selecinarTipoMovimento({id, text}){
     
       this.removeFormatting();
-      const valorIntroduzido = this.form.valor;
-      
+
       if(this.form.tipo_movimento_id == 1){
       
-        if( valorIntroduzido > this.saldo_final ){
+        if( this.form.valor > this.saldo_final ){
           Swal.fire({
             toast: true,
             icon: "error",
@@ -491,7 +498,7 @@ export default {
       this.removeFormatting();
     
       if(this.form.tipo_movimento_id == 1){
-        if( valorIntroduzido > this.saldo_final ){
+        if( this.form.valor > this.saldo_final ){
           Swal.fire({
             toast: true,
             icon: "error",

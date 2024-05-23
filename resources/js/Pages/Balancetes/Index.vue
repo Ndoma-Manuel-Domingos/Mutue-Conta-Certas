@@ -258,21 +258,21 @@ export default {
       data_final:  "", // new Date().toISOString().substr(0, 10),
       
       subconta_id: "",
+      ano_lectivo: "",
 
       params: {},
     };
   },
   mounted() {
+
+    this.tipo_balancete_id = "3";
     this.exercicio_id = this.sessions_exercicio ? this.sessions_exercicio.id : "";
     this.periodo_id = this.periodo_sessao ? this.periodo_sessao.id : "";
-    this.tipo_balancete_id = "3";
     
     const year = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
-    
-    this.data_inicio = `${year}-01-01`;
-    this.data_final = `${year}-12-31`;
-    
+    this.ano_lectivo = year;
     this.userYear = this.sessions_exercicio ? this.sessions_exercicio.designacao : "";
+    this.userMonth = this.periodo.numero;
 
     $("#tabela_de_balancetes").DataTable({
       responsive: true,
@@ -297,6 +297,20 @@ export default {
 
     exercicio_id: function (val) {
       this.params.exercicio_id = val;
+      axios
+        .get(`/get-info-exercicio/${val}`)
+        .then((response) => {
+          
+          this.ano_lectivo = response.data.exercicio.designacao;
+          this.userYear = response.data.exercicio.designacao;
+        
+          this.data_inicio = `${response.data.exercicio.designacao}-05-01`;
+          this.data_final = `${response.data.exercicio.designacao}-05-30`;  
+          
+          this.minDate(this.ano_lectivo)
+          this.maxDate(this.ano_lectivo)
+        })
+        .catch((error) => {});
       this.updateData();
     },
     
@@ -312,6 +326,20 @@ export default {
 
     periodo_id: function (val) {
       this.params.periodo_id = val;
+      axios
+        .get(`/get-info-periodo/${val}`)
+        .then((response) => {
+        
+          this.data_inicio = `${this.ano_lectivo}-${response.data.periodo.numero}-01`;
+          this.data_final = `${this.ano_lectivo}-${response.data.periodo.numero}-30`; 
+          
+          this.minDate(this.ano_lectivo)
+          this.maxDate(this.ano_lectivo)
+          
+          this.userYear = this.ano_lectivo;
+          
+        })
+        .catch((error) => {});
       this.updateData();
     },
 

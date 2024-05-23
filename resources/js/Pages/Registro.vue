@@ -17,6 +17,14 @@
                             <h6 class="text-center text-danger pb-3" v-if="form.errors.acesso">Acesso Registro</h6>
                             
                             <div class="col-12 mb-3">
+                                <label for="" class="form-label">Nome</label>
+                                <div class="input-group">
+                                    <input type="text" v-model="form.name" :class="{'is-invalid' : form.errors.name}" class="form-control form-control-sm " placeholder="Informe o seu Nome" />
+                                </div>
+                                <span v-if="form.errors.name" class="login-box-msg text-danger" >{{ form.errors.name }}</span>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
                                 <label for="" class="form-label">NIF</label>
                                 <div class="input-group">
                                     
@@ -46,9 +54,9 @@
                             <div class="col-12 mb-3">
                                 <label for="" class="form-label">Confirmar Senha</label>
                                 <div class="input-group">
-                                    <input type="confirm_password" v-model="form.confirm_password" :class="{'is-invalid' : form.errors.confirm_password}"  class="form-control form-control-sm " placeholder="Confirmar Senha" />
+                                    <input type="password" v-model="form.r_password" :class="{'is-invalid' : form.errors.r_password}"  class="form-control form-control-sm " placeholder="Confirmar Senha" />
                                 </div>
-                                <span v-if="form.errors.confirm_password" class="login-box-msg text-danger" >{{ form.errors.confirm_password }}</span>
+                                <span v-if="form.errors.r_password" class="login-box-msg text-danger" >{{ form.errors.r_password }}</span>
                             </div>
 
                             <div class="col-12">
@@ -84,15 +92,16 @@
 
     const form = useForm({
         email: "",
+        name: "",
         nif: "",
         password: "",
-        confirm_password: "",
+        r_password: "",
     })
 
     const internalInstance = getCurrentInstance();
 
     const submit = () => {
-        form.post(route("mf.login.post"), {
+        form.post(route("mc.register"), {
             onBefore: () => {
                 internalInstance.appContext.config.globalProperties.$Progress.start();
             },

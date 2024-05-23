@@ -29,8 +29,8 @@ class CentroDeCustoController extends Controller
      */
     public function create()
     {
-        $data['centro_de_custo'] = CentroDeCusto::all();
-
+        $data['centro_de_custo'] = CentroDeCusto::where('empresa_id', $this->empresaLogada())->orderBy('id', 'desc')->get();
+        
         return Inertia::render('CentroDeCusto/Create', $data);
     }
 

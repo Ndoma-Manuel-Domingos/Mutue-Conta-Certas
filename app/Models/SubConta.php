@@ -18,6 +18,7 @@ class SubConta extends Model
         'descricao',
         'estado',
         'controle_conta_id',
+        'tipo_instituicao',
         'tipo',
         'conta_id',
         'empresa_id',
@@ -29,6 +30,11 @@ class SubConta extends Model
     public function items_movimentos()
     {
         return $this->hasMany(MovimentoItem::class, 'subconta_id', 'id');
+    }  
+        
+    public function items_imobilizado()
+    {
+        return $this->hasMany(Imobilizado::class, 'sub_conta_id', 'id');
     }  
             
     public function empresa()
