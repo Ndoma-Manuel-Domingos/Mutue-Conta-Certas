@@ -76,8 +76,8 @@ class ContrapartidaExport extends DefaultValueBinder implements FromCollection, 
 
         return [
             '#',
-            $data->sub_conta->numero . '-' . $data->sub_conta->designacao,
-            $data->designacao,
+            $data->sub_conta->numero . ' - ' . $data->sub_conta->designacao,
+            $data->tipo_credito->designacao,
 
         ];
     }
@@ -109,8 +109,6 @@ class ContrapartidaExport extends DefaultValueBinder implements FromCollection, 
 
     public function collection()
     {
-        $teste = Contrapartida::with(['tipo_credito', 'sub_conta'])->get();
-        dd($teste);
         return Contrapartida::with(['tipo_credito', 'sub_conta'])->get();
     }
 

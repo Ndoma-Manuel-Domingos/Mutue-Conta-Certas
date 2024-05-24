@@ -504,7 +504,7 @@ class FluxoCaixaController extends Controller
         ->with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
         ->where('origem', 'fluxocaixa')
         ->where('empresa_id', $this->empresaLogada())
-        ->select(DB::raw('SUM(debito) AS debito'), DB::raw('SUM(credito) AS credito'), DB::raw('SUM(iva) AS iva'))
+        ->select(DB::raw('SUM(debito) AS debito'), DB::raw('SUM(credito) AS credito'), DB::raw('SUM(iva) AS iva'))->get();
 
         // dd($movimentos);
 

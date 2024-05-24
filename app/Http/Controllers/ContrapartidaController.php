@@ -115,7 +115,7 @@ class ContrapartidaController extends Controller
     }
 
     public function exportarExcel(){
-        return Excel::download(new ContrapartidaExport(), 'exercicio-excel.xlsx');
+        return Excel::download(new ContrapartidaExport(), 'contra-partida-excel.xlsx');
     }
 
 }

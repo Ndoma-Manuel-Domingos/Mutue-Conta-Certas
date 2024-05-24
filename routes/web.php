@@ -168,6 +168,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('exportar-exercicio-excel', [ExercicioController::class, 'exportarExcel']);
     Route::get('exportar-periodo-excel', [PeriodoController::class, 'exportarExcel']);
     Route::get('exportar-contra-partida-excel', [ContrapartidaController::class, 'exportarExcel']);
+    Route::get('exportar-tipo-credito-excel', [TipoCreditoController::class, 'exportarExcel']);
 
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');

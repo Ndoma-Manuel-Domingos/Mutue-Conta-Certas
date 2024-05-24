@@ -31,7 +31,7 @@
 
                                     <a href="" class="btn btn-sm mx-1 btn-success float-right"
                                         @click="ExportarExcelContraPartida()">
-                                        <i class="fas fa-file-excel"></i> Exportar Balanço</a>
+                                        <i class="fas fa-file-excel"></i> Exportar</a>
                                 </h3>
 
                             </div>
