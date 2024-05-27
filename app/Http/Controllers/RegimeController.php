@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Regime;
+use App\Exports\RegimeExport;
+
+use App\Exports\MovimentoExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class RegimeController extends Controller
 {
@@ -19,7 +24,7 @@ class RegimeController extends Controller
             $query->where('designacao', 'like', "%".$value."%");
         })
         ->paginate(10);
-        
+
         return Inertia::render('Regime/index', ['regimes' => $data]);
     }
 
@@ -45,7 +50,7 @@ class RegimeController extends Controller
     {
         $request->validate([
             "designacao" => "required",
-        ], 
+        ],
         [
             "designacao.required" => "Campo Obrigatório",
         ]);
@@ -80,7 +85,7 @@ class RegimeController extends Controller
     public function edit($id)
     {
         $data['regime'] = Regime::findOrFail($id);
-        
+
         return Inertia::render('Regime/Edit', $data);
     }
 
@@ -101,9 +106,12 @@ class RegimeController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message', 'Não foi possível actualizar os dados!'], 201);
         }
-        
+
     }
 
+    public function exportarExcel(){
+        return Excel::download(new RegimeExport(), 'regime-excel.xlsx');
+    }
     /**
      * Remove the specified resource from storage.
      *

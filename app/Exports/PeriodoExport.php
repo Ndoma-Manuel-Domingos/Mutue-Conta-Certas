@@ -105,7 +105,7 @@ class PeriodoExport extends DefaultValueBinder implements FromCollection, WithHe
                     ],
 
                 ]);
-                // $event->sheet->getColumnDimension('A')->setWidth(50);
+                $event->sheet->getColumnDimension('D')->setWidth(28);
                 // $event->sheet->getColumnDimension('B')->setWidth(200);
                 // $event->sheet->getColumnDimension('C')->setWidth(300);
             },
@@ -121,7 +121,7 @@ class PeriodoExport extends DefaultValueBinder implements FromCollection, WithHe
 
     public function startCell(): String
     {
-        return "A10";
+        return "A11";
     }
 
     public function drawings()
@@ -139,16 +139,16 @@ class PeriodoExport extends DefaultValueBinder implements FromCollection, WithHe
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->setCellValue('D5', strtoupper('Diario'));
-        $sheet->setCellValue('D7', 'NIF: ');
-        $sheet->setCellValue('E7',  $this->dadosEmpresa->codigo_empresa);
-        $sheet->setCellValue('D6', 'Empresa: ');
-        $sheet->setCellValue('E6', $this->dadosEmpresa->nome_empresa);
+        $sheet->setCellValue('C6', strtoupper('BALANCO'));
+        $sheet->setCellValue('C7', 'Empresa: ');
+        $sheet->setCellValue('C8', 'NIF: ');
+        $sheet->setCellValue('D7', $this->dadosEmpresa->nome_empresa);
+        $sheet->setCellValue('D8',  $this->dadosEmpresa->codigo_empresa);
         $coordenadas = $sheet->getCoordinates();
 
         return [
             // Style the first row as bold text.
-            10    => [
+            11    => [
                 'font' => ['bold' => false, 'color' => ['rgb' => 'FCFCFD']],
                 'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => '2b5876']]
 
@@ -171,6 +171,12 @@ class PeriodoExport extends DefaultValueBinder implements FromCollection, WithHe
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                 ],
             ]],
+
+            'C6:D9'    => [
+                'font' => ['bold' => false, 'color' => ['rgb' => 'FCFCFD']],
+                'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => '2b5876']]
+
+            ],
 
         ];
     }

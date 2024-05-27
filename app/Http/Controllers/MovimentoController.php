@@ -347,7 +347,7 @@ class MovimentoController extends Controller
 
     public function exportarExcel(){
 
-        return Excel::download(new MovimentoExport(), 'users.xlsx');
+        return Excel::download(new MovimentoExport(), 'balanco.xlsx');
     }
 
     public function destroy($id)

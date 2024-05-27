@@ -152,7 +152,7 @@ class TipoDocumentoController extends Controller
 
     public function exportarExcel(){
 
-        return Excel::download(new TipoDocumentoExport(), 'diario-excel.xlsx');
+        return Excel::download(new TipoDocumentoExport(), 'tipo-documento-excel.xlsx');
 
     }
 }

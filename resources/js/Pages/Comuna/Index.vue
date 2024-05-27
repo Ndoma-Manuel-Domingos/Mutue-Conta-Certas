@@ -22,6 +22,10 @@
                     <div class="col-12 col-md-12">
                         <div class="card">
                             <div class="card-header">
+                                <a href="" class="btn btn-sm mx-1 btn-success float-right"
+                                    @click="ExportarExcelComuna()">
+                                    <i class="fas fa-file-excel"></i> Exportar</a>
+
                                 <a href="/comuna/create" class="btn btn-info"> <i class="fas fa-plus"></i>NOVA COMUNA
                                 </a>
                             </div>
@@ -93,12 +97,17 @@ export default {
     },
     mounted() {
         $('#tabela_comunas').DataTable({
-      "responsive": true, "lengthChange": true, "autoWidth": true,
-    });
-     },
+            "responsive": true, "lengthChange": true, "autoWidth": true,
+        });
+    },
     methods: {
         deleteItem(item) {
             console.log(item.id)
+        },
+        ExportarExcelComuna() {
+            window.open(
+                `exportar-comuna-excel`
+            );
         },
         imprimirPeriodos() {
             window.open("imprimir-periodos");

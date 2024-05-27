@@ -13,6 +13,7 @@ use App\Models\MovimentoItem;
 use App\Models\Periodo;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Models\UserEmpresa;
 
 use App\Models\CentroDeCusto;
 use GuzzleHttp\Psr7\Request;
@@ -30,13 +31,15 @@ use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use Maatwebsite\Excel\DefaultValueBinder;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use App\Models\Empresa;
+
 
 class CentroDeCustoExport extends DefaultValueBinder implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles, WithMapping, WithEvents, WithDrawings, WithCustomStartCell
 {
     /**
      * @return \Illuminate\Support\Collection
      */
-
+    public $dadosEmpresa;
     public $data_inicio, $data_final, $exercicioId, $tipo_balancete_id, $periodo_id;
 
     public function headings(): array
@@ -49,6 +52,35 @@ class CentroDeCustoExport extends DefaultValueBinder implements FromCollection, 
             'Exercício',
         ];
     }
+
+    public function empresaLogada()
+    {
+        $user = auth()->user();
+
+        if ($user) {
+
+            $user = User::find($user->id);
+
+            $empresa = UserEmpresa::where('estado', '1')->where('user_id', $user->id)->first();
+            if ($empresa) {
+                return $empresa->empresa_id;
+            } else {
+                return "";
+            }
+        }
+
+        return "";
+    }
+
+    public function dadosEmpresaLogada($id)
+    {
+        $empresa = Empresa::where('id', $id)->first();
+        if ($empresa)
+            return $empresa;
+        else
+            return "";
+    }
+
 
     public function __construct($data_inicio, $data_final, $exercicio_id, $tipo_balancete_id, $periodo_id)
     {
@@ -208,11 +240,11 @@ class CentroDeCustoExport extends DefaultValueBinder implements FromCollection, 
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->setCellValue('A7', strtoupper('Balanço de Verificação'));
-        // $sheet->setCellValue('C6', 'ANOS LECTIVOS: ');
-        // $sheet->setCellValue('D6', 'TODAS');
-        // $sheet->setCellValue('C7', 'CURSO: ');
-        // $sheet->setCellValue('D7',  'TODAS');
+        $sheet->setCellValue('D6', strtoupper('BALANCO'));
+        $sheet->setCellValue('D7', 'Empresa: ');
+        $sheet->setCellValue('D8', 'NIF: ');
+        $sheet->setCellValue('E7', $this->dadosEmpresa->nome_empresa);
+        $sheet->setCellValue('E8',  $this->dadosEmpresa->codigo_empresa);
         $coordenadas = $sheet->getCoordinates();
 
         return [

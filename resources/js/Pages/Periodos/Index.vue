@@ -26,7 +26,7 @@
                 <button class="btn btn-danger btn-sm mx-1" @click="imprimirPeriodos()">
                   <i class="fas fa-save"></i> Imprimir Contas
                 </button>
-                <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelPeriodo()">
+                <a href="" class="btn btn-sm mx-1 btn-success float-left" @click="ExportarExcelPeriodo()">
                   <i class="fas fa-file-excel"></i> Exportar</a
                 >
               </div>

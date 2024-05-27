@@ -6,6 +6,10 @@ use App\Models\GrupoEmpresa;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use App\Exports\GrupoEmpresaExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
+
 class GrupoEmpresaController extends Controller
 {
     /**
@@ -15,10 +19,10 @@ class GrupoEmpresaController extends Controller
      */
     public function index(Request $request)
     {
-        $data['grupos_empresas'] = GrupoEmpresa::when($request->input_busca_grupos_empresas, function($query, $value){
-            $query->where('designacao', 'like', "%".$value."%");
+        $data['grupos_empresas'] = GrupoEmpresa::when($request->input_busca_grupos_empresas, function ($query, $value) {
+            $query->where('designacao', 'like', "%" . $value . "%");
         })
-        ->get();
+            ->get();
 
         return Inertia::render('GrupoEmpresas/Index', $data);
     }
@@ -31,7 +35,7 @@ class GrupoEmpresaController extends Controller
     public function create()
     {
         $data[''] = [];
-        
+
         return Inertia::render('GrupoEmpresas/Create', $data);
     }
 
@@ -73,7 +77,7 @@ class GrupoEmpresaController extends Controller
     public function edit($id)
     {
         $data['grupo_empresa'] = GrupoEmpresa::findOrFail($id);
-        
+
         return Inertia::render('GrupoEmpresas/Edit', $data);
     }
 
@@ -94,6 +98,11 @@ class GrupoEmpresaController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 201);
         }
+    }
+
+    public function exportarExcel()
+    {
+        return Excel::download(new GrupoEmpresaExport(), 'grupo-empresa-excel.xlsx');
     }
 
     /**

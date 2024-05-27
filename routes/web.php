@@ -169,6 +169,18 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('exportar-periodo-excel', [PeriodoController::class, 'exportarExcel']);
     Route::get('exportar-contra-partida-excel', [ContrapartidaController::class, 'exportarExcel']);
     Route::get('exportar-tipo-credito-excel', [TipoCreditoController::class, 'exportarExcel']);
+    Route::get('exportar-tipo-movimento-excel', [TipoMovimentoController::class, 'exportarExcel']);
+    Route::get('exportar-documento-excel', [DocumentoController::class, 'exportarExcel']);
+    Route::get('exportar-tipo-proveito-excel', [TipoProveitoController::class, 'exportarExcel']);
+    Route::get('exportar-regime-excel', [RegimeController::class, 'exportarExcel']);
+    Route::get('exportar-tipo-empresa-excel', [TipoEmpresaController::class, 'exportarExcel']);
+    Route::get('exportar-grupo-empresa-excel', [GrupoEmpresaController::class, 'exportarExcel']);
+    Route::get('exportar-moeda-excel', [MoedaController::class, 'exportarExcel']);
+    Route::get('exportar-pais-excel', [PaisesController::class, 'exportarExcel']);
+    Route::get('exportar-provincia-excel', [ProvinciaController::class, 'exportarExcel']);
+    Route::get('exportar-municipio-excel', [MunicipioController::class, 'exportarExcel']);
+    Route::get('exportar-comuna-excel', [ComunaController::class, 'exportarExcel']);
+    Route::get('exportar-operador-excel', [OperadorController::class, 'exportarExcel']);
 
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');

@@ -30,7 +30,7 @@
                     <i class="fas fa-file-pd"></i> Imprimir
                   </button>
                   <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelDiario()">
-                  <i class="fas fa-file-excel"></i> Exportar Balanço</a
+                  <i class="fas fa-file-excel"></i> Exportar</a
                 >
                 </h3>
 

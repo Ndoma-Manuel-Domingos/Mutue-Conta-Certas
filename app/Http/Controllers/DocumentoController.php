@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Documento;
+use App\Exports\DocumentoExport;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+
+use App\Exports\MovimentoExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class DocumentoController extends Controller
 {
@@ -16,7 +21,7 @@ class DocumentoController extends Controller
     public function index(Request $request)
     {
         $data = Documento::get();
-      
+
         return Inertia::render('Documentos/Index', ['documentos' => $data]);
     }
 
@@ -40,12 +45,14 @@ class DocumentoController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            "designacao" => "required",
-        ], 
-        [
-            "designacao.required" => "Campo Obrigatório",
-        ]);
+        $request->validate(
+            [
+                "designacao" => "required",
+            ],
+            [
+                "designacao.required" => "Campo Obrigatório",
+            ]
+        );
 
         try {
             $data = Documento::create([
@@ -77,7 +84,7 @@ class DocumentoController extends Controller
     public function edit($id)
     {
         $data['tipo_movimento'] = Documento::findOrFail($id);
-        
+
         return Inertia::render('Documentos/Edit', $data);
     }
 
@@ -98,9 +105,12 @@ class DocumentoController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message', 'Não foi possível actualizar os dados!'], 201);
         }
-        
     }
 
+    public function exportarExcel()
+    {
+        return Excel::download(new DocumentoExport(), 'documento-excel.xlsx');
+    }
     /**
      * Remove the specified resource from storage.
      *

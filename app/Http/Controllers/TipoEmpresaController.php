@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\TipoEmpresa;
+use App\Exports\TipoEmpresaExport;
+
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class TipoEmpresaController extends Controller
 {
@@ -28,7 +32,7 @@ class TipoEmpresaController extends Controller
     public function create()
     {
         $data[''] = [];
-        
+
         return Inertia::render('TipoEmpresas/Create', $data);
     }
 
@@ -70,7 +74,7 @@ class TipoEmpresaController extends Controller
     public function edit($id)
     {
         $data['tipo_empresa'] = TipoEmpresa::findOrFail($id);
-        
+
         return Inertia::render('TipoEmpresas/Edit', $data);
     }
 
@@ -91,6 +95,9 @@ class TipoEmpresaController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 201);
         }
+    }
+    public function exportarExcel(){
+        return Excel::download(new TipoEmpresaExport(), 'tipo-empresas-excel.xlsx');
     }
 
     /**

@@ -7,6 +7,10 @@ use Inertia\Inertia;
 use App\Models\Comuna;
 use App\Models\Municipio;
 
+use App\Exports\ComunaExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
+
 class ComunaController extends Controller
 {
     /**
@@ -18,7 +22,7 @@ class ComunaController extends Controller
     {
         $data['comuna'] = Comuna::with(['municipio'])->get();
         $data['cont_comuna'] = Comuna::count();
-        
+
         return Inertia::render('Comuna/Index', $data);
     }
 
@@ -42,7 +46,7 @@ class ComunaController extends Controller
     public function store(Request $request)
     {
         try {
-            
+
             $data = Comuna::create([
                 'designacao' => $request->designacao,
                 'municipio_id' => $request->municipio_id
@@ -88,7 +92,7 @@ class ComunaController extends Controller
     {
         try {
             $comuna = Comuna::findOrFail($id);
-            
+
             $comuna->designacao = $request->designacao;
             $comuna->municipio_id = $request->municipio_id;
             $comuna->update();
@@ -96,6 +100,10 @@ class ComunaController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 201);
         }
+    }
+
+    public function exportarExcel(){
+        return Excel::download(new ComunaExport(), 'comuna-excel.xlsx');
     }
 
     /**

@@ -33,13 +33,14 @@ use Maatwebsite\Excel\DefaultValueBinder;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use App\Models\UserEmpresa;
+use App\Models\Empresa;
 
 class MovimentoExport extends DefaultValueBinder implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles, WithMapping, WithEvents, WithDrawings, WithCustomStartCell
 {
     /**
      * @return \Illuminate\Support\Collection
      */
-
+    public $dadosEmpresa;
     public function empresaLogada()
     {
         $user = auth()->user();
@@ -57,6 +58,15 @@ class MovimentoExport extends DefaultValueBinder implements FromCollection, With
         }
 
         return "";
+    }
+
+    public function dadosEmpresaLogada($id)
+    {
+        $empresa = Empresa::where('id', $id)->first();
+        if ($empresa)
+            return $empresa;
+        else
+            return "";
     }
     public function headings(): array
     {
@@ -76,6 +86,7 @@ class MovimentoExport extends DefaultValueBinder implements FromCollection, With
 
     public function __construct()
     {
+        $this->dadosEmpresa = $this->dadosEmpresaLogada($this->empresaLogada());
     }
 
     public function map($data): array
@@ -133,7 +144,7 @@ class MovimentoExport extends DefaultValueBinder implements FromCollection, With
 
     public function startCell(): String
     {
-        return "A10";
+        return "A11";
     }
 
     public function drawings()
@@ -150,16 +161,16 @@ class MovimentoExport extends DefaultValueBinder implements FromCollection, With
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->setCellValue('A7', strtoupper('Balanço de Verificação'));
-        // $sheet->setCellValue('C6', 'ANOS LECTIVOS: ');
-        // $sheet->setCellValue('D6', 'TODAS');
-        // $sheet->setCellValue('C7', 'CURSO: ');
-        // $sheet->setCellValue('D7',  'TODAS');
+        $sheet->setCellValue('D6', strtoupper('BALANCO'));
+        $sheet->setCellValue('D7', 'Empresa: ');
+        $sheet->setCellValue('D8', 'NIF: ');
+        $sheet->setCellValue('E7', $this->dadosEmpresa->nome_empresa);
+        $sheet->setCellValue('E8',  $this->dadosEmpresa->codigo_empresa);
         $coordenadas = $sheet->getCoordinates();
 
         return [
             // Style the first row as bold text.
-            10    => [
+            11    => [
                 'font' => ['bold' => false, 'color' => ['rgb' => 'FCFCFD']],
                 'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => '2b5876']]
 
@@ -182,6 +193,12 @@ class MovimentoExport extends DefaultValueBinder implements FromCollection, With
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                 ],
             ]],
+
+            'D6:E9'    => [
+                'font' => ['bold' => false, 'color' => ['rgb' => 'FCFCFD']],
+                'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => '2b5876']]
+
+            ],
 
         ];
     }

@@ -22,6 +22,11 @@
                     <div class="col-12 col-md-12">
                         <div class="card">
                             <div class="card-header">
+
+                                <a href="" class="btn btn-sm mx-1 btn-success float-right"
+                                    @click="ExportarExcelProvincia()">
+                                    <i class="fas fa-file-excel"></i> Exportar</a>
+
                                 <a href="/provincia/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i>NOVA
                                     PROVÍNCIA </a>
                             </div>
@@ -98,6 +103,12 @@ export default {
     methods: {
         deleteItem(item) {
             console.log(item.id)
+        },
+
+        ExportarExcelProvincia() {
+            window.open(
+                `exportar-provincia-excel`
+            );
         },
         imprimirPeriodos() {
             window.open("imprimir-periodos");

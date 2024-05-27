@@ -352,7 +352,6 @@ class BalancoController extends Controller
     }
     public function exportarExcel(Request $request)
     {
-        dd($request);
         $data['dados'] = $request;
         $data_inicio = $data['dados']->data_inicio;
         $data_final = $data['dados']->data_final;
@@ -360,7 +359,7 @@ class BalancoController extends Controller
         $tipo_balancete_id = $data['dados']->tipo_balancete_id;
         $periodo_id = $data['dados']->periodo_id;
 
-        return Excel::download(new CentroDeCustoExport($data_inicio, $data_final, (int)$exercicio_id, $tipo_balancete_id, $periodo_id), 'users.xlsx');
+        return Excel::download(new CentroDeCustoExport($data_inicio, $data_final, (int)$exercicio_id, $tipo_balancete_id, $periodo_id), 'balanco.xlsx');
     }
 
     public function getSubcontas(Request $request)

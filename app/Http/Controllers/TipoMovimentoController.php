@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\TipoMovimento;
+use App\Exports\TipoMovimentoExport;
+
+use App\Exports\MovimentoExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class TipoMovimentoController extends Controller
 {
@@ -16,7 +21,7 @@ class TipoMovimentoController extends Controller
     public function index(Request $request)
     {
         $data = TipoMovimento::get();
-      
+
         return Inertia::render('TipoMovimentos/Index', ['tipos_movimentos' => $data]);
     }
 
@@ -40,12 +45,14 @@ class TipoMovimentoController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            "designacao" => "required",
-        ], 
-        [
-            "designacao.required" => "Campo Obrigatório",
-        ]);
+        $request->validate(
+            [
+                "designacao" => "required",
+            ],
+            [
+                "designacao.required" => "Campo Obrigatório",
+            ]
+        );
 
         try {
             $data = TipoMovimento::create([
@@ -77,7 +84,7 @@ class TipoMovimentoController extends Controller
     public function edit($id)
     {
         $data['tipo_movimento'] = TipoMovimento::findOrFail($id);
-        
+
         return Inertia::render('TipoMovimentos/Edit', $data);
     }
 
@@ -98,7 +105,11 @@ class TipoMovimentoController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message', 'Não foi possível actualizar os dados!'], 201);
         }
-        
+    }
+
+    public function exportarExcel()
+    {
+        return Excel::download(new TipoMovimentoExport(), 'tipo-movimento-excel.xlsx');
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\Exercicio;
+use App\Models\Comuna;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use GuzzleHttp\Psr7\Request;
+
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -23,7 +23,7 @@ use App\Models\UserEmpresa;
 use App\Models\Empresa;
 use App\Models\User;
 
-class ExercicioExport extends DefaultValueBinder implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles, WithMapping, WithEvents, WithDrawings, WithCustomStartCell
+class ComunaExport extends DefaultValueBinder implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles, WithMapping, WithEvents, WithDrawings, WithCustomStartCell
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -49,9 +49,10 @@ class ExercicioExport extends DefaultValueBinder implements FromCollection, With
         return "";
     }
 
-    public function dadosEmpresaLogada($id){
+    public function dadosEmpresaLogada($id)
+    {
         $empresa = Empresa::where('id', $id)->first();
-        if($empresa)
+        if ($empresa)
             return $empresa;
         else
             return "";
@@ -62,8 +63,10 @@ class ExercicioExport extends DefaultValueBinder implements FromCollection, With
         return [
 
             '#',
-            'Designação',
-            'Estado',
+            'id',
+            'Designacao',
+            'Provincia',
+
         ];
     }
 
@@ -77,8 +80,9 @@ class ExercicioExport extends DefaultValueBinder implements FromCollection, With
 
         return [
             '#',
+            $data->id,
             $data->designacao,
-            $data->estado == 1 ? 'Activo' : 'Desactivo',
+            $data->municipio->designacao,
 
         ];
     }
@@ -99,14 +103,8 @@ class ExercicioExport extends DefaultValueBinder implements FromCollection, With
                         ],
                     ],
 
-                    $event->sheet->getStyle('E11:E' . $event->sheet->getHighestRow())
-                        ->getFont()->setColor(new Color('FF0000')),
-
-                    $event->sheet->getStyle('D11:D' . $event->sheet->getHighestRow())
-                        ->getFont()->setColor(new Color('0000CD')),
-
                 ]);
-                $event->sheet->getColumnDimension('D')->setWidth(28);
+                $event->sheet->getColumnDimension('E')->setWidth(28);
                 // $event->sheet->getColumnDimension('B')->setWidth(200);
                 // $event->sheet->getColumnDimension('C')->setWidth(300);
             },
@@ -116,15 +114,13 @@ class ExercicioExport extends DefaultValueBinder implements FromCollection, With
 
     public function collection()
     {
-        $teste = Exercicio::with(['empresa'])->where('empresa_id', $this->empresaLogada())->get();
-
-        return Exercicio::with(['empresa'])->where('empresa_id', $this->empresaLogada())->get();
+        return Comuna::get();
     }
 
 
     public function startCell(): String
     {
-        return "A11";
+        return "A10";
     }
 
     public function drawings()
@@ -132,7 +128,7 @@ class ExercicioExport extends DefaultValueBinder implements FromCollection, With
 
         $drawing = new Drawing();
         $drawing->setName('Logo');
-        $drawing->setDescription('Balanço');
+        $drawing->setDescription('Grupo DE EMPRESAS');
         $drawing->setPath(public_path('/images/log1.png'));
         $drawing->setHeight(90);
         $drawing->setCoordinates('A1');
@@ -142,16 +138,16 @@ class ExercicioExport extends DefaultValueBinder implements FromCollection, With
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->setCellValue('C6', strtoupper('BALANCO'));
-        $sheet->setCellValue('C7', 'Empresa: ');
-        $sheet->setCellValue('C8', 'NIF: ');
-        $sheet->setCellValue('D7', $this->dadosEmpresa->nome_empresa);
-        $sheet->setCellValue('D8',  $this->dadosEmpresa->codigo_empresa);
+        $sheet->setCellValue('D6', strtoupper('COMUNAS'));
+        $sheet->setCellValue('D7', 'Empresa: ');
+        $sheet->setCellValue('D8', 'NIF: ');
+        $sheet->setCellValue('E7', $this->dadosEmpresa->nome_empresa);
+        $sheet->setCellValue('E8',  $this->dadosEmpresa->codigo_empresa);
         $coordenadas = $sheet->getCoordinates();
 
         return [
             // Style the first row as bold text.
-            11    => [
+            10    => [
                 'font' => ['bold' => false, 'color' => ['rgb' => 'FCFCFD']],
                 'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => '2b5876']]
 
@@ -174,12 +170,6 @@ class ExercicioExport extends DefaultValueBinder implements FromCollection, With
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                 ],
             ]],
-
-            'C6:D9'    => [
-                'font' => ['bold' => false, 'color' => ['rgb' => 'FCFCFD']],
-                'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => '2b5876']]
-
-            ],
 
         ];
     }

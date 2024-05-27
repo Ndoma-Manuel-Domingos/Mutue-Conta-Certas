@@ -120,7 +120,7 @@ class TipoDocumentoExport extends DefaultValueBinder implements FromCollection, 
 
     public function startCell(): String
     {
-        return "A10";
+        return "A11";
     }
 
     public function drawings()
@@ -138,16 +138,16 @@ class TipoDocumentoExport extends DefaultValueBinder implements FromCollection, 
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->setCellValue('D5', strtoupper('Diario'));
-        $sheet->setCellValue('D7', 'NIF: ');
-        $sheet->setCellValue('E7',  $this->dadosEmpresa->codigo_empresa);
-        $sheet->setCellValue('D6', 'Empresa: ');
-        $sheet->setCellValue('E6', $this->dadosEmpresa->nome_empresa);
+        $sheet->setCellValue('D6', strtoupper('BALANCO'));
+        $sheet->setCellValue('D7', 'Empresa: ');
+        $sheet->setCellValue('D8', 'NIF: ');
+        $sheet->setCellValue('E7', $this->dadosEmpresa->nome_empresa);
+        $sheet->setCellValue('E8',  $this->dadosEmpresa->codigo_empresa);
         $coordenadas = $sheet->getCoordinates();
 
         return [
             // Style the first row as bold text.
-            10    => [
+            11    => [
                 'font' => ['bold' => false, 'color' => ['rgb' => 'FCFCFD']],
                 'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => '2b5876']]
 
@@ -170,6 +170,12 @@ class TipoDocumentoExport extends DefaultValueBinder implements FromCollection, 
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                 ],
             ]],
+
+            'D6:E9'    => [
+                'font' => ['bold' => false, 'color' => ['rgb' => 'FCFCFD']],
+                'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => '2b5876']]
+
+            ],
 
         ];
     }
