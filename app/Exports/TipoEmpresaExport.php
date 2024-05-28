@@ -89,18 +89,18 @@ class TipoEmpresaExport extends DefaultValueBinder implements FromCollection, Wi
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $event->sheet->getStyle('A6:C6')->applyFromArray([
-                    'font' => [
-                        'bold' => true,
-                    ],
-                    'borders' => [
-                        'outline' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                // $event->sheet->getStyle('A6:C6')->applyFromArray([
+                //     'font' => [
+                //         'bold' => true,
+                //     ],
+                //     'borders' => [
+                //         'outline' => [
+                //             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
 
-                        ],
-                    ],
+                //         ],
+                //     ],
 
-                ]);
+                // ]);
                 $event->sheet->getColumnDimension('E')->setWidth(28);
                 // $event->sheet->getColumnDimension('B')->setWidth(200);
                 // $event->sheet->getColumnDimension('C')->setWidth(300);
@@ -135,11 +135,11 @@ class TipoEmpresaExport extends DefaultValueBinder implements FromCollection, Wi
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->setCellValue('D5', strtoupper('TIPO DE PROVEITO'));
-        $sheet->setCellValue('D7', 'NIF: ');
-        $sheet->setCellValue('E7',  $this->dadosEmpresa->codigo_empresa);
-        $sheet->setCellValue('D6', 'Empresa: ');
-        $sheet->setCellValue('E6', $this->dadosEmpresa->nome_empresa);
+        $sheet->setCellValue('D6', strtoupper('TIPO DE PROVEITO'));
+        $sheet->setCellValue('D7', 'Empresa: ');
+        $sheet->setCellValue('D8', 'NIF: ');
+        $sheet->setCellValue('E7', $this->dadosEmpresa->nome_empresa);
+        $sheet->setCellValue('E8',  $this->dadosEmpresa->codigo_empresa);
         $coordenadas = $sheet->getCoordinates();
 
         return [
@@ -167,6 +167,12 @@ class TipoEmpresaExport extends DefaultValueBinder implements FromCollection, Wi
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                 ],
             ]],
+
+            'D6:E9'    => [
+                'font' => ['bold' => false, 'color' => ['rgb' => 'FCFCFD']],
+                'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => '2b5876']]
+
+            ],
 
         ];
     }

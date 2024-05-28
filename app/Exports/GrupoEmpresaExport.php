@@ -89,18 +89,18 @@ class GrupoEmpresaExport extends DefaultValueBinder implements FromCollection, W
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $event->sheet->getStyle('A6:C6')->applyFromArray([
-                    'font' => [
-                        'bold' => true,
-                    ],
-                    'borders' => [
-                        'outline' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                // $event->sheet->getStyle('A6:C6')->applyFromArray([
+                //     'font' => [
+                //         'bold' => true,
+                //     ],
+                //     'borders' => [
+                //         'outline' => [
+                //             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
 
-                        ],
-                    ],
+                //         ],
+                //     ],
 
-                ]);
+                // ]);
                 $event->sheet->getColumnDimension('E')->setWidth(28);
                 // $event->sheet->getColumnDimension('B')->setWidth(200);
                 // $event->sheet->getColumnDimension('C')->setWidth(300);

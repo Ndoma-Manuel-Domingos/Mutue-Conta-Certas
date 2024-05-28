@@ -133,10 +133,10 @@ class ContrapartidaExport extends DefaultValueBinder implements FromCollection, 
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->setCellValue('D5', strtoupper('Diario'));
+        $sheet->setCellValue('D5', strtoupper('CONTRA PARTIDA'));
         $sheet->setCellValue('D7', 'NIF: ');
-        $sheet->setCellValue('E7',  $this->dadosEmpresa->codigo_empresa);
         $sheet->setCellValue('D6', 'Empresa: ');
+        $sheet->setCellValue('E7',  $this->dadosEmpresa->codigo_empresa);
         $sheet->setCellValue('E6', $this->dadosEmpresa->nome_empresa);
         $coordenadas = $sheet->getCoordinates();
 
@@ -165,6 +165,12 @@ class ContrapartidaExport extends DefaultValueBinder implements FromCollection, 
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                 ],
             ]],
+
+            'D5:E9'    => [
+                'font' => ['bold' => false, 'color' => ['rgb' => 'FCFCFD']],
+                'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'color' => ['rgb' => '2b5876']]
+
+            ],
 
         ];
     }

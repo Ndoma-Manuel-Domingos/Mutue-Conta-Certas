@@ -23,7 +23,7 @@
             <div class="card">
               <div class="card-header">
                 <a href="/tipos-documentos/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> CRIAR TIPO DE DOCUMENTO</a>
-                <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelTipoDocumento()">
+                <a href="" class="btn btn-sm mx-1 btn-success float-left" @click="ExportarExcelTipoDocumento()">
                   <i class="fas fa-file-excel"></i> Exportar</a
                 >
                 <button class="btn btn-sm btn-danger mx-1">

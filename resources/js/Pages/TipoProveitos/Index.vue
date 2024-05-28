@@ -30,7 +30,7 @@
                                     <i class="fas fa-file-pdf"></i> Imprimir
                                 </button>
 
-                                <a href="" class="btn btn-sm mx-1 btn-success float-right"
+                                <a href="" class="btn btn-sm mx-1 btn-success float-left"
                                     @click="ExportarExcelTipoProveito()">
                                     <i class="fas fa-file-excel"></i> Exportar</a>
                             </div>

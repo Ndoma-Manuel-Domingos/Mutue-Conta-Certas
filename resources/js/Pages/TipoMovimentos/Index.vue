@@ -26,13 +26,14 @@
                             <div class="card-header">
                                 <a href="/tipos-movimentos/create" class="btn btn-info btn-sm mx-1">
                                     <i class="fas fa-plus"></i> CRIAR TIPO DE MOVIMENTOS</a>
+
+                                <a href="" class="btn btn-sm mx-1 btn-success float-left"
+                                    @click="ExportarExcelTipoMovimento()">
+                                    <i class="fas fa-file-excel"></i> Exportar</a>
+
                                 <button class="btn btn-danger btn-sm mx-1" @click="imprimirPeriodos()">
                                     <i class="fas fa-file-pdf"></i> Imprimir
                                 </button>
-
-                                <a href="" class="btn btn-sm mx-1 btn-success float-right"
-                                    @click="ExportarExcelTipoMovimento()">
-                                    <i class="fas fa-file-excel"></i> Exportar</a>
                             </div>
                             <div class="card-body">
                                 <table class="table table-bordered table-hover" id="tabela_de_tipos_movimentos">
