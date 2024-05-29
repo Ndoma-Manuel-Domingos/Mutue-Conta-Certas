@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\TipoProveito;
+use App\Exports\TipoProveitoExport;
+
+use App\Exports\MovimentoExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class TipoProveitoController extends Controller
 {
@@ -16,7 +21,7 @@ class TipoProveitoController extends Controller
     public function index(Request $request)
     {
         $data = TipoProveito::get();
-        
+
         return Inertia::render('TipoProveitos/Index', ['tipos_proveitos' => $data]);
     }
 
@@ -42,7 +47,7 @@ class TipoProveitoController extends Controller
     {
         $request->validate([
             "designacao" => "required",
-        ], 
+        ],
         [
             "designacao.required" => "Campo Obrigatório",
         ]);
@@ -77,7 +82,7 @@ class TipoProveitoController extends Controller
     public function edit($id)
     {
         $data['tipo_proveito'] = TipoProveito::findOrFail($id);
-        
+
         return Inertia::render('TipoProveitos/Edit', $data);
     }
 
@@ -98,9 +103,12 @@ class TipoProveitoController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message', 'Não foi possível actualizar os dados!'], 201);
         }
-        
+
     }
 
+    public function exportarExcel(){
+        return Excel::download(new TipoProveitoExport(), 'tipo-proveito-excel.xlsx');
+    }
     /**
      * Remove the specified resource from storage.
      *

@@ -21,11 +21,13 @@
         <div class="row">
           <div class="col-12 col-md-12">
             <div class="card">
-              <div class="card-header"> 
+              <div class="card-header">
                 <a href="/movimentos/create" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> LANÇAR MOVIMENTOS</a>
                 <a href="/fluxos-caixas/create" class="btn btn-info btn-sm mx-1"> <i class="fas fa-plus"></i> FLUXO DE CAIXA</a>
                 <a @click="imprimirPlano()" class="btn btn-sm mx-1 btn-danger float-right"> <i class="fas fa-file-pdf"></i> Visualizar</a>
-                <a href="" class="btn btn-sm mx-1 btn-success float-right"> <i class="fas fa-file-excel"></i> Exportar</a>
+                <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelMovimento()">
+                  <i class="fas fa-file-excel"></i> Exportar Balanço</a
+                >
               </div>
               <div class="card-body">
                 <table class="table table-bordered table-hover" id="tabela_de_movimentos">
@@ -42,9 +44,9 @@
                       <th class="text-right">Ações</th>
                     </tr>
                   </thead>
-                  
+
                   <tbody>
-                    
+
                     <tr v-for="item in movimentos" :key="item">
                       <td>{{ item.id }}</td>
                       <!-- <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td> -->
@@ -64,7 +66,7 @@
                   </tbody>
                 </table>
               </div>
-          
+
             </div>
           </div>
         </div>
@@ -72,7 +74,7 @@
     </div>
   </MainLayouts>
 </template>
-  
+
 <script>
 
 import Paginacao from "../../components/Paginacao.vue";
@@ -105,7 +107,7 @@ export default {
     $('#tabela_de_movimentos').DataTable({
       "responsive": true, "lengthChange": true, "autoWidth": true,
     });
-  },    
+  },
   watch: {
     options: function (val) {
       this.params.page = val.page;
@@ -120,7 +122,7 @@ export default {
       this.updateData();
     },
   },
-  
+
   methods: {
     updateData() {
       this.$Progress.start();
@@ -135,20 +137,26 @@ export default {
     imprimirPlano() {
       window.open("imprimir-movimentos");
     },
-    
+
     formatarValorMonetario(valor) {
         // Converter o número para uma string e separar parte inteira da parte decimal
         let partes = String(valor).split('.');
         let parteInteira = partes[0];
         let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
-    
+
         // Adicionar separadores de milhar
         parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    
+
         // Retornar o valor formatado
         return parteInteira + parteDecimal;
     },
-    
+
+    ExportarExcelMovimento() {
+      window.open(
+        `exportar-movimento-excel`
+      );
+    },
+
     formatValor(atual) {
       const valorFormatado = Intl.NumberFormat("pt-br", {
         style: "currency",
@@ -159,5 +167,4 @@ export default {
   },
 };
 </script>
-  
-  
+

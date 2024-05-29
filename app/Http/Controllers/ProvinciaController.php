@@ -7,6 +7,10 @@ use Inertia\Inertia;
 use App\Models\Provincia;
 use App\Models\Pais;
 
+use App\Exports\ProvinciaExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
+
 class ProvinciaController extends Controller
 {
     /**
@@ -86,10 +90,10 @@ class ProvinciaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         try {
             $provincia = Provincia::findOrFail($id);
-            
+
             $provincia->designacao = $request->designacao;
             $provincia->pais_id = $request->pais_id;
             $provincia->update();
@@ -97,6 +101,10 @@ class ProvinciaController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 201);
         }
+    }
+
+    public function exportarExcel(){
+        return Excel::download(new ProvinciaExport(), 'pais-excel.xlsx');
     }
 
     /**

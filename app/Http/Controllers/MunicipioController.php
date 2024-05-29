@@ -7,6 +7,10 @@ use Inertia\Inertia;
 use App\Models\Municipio;
 use App\Models\Provincia;
 
+use App\Exports\MunicipioExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
+
 class MunicipioController extends Controller
 {
     /**
@@ -87,7 +91,7 @@ class MunicipioController extends Controller
     {
         try {
             $municipio = Municipio::findOrFail($id);
-           
+
             $municipio->designacao = $request->designacao;
             $municipio->provincias_id = $request->provincias_id;
             $municipio->update();
@@ -97,6 +101,9 @@ class MunicipioController extends Controller
         }
     }
 
+    public function exportarExcel(){
+        return Excel::download(new MunicipioExport(), 'municipio-excel.xlsx');
+    }
     /**
      * Remove the specified resource from storage.
      *

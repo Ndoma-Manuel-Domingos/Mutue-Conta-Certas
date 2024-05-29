@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use App\Exports\UserEmpresaExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
+
 class OperadorController extends Controller
 {
     use Config;
@@ -18,15 +22,15 @@ class OperadorController extends Controller
         $data['operadores'] = UserEmpresa::with(["empresa", "user"])
         ->where('empresa_id', $this->empresaLogada())
         ->get();
-                        
+
         return Inertia::render('Operadores/Index', $data);
     }
 
     public function create()
     {
-        
+
         $data['operadores'] = [];
-                
+
         return Inertia::render('Operadores/Create', $data);
     }
 
@@ -37,7 +41,7 @@ class OperadorController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-        
+
         $full = $request->input('nome');
         $usernames = preg_split('/\s+/', strtolower($full), -1, PREG_SPLIT_NO_EMPTY);
 
@@ -51,22 +55,22 @@ class OperadorController extends Controller
             'telefone' => "000-000-000",
             'is_admin' => 0,
         ]);
-        
+
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
-        
+
     }
 
     public function get_diario($id)
     {
 
     }
-    
+
 
     public function show($id)
     {
 
     }
-    
+
     public function edit($id)
     {
 
@@ -80,5 +84,9 @@ class OperadorController extends Controller
     public function destroy($id)
     {
         // Exclui um post específico do banco de dados
+    }
+
+    public function exportarExcel(){
+        return Excel::download(new UserEmpresaExport(), 'operador-excel.xlsx');
     }
 }

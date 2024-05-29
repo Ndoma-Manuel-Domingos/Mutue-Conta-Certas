@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PeriodoExport;
 use App\Models\Exercicio;
 use App\Models\Periodo;
 use App\Models\User;
@@ -9,6 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use PDF;
+use App\Exports\MovimentoExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class PeriodoController extends Controller
 {
@@ -17,13 +21,13 @@ class PeriodoController extends Controller
     public function index(Request $request)
     {
         // Retorna a lista de posts
-        
+
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-                
+
         $data['periodos'] = Periodo::when($request->input_busca_periodos, function($query, $value){
             $query->where('designacao', 'like', "%".$value."%");
         })->where('empresa_id', $this->empresaLogada())->with(['empresa', 'exercicio'])->get();
-               
+
         return Inertia::render('Periodos/Index', $data);
     }
 
@@ -32,25 +36,25 @@ class PeriodoController extends Controller
         // Exibe o formulário para criar um novo post
 
         $data['exercicios'] = Exercicio::select('id', 'designacao As text')->get();
-       
+
         return Inertia::render('Periodos/Create', $data);
     }
 
     public function store(Request $request)
     {
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-        
+
         $validator = Validator::make($request->all(), [
             "designacao" => "required",
             "exercicio_id" => "required",
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-       
+
         if($this->empresaLogada()){
-        
+
             Periodo::create([
                 'numero' => $request->numero,
                 'designacao' => $request->designacao,
@@ -59,30 +63,30 @@ class PeriodoController extends Controller
                 'estado' => $request->estado,
             ]);
         }
-        
+
         // return redirect()->route('classes.index');
-        
+
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
-    
+
         // Salva um novo post no banco de dados
     }
 
     public function show($id)
     {
         $diario = Periodo::findOrFail($id);
-        
+
         $estado = "";
-        
+
         if($diario->estado == "activo"){
             $estado = "desactivo";
         }
         if($diario->estado == "desactivo"){
             $estado = "activo";
         }
-        
+
         $diario->estado = $estado;
         $diario->update();
-        
+
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
     
@@ -101,9 +105,9 @@ class PeriodoController extends Controller
     {
         // Exibe o formulário para editar um post
         $data['periodo'] = Periodo::findOrFail($id);
-        
+
         $data['exercicios'] = Exercicio::select('id', 'designacao As text')->get();
-       
+
         return Inertia::render('Periodos/Edit', $data);
     }
 
@@ -114,14 +118,14 @@ class PeriodoController extends Controller
             "estado" => "required",
             "designacao" => "required",
             "exercicio_id" => "required",
-        ], 
+        ],
         [
             "estado.required" => "Campo Obrigatório",
             "designacao.required" => "Campo Obrigatório",
             "exercicio_id.required" => "Campo Obrigatório",
         ]);
-            
-        
+
+
         // Atualiza um post específico no banco de dados
         $periodo = Periodo::findOrFail($id);
         $periodo->numero = $request->numero;
@@ -129,7 +133,7 @@ class PeriodoController extends Controller
         $periodo->designacao = $request->designacao;
         $periodo->exercicio_id = $request->exercicio_id;
         $periodo->update();
-        
+
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
 
@@ -139,10 +143,14 @@ class PeriodoController extends Controller
     }
 
     public function imprimirPeriodo(){
-        $data['periodo_data'] = Periodo::with(['empresa', 'exercicio'])->get();     
-        
+        $data['periodo_data'] = Periodo::with(['empresa', 'exercicio'])->get();
+
         $pdf = PDF::loadView('pdf.contas.Periodo', $data)->setPaper('a3', 'landscape');
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Contas.pdf');
+    }
+
+    public function exportarExcel(){
+        return Excel::download(new PeriodoExport(), 'exercicio-excel.xlsx');
     }
 }

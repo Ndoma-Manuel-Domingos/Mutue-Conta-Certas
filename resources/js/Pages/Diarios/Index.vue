@@ -29,6 +29,9 @@
                   <button class="btn btn-sm float-right btn-danger mx-1">
                     <i class="fas fa-file-pd"></i> Imprimir
                   </button>
+                  <a href="" class="btn btn-sm mx-1 btn-success float-right" @click="ExportarExcelDiario()">
+                  <i class="fas fa-file-excel"></i> Exportar</a
+                >
                 </h3>
 
               </div>
@@ -127,7 +130,7 @@ export default {
       }
       this.updateData();
     },
-    
+
     input_busca_diarios: function (val) {
       this.params.input_busca_diarios = val;
       this.updateData();
@@ -135,7 +138,13 @@ export default {
 
   },
   methods: {
-    
+
+    ExportarExcelDiario() {
+      window.open(
+        `exportar-diario-excel`
+      );
+    },
+
     updateData() {
       this.$Progress.start();
       this.$inertia.get("/diarios", this.params, {
@@ -146,7 +155,7 @@ export default {
         },
       });
     },
-    
+
     mudar_estado(item) {
       this.$Progress.start();
 
@@ -179,7 +188,7 @@ export default {
           });
         });
     },
-    
+
   },
 };
 </script>

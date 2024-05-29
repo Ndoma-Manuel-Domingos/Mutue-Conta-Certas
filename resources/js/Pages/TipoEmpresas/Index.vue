@@ -28,6 +28,10 @@
                                     <i class="fas fa-file-pdf"></i> Imprimir
                                 </button>
 
+                                <a href="" class="btn btn-sm mx-1 btn-success float-left"
+                                    @click="ExportarExcelTipoEmpresa()">
+                                    <i class="fas fa-file-excel"></i> Exportar</a>
+
                                 <div class="card-tools">
                                     <div class="input-group input-group" style="width: 450px">
                                         <input type="text" v-model="input_busca_tipos_empresas"
@@ -145,6 +149,11 @@ export default {
             });
         },
 
+        ExportarExcelTipoEmpresa() {
+            window.open(
+                `exportar-tipo-empresa-excel`
+            );
+        },
 
         imprimirPeriodos() {
             window.open("imprimir-periodos");

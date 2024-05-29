@@ -22,6 +22,10 @@
                     <div class="col-12 col-md-12">
                         <div class="card">
                             <div class="card-header">
+
+                                <a href="" class="btn btn-sm mx-1 btn-success float-right"
+                                    @click="ExportarExcelMunicipio()">
+                                    <i class="fas fa-file-excel"></i> Exportar</a>
                                 <a href="/municipio/create" class="btn btn-info"> <i class="fas fa-plus"></i>NOVO
                                     MUNICÍPIO </a>
                             </div>
@@ -102,6 +106,12 @@ export default {
         },
         imprimirPeriodos() {
             window.open("imprimir-periodos");
+        },
+
+        ExportarExcelMunicipio() {
+            window.open(
+                `exportar-municipio-excel`
+            );
         },
     },
 };

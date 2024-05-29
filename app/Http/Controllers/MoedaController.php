@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Moeda;
 
+use App\Exports\MoedaExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
+
 class MoedaController extends Controller
 {
     /**
@@ -15,7 +19,7 @@ class MoedaController extends Controller
      */
     public function index(Request $request)
     {
- 
+
         $data['moeda'] = Moeda::when($request->input_busca_moedas, function($query, $value){
             $query->where('designacao', 'like', "%".$value."%");
             $query->orWhere('sigla', 'like', "%".$value."%");
@@ -101,7 +105,7 @@ class MoedaController extends Controller
     {
         try {
             $moeda = Moeda::findOrFail($id);
-            
+
             $moeda->designacao = $request->designacao;
             $moeda->pais = $request->pais;
             $moeda->sigla = $request->sigla;
@@ -112,6 +116,10 @@ class MoedaController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Não foi possível actualizar o registo!'], 201);
         }
+    }
+
+    public function exportarExcel(){
+        return Excel::download(new MoedaExport(), 'moeda-excel.xlsx');
     }
 
     /**

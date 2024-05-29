@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Pais;
+use App\Exports\PaisExport;
+
+use App\Exports\MovimentoExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class PaisesController extends Controller
 {
@@ -46,7 +51,6 @@ class PaisesController extends Controller
                 'nome_ingles' => $request->nome_ingles,
             ]);
             return response()->json(['message' => 'Dados salvos com sucesso'], 200);
-
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 201);
         }
@@ -72,7 +76,7 @@ class PaisesController extends Controller
     public function edit($id)
     {
         $data['paises'] = Pais::findOrFail($id);
-        
+
         return Inertia::render('Paises/Edit', $data);
     }
 
@@ -91,10 +95,15 @@ class PaisesController extends Controller
             $paises->nome_ingles = $request->nome_ingles;
             $paises->update();
             return response()->json(['message' => 'Dados actualizados com sucesso'], 200);
-
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 201);
         }
+    }
+
+
+    public function exportarExcel()
+    {
+        return Excel::download(new PaisExport(), 'paises-excel.xlsx');
     }
 
     /**
@@ -108,7 +117,7 @@ class PaisesController extends Controller
         //
     }
 
-    public function imprimirPaises(){
-        
+    public function imprimirPaises()
+    {
     }
 }

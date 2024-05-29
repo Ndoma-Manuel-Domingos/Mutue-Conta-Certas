@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\TipoCredito;
+use App\Exports\TipoCreditoExport;
+
+use App\Exports\MovimentoExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class TipoCreditoController extends Controller
 {
@@ -16,7 +21,7 @@ class TipoCreditoController extends Controller
     public function index(Request $request)
     {
         $data = TipoCredito::get();
-        
+
         return Inertia::render('TipoCreditos/Index', ['tipos_creditos' => $data]);
     }
 
@@ -42,7 +47,7 @@ class TipoCreditoController extends Controller
     {
         $request->validate([
             "designacao" => "required",
-        ], 
+        ],
         [
             "designacao.required" => "Campo Obrigatório",
         ]);
@@ -77,7 +82,7 @@ class TipoCreditoController extends Controller
     public function edit($id)
     {
         $data['tipo_credito'] = TipoCredito::findOrFail($id);
-        
+
         return Inertia::render('TipoCreditos/Edit', $data);
     }
 
@@ -98,7 +103,11 @@ class TipoCreditoController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message', 'Não foi possível actualizar os dados!'], 201);
         }
-        
+
+    }
+
+    public function exportarExcel(){
+        return Excel::download(new TipoCreditoExport(), 'tipo-credito-excel.xlsx');
     }
 
     /**
