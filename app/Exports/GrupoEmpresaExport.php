@@ -135,11 +135,11 @@ class GrupoEmpresaExport extends DefaultValueBinder implements FromCollection, W
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->setCellValue('D5', strtoupper('GRUPO DE EMPRESAS'));
-        $sheet->setCellValue('D7', 'NIF: ');
-        $sheet->setCellValue('E7',  $this->dadosEmpresa->codigo_empresa);
-        $sheet->setCellValue('D6', 'Empresa: ');
+        $sheet->setCellValue('D6', strtoupper('GRUPO DE EMPRESAS'));
+        $sheet->setCellValue('D7', 'Empresa: ');
+        $sheet->setCellValue('D8', 'NIF: ');
         $sheet->setCellValue('E6', $this->dadosEmpresa->nome_empresa);
+        $sheet->setCellValue('E7',  $this->dadosEmpresa->codigo_empresa);
         $coordenadas = $sheet->getCoordinates();
 
         return [
