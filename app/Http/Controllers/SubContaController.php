@@ -140,8 +140,6 @@ class SubContaController extends Controller
             "numero.required" => "Campo Obrigatório",
             "tipo.required" => "Campo Obrigatório",
         ]);
-        
-
 
         // Atualiza um post específico no banco de dados
         $classe = SubConta::findOrFail($id);

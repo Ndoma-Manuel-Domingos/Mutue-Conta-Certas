@@ -26,12 +26,11 @@
               <div class="card">
                 <div class="card-header">
                   <h5>
-                    <!-- <span>Saldo Anterior:</span>
-                    <span class="text-info">50.000,00</span>  -->
+                    <span>Saldo Anterior:</span>
+                    <span class="text-info">{{ formatarValorMonetario(saldo_antes_movimento) }}</span> 
                     ||
                     <span>Saldo Actual: </span>
                     <span class="text-info"> {{ formatarValorMonetario(saldo_final) }}</span>
-                    <!-- <span class="text-info"> {{ formatarValorMonetario(saldo_actual) }}</span> -->
 
                     <span class="float-right"
                       >MOEDA: <strong class="text-info">{{ sessions ? (sessions.moeda ? (sessions.moeda.base ? sessions.moeda.base.sigla : "Sem moeda principal") : "Sem moeda principal") : "Sem moeda principal" }}</strong></span
@@ -254,16 +253,16 @@
                   </thead>
                   
                   <tbody>
+                  
                     <tr>
                       <td colspan="3" class="text-right">Total</td>
                       <td class="text-right text-primary">{{ resultados.total_debito == null ? 0 : formatarValorMonetario(resultados.total_debito) }}</td>
                       <td class="text-right text-danger">{{ resultados.total_credito == null ? 0 : formatarValorMonetario(resultados.total_credito) }}</td>
+                      <td class="text-right text-primary">{{ formatarValorMonetario(saldo_antes_movimento) }}</td>
                       <td class="text-right text-primary">{{ formatarValorMonetario(saldo_final) }}</td>
-                      <td class="text-right text-primary">{{ formatarValorMonetario(saldo_final) }}</td>
-                      <!-- <td class="text-right text-primary" v-if="resultados.total_debito > resultados.total_credito">{{ resultados ? formatarValorMonetario(((resultados.total_debito + saldo_final) - resultados.total_credito)) : "-"  }}</td> -->
-                      <!-- <td class="text-right text-danger" v-if="resultados.total_credito > resultados.total_debito">{{ resultados ? formatarValorMonetario(((resultados.total_credito + saldo_final) - resultados.total_debito)) : "-" }}</td> -->
                       <td></td>
                     </tr>
+                    
                     <tr v-for="(item, index) in item_movimentos" :key="index">
                       <td class="text-center">{{ index + 1 }} </td>
                       <td class="text-center">{{ item.movimento.lancamento_atual ?? '' }}</td>
@@ -273,7 +272,10 @@
                       
                       <td class="text-right text-primary" v-if="item.debito > item.credito">{{ formatarValorMonetario(item.debito - item.credito) }}</td>
                       <td class="text-right text-danger" v-if="item.credito > item.debito">{{ formatarValorMonetario(item.credito - item.debito) }}</td>
-                      
+                
+                      <td class="text-right text-primary" v-if="item.debito > item.credito">{{ formatarValorMonetario(item.debito - item.credito) }}</td>
+                      <td class="text-right text-danger" v-if="item.credito > item.debito">{{ formatarValorMonetario(item.credito - item.debito) }}</td>
+                        
                       <td style="width: 150px;">
                         <a @click="remover_fluxo_caixa_item(item)" class="text-danger btn btn-default mx-1"><i class="fas fa-times"></i></a>
                         <a @click="editar_fluxo_caixa_item(item)" class="text-success btn btn-default mx-1"><i class="fas fa-edit"></i></a>
@@ -306,7 +308,8 @@ export default {
     "saldo",
     "item_movimentos", "resultados",
     "taxas",
-    "saldo_final"
+    "saldo_final", 
+    "saldo_antes_movimento"
   ],
   components: {},
   computed: {

@@ -96,12 +96,12 @@
             <tbody>
                 @foreach($movimentos as $key => $item)
                 <tr>
-                    <td style="text-align: center;">{{$key + 1 }}</td>
-                    <td style="text-align: center;">{{$item->id}}</td>
-                    <td style="text-align: left;">{{$item->diario->numero}} - {{$item->diario->designacao}}</td>
-                    <td style="text-align: left;">{{$item->tipo_documento->numero}} - {{$item->tipo_documento->designacao}}</td>
-                    <td style="text-align: right;">{{$item->data_lancamento}}</td>
-                    <td style="text-align: right;">{{$item->exercicio->designacao}}</td>
+                    <td style="text-align: center;">{{ $key + 1 }}</td>
+                    <td style="text-align: center;">{{ $item->id }}</td>
+                    <td style="text-align: left;">{{ $item->descricao }}</td>
+                    <td style="text-align: left;">{{ $item->items[0]->documento->designacao }}</td>
+                    <td style="text-align: right;">{{ $item->data_lancamento }}</td>
+                    <td style="text-align: right;">{{ $item->exercicio->designacao }}</td>
                     <td style="text-align: right;color: blue">{{ number_format($item->debito, 2, ',', '.') }}</td>
                     <td style="text-align: right;color: red">{{ number_format($item->credito, 2, ',', '.') }}</td>
                     @if ($item->debito > $item->credito)
@@ -109,6 +109,9 @@
                     @endif
                     @if ($item->credito > $item->debito)
                     <td style="text-align: right;color: red">{{ number_format($item->credito - $item->debito , 2, ',', '.') }}</td>
+                    @endif
+                    @if ($item->credito == $item->debito)
+                    <td style="text-align: right;color: red">--</td>
                     @endif
                 </tr>
                 @endforeach

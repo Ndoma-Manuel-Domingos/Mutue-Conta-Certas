@@ -58,12 +58,19 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            // 'tipo_empresa' => 'required',
+            'nif' => 'required',
             'email' => 'required|string|email|max:255|unique:users',
-            // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'password' => 'required|min:3|max:20|same:password',
             'r_password' => 'required|min:3|max:20',
+        ], [
+            'name.required' => 'Campo Obrigatório',
+            'nif.required' => 'Campo Obrigatório',
+            // 'tipo_empresa.required' => 'Campo Obrigatório',
+            'email.required' => 'Campo Obrigatório',
+            'password.required' => 'Campo Obrigatório',
+            'r_password.required' => 'Campo Obrigatório',
         ]);
-               
         
         // $empresa = Empresa::create([
         //     'nome' => $request->name,
@@ -73,7 +80,6 @@ class AuthController extends Controller
         
         $usernames = preg_split('/\s+/', strtolower($request->name), -1, PREG_SPLIT_NO_EMPTY);
         $username = head($usernames) . '.' . last($usernames);
-        
 
         $user = User::create([
             'name' => $request->name,
@@ -95,7 +101,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect(RouteServiceProvider::HOME_LICENCA);
     }
 
     public function logout(Request $request)

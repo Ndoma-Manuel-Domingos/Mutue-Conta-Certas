@@ -31,14 +31,14 @@
                 <table class="table table-bordered table-hover" id="tabela_de_movimentos">
                   <thead>
                     <tr>
-                      <th @click="order_by_codigo" style="cursor: pointer;">Nº</th>
-                      <th @click="order_by_diario" style="cursor: pointer;">Diário</th>
-                      <th @click="order_by_documento" style="cursor: pointer;">Documento</th>
-                      <th>Débito</th>
-                      <th>Crédito</th>
+                      <th style="cursor: pointer;">Nº</th>
+                      <!-- <th style="cursor: pointer;">Diário</th> -->
                       <th>Data</th>
                       <th>Exercício</th>
-                      <th>Operador</th>
+                      <th>Período</th>
+                      <th style="cursor: pointer;">descrição</th>
+                      <th>Débito</th>
+                      <th>Crédito</th>
                       <th class="text-right">Ações</th>
                     </tr>
                   </thead>
@@ -47,13 +47,13 @@
                     
                     <tr v-for="item in movimentos" :key="item">
                       <td>{{ item.id }}</td>
-                      <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td>
-                      <td>{{ item.tipo_documento.numero }} - {{ item.tipo_documento.designacao }}</td>
-                      <td class="text-info"><strong>{{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
-                      <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
+                      <!-- <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td> -->
                       <td>{{ item.data_lancamento }}</td>
                       <td>{{ item.exercicio.designacao }}</td>
-                      <td>{{ item.criador.name }}</td>
+                      <td>{{ item.periodo.designacao }}</td>
+                      <td>{{ item.descricao }}</td>
+                      <td class="text-info"><strong>{{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
+                      <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
                       <td>
                         <div class="float-right">
                           <a :href="`/movimentos/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>

@@ -34,20 +34,10 @@ class ContaController extends Controller
                 $query->orWhere('numero', 'like', "%".$value."%");
             }); 
         })
-        // ->when($request->order_by, function($query, $value){
-        //     if($value == "conta"){
-        //         $query->orderBy('conta_id', 'asc');
-        //     }else if($value == "numero"){
-        //         $query->orderBy('numero', 'asc');
-        //     }else if($value == "designacao"){
-        //         $query->orderBy('designacao', 'asc');
-        //     }
-        // })
         ->with(['empresa', 'conta', 'classe'])->where('empresa_id', $this->empresaLogada())
         // ->orderBy('numero', 'asc')
         ->get();
         
-               
         return Inertia::render('Contas/Index', $data);
     }
 
@@ -56,7 +46,6 @@ class ContaController extends Controller
         // Exibe o formulário para criar um novo post
         $data['classes'] = Classe::select('id', 'designacao As d', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->get();
         $data['contas'] = Conta::select('id', 'designacao As d', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->get();
-
        
         return Inertia::render('Contas/Create', $data);
     }
