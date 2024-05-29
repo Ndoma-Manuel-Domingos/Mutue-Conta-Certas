@@ -15,7 +15,7 @@
                     <div class="card-body">
                         <form @submit.prevent="submit">
                             <h6 class="text-center text-danger pb-3" v-if="form.errors.acesso">Acesso Registro</h6>
-                            
+
                             <div class="col-12 mb-3">
                                 <label for="" class="form-label">Nome</label>
                                 <div class="input-group">
@@ -23,6 +23,21 @@
                                 </div>
                                 <span v-if="form.errors.name" class="login-box-msg text-danger" >{{ form.errors.name }}</span>
                             </div>
+                                                        
+                            <!-- <div class="col-12 mb-3">
+                                <label for="" class="form-label">Tipo Empresa</label>
+                                <div class="input-group">
+                                    <Select2
+                                        v-model="form.tipo_empresa"
+                                        id="estado"
+                                        class="col-12 col-md-12"
+                                        :options="tipo_clientes"
+                                        :settings="{ width: '100%' }"
+                                        @select="getTipoCliente($event)"
+                                    />
+                                </div>
+                                <span v-if="form.errors.tipo_empresa" class="login-box-msg text-danger" >{{ form.errors.tipo_empresa }}</span>
+                            </div> -->
                             
                             <div class="col-12 mb-3">
                                 <label for="" class="form-label">NIF</label>
@@ -58,6 +73,8 @@
                                 </div>
                                 <span v-if="form.errors.r_password" class="login-box-msg text-danger" >{{ form.errors.r_password }}</span>
                             </div>
+                            
+                            
 
                             <div class="col-12">
                                 <div class="row mt-5">
@@ -83,37 +100,65 @@
     import AuthLayouts from "./Layouts/AuthLayouts.vue";
     export default {
         layout: AuthLayouts,
-    };
-</script>
-
-<script setup>
-    import { useForm } from "@inertiajs/inertia-vue3";
-    import { getCurrentInstance } from 'vue'
-
-    const form = useForm({
-        email: "",
-        name: "",
-        nif: "",
-        password: "",
-        r_password: "",
-    })
-
-    const internalInstance = getCurrentInstance();
-
-    const submit = () => {
-        form.post(route("mc.register"), {
-            onBefore: () => {
-                internalInstance.appContext.config.globalProperties.$Progress.start();
-            },
-            onSuccess: () => {
-                internalInstance.appContext.config.globalProperties.$Progress.finish();
-                location.reload();
-            },
-            onError: () => {
-                internalInstance.appContext.config.globalProperties.$Progress.fail();
+        
+        data() {
+            return {
+                tipo_clientes: [
+                    { id: "singular", text: "Singular" },
+                    { id: "juridica", text: "Jurídica" },
+                ],
+                
+                form: this.$inertia.form({
+                    email: "",
+                    name: "",
+                    // tipo_empresa: "",
+                    nif: "",
+                    password: "",
+                    r_password: "",
+                })
             }
-        })
-    }
+        },
+        
+        methods: {
+            getTipoCliente() {
+                if(this.form.tipo_empresa == "singular"){
+                    alert("Empresa Singular")
+                }
+                if(this.form.tipo_empresa == "juridica"){
+                    alert("Empresa Juridica")
+                }
+            },
+            
+            submit(){
+                this.$Progress.start();
+                
+                this.form.post(route("mc.register"), {
+                    preverseScroll: true,
+                    onSuccess: () => {
+                      this.form.reset();
+                      this.$Progress.finish();
+            
+                      Swal.fire({
+                        title: "Bom Trabalho",
+                        text: "Conta Criada com sucesso",
+                        icon: "success",
+                        confirmButtonColor: "#3d5476",
+                        confirmButtonText: "Ok",
+                        onClose: () => {},
+                      });
+                      
+                      location.reload();
+                    },
+                    onError: (errors) => {
+                      console.log(errors);
+                      this.$Progress.fail();
+                    },
+                });
+         
+            }
+        }
+    };
+    
 </script>
 
 <style>

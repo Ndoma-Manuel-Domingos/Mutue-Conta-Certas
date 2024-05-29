@@ -230,7 +230,6 @@ export default {
             showConfirmButton: false,
             timer: 4000,
           });
-          
           // window.location.reload();
           // console.log("Resposta da requisição POST:", response.data);
         })

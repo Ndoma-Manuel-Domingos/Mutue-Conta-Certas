@@ -29,26 +29,13 @@ class MovimentoController extends Controller
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
-
-        $data['movimentos'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])
+            
+        $data['movimentos'] = Movimento::with(['exercicio', 'periodo' , 'criador'])
         ->whereHas('diario', function($query) use($request){
             $query->when($request->tipo_diario, function($query, $value){
                 $query->where('designacao', 'like', "%".$value."%");
                 $query->orWhere('numero', $value);
             });
-        })
-        ->when($request->order_by, function($query, $value){
-            if($value == "numero"){
-                $query->orderBy('id', 'asc');
-            }else if($value == "diario"){
-                $query->whereHas('diario', function($query){
-                    $query->orderBy('numero', 'asc');
-                });
-            }else if($value == "documento"){
-                $query->whereHas('tipo_documento', function($query){
-                    $query->orderBy('numero', 'asc');
-                });
-            }
         })
         ->whereHas('tipo_documento', function($query) use($request){
             $query->when($request->tipo_documento, function($query, $value){

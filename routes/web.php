@@ -35,6 +35,7 @@ use App\Http\Controllers\{
     UtilizadorController,
     CentroDeCustoController,
     ImobilizadosController,
+    LicencaController,
     OperadorController,
     TabelaAmortizacaoController,
     TabelaAmortizacaoItemsController,
@@ -61,6 +62,8 @@ Route::get('/criar-conta', [AuthController::class, 'register'])->middleware('gue
 Route::post('/criar-conta', [AuthController::class, 'register_store'])->name('mc.register');
 
 Route::group(["middleware" => "auth"], function () {
+
+    Route::get('/licencas', [LicencaController::class, 'licencas']);
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('mf.logout');
     Route::resource('classes', ClasseController::class);
@@ -156,6 +159,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('municipio', MunicipioController::class);
     Route::resource('provincia', ProvinciaController::class);
     Route::resource('comuna', ComunaController::class);
+    Route::resource('licenca', LicencaController::class);
 
 
     // Exportar Excell

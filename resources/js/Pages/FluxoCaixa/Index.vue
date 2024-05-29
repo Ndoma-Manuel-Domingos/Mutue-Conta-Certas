@@ -100,28 +100,26 @@
           <div class="col-12 col-md-12">
             <div class="card">
               <div class="card-header">
-                <!-- <h3 class="card-title"> -->
-                  <span class="float-left text-primary h5" v-if="resultado.debito > resultado.credito">SALDO FINAL: {{ formatarValorMonetario(resultado.debito - resultado.credito) }}</span>
-                  <span class="float-left text-danger h5" v-else-if="resultado.credito > resultado.debito">SALDO FINAL: {{ formatarValorMonetario(resultado.credito - resultado.debito) }}</span>
-                  <span class="float-left text-danger h5" v-else>SALDO FINAL: {{ formatarValorMonetario(0) }}</span>
-                  
-                  <a class="btn btn-sm float-right btn-danger mx-1" @click="imprimirPDF()">
-                    <i class="fas fa-file-pdf"></i> Imprimir
-                  </a>
-                  <a
-                    href="/fluxos-caixas/create"
-                    class="btn btn-sm btn-info mx-1 float-right"
-                  >
-                    <i class="fas fa-plus"></i> FLUXO DE CAIXA</a
-                  >
-                  
-                  <a
-                    href="/demonstracao-fluxo-caixa"
-                    class="btn btn-sm btn-info mx-1 float-right"
-                  >
-                    <i class="fas fa-plus"></i> DEMOSTRAÇÃO DE FLUXO DE CAIXA</a
-                  >
-                <!-- </h3> -->
+                <span class="float-left text-primary h5" v-if="resultado.debito > resultado.credito">SALDO FINAL: {{ formatarValorMonetario(resultado.debito - resultado.credito) }}</span>
+                <span class="float-left text-danger h5" v-else-if="resultado.credito > resultado.debito">SALDO FINAL: {{ formatarValorMonetario(resultado.credito - resultado.debito) }}</span>
+                <span class="float-left text-danger h5" v-else>SALDO FINAL: {{ formatarValorMonetario(0) }}</span>
+                
+                <a class="btn btn-sm float-right btn-danger mx-1" @click="imprimirPDF()">
+                  <i class="fas fa-file-pdf"></i> Imprimir
+                </a>
+                <a
+                  href="/fluxos-caixas/create"
+                  class="btn btn-sm btn-info mx-1 float-right"
+                >
+                  <i class="fas fa-plus"></i> FLUXO DE CAIXA</a
+                >
+                
+                <a
+                  href="/demonstracao-fluxo-caixa"
+                  class="btn btn-sm btn-info mx-1 float-right"
+                >
+                  <i class="fas fa-plus"></i> DEMOSTRAÇÃO DE FLUXO DE CAIXA</a
+                >
               </div>
               <div class="card-body">
                 <table
@@ -155,17 +153,12 @@
                   <tbody>
                     <tr v-for="item in movimentos" :key="item">
                       <td>{{ item.lancamento_atual ?? "" }}</td>
-                      <td>{{ item.diario.designacao ?? "" }}</td>
+                      <td>{{ item.descricao ?? "" }}</td>
 
-                      <td class="text-right">
-                        {{ item.exercicio.designacao ?? "" }}
-                      </td>
-                      <td class="text-right">
-                        {{ item.periodo.designacao ?? "" }}
-                      </td>
-                      <td class="text-right">
-                        {{ item.data_lancamento ?? '' }}
-                      </td>
+                      <td class="text-right"> {{ item.exercicio.designacao ?? "" }} </td>
+                      <td class="text-right"> {{ item.periodo.designacao ?? "" }} </td>
+                      <td class="text-right"> {{ item.data_lancamento ?? '' }} </td>
+                      
                       <td class="text-right text-primary">{{ item.debito == 0 ? "-" : formatarValorMonetario(item.debito) }}</td>
                       <td class="text-right text-danger">{{ item.credito == 0 ? "-" : formatarValorMonetario(item.credito) }}</td>
                       
@@ -190,7 +183,6 @@
                             class="btn btn-sm btn-danger mx-2" target="_blink"
                             ><i class="fas fa-file-pdf"></i> Imprimir</a
                           >
-                          
                         </div>
                       </td>
                     </tr>

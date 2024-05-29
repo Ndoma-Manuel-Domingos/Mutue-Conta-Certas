@@ -23,12 +23,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login-api', [ApiController::class, 'loginAPI']);
 
 Route::group(["middleware" => "auth:sanctum"], function () {
-    Route::post('/criar-subconta', [ApiController::class, 'criar_subconta']);
-    Route::get('/listar-subconta', [ApiController::class, 'get_subconta']);
-    Route::get('/listar-contas', [ApiController::class, 'get_conta']);
     Route::put('/actualizar-subconta/{id}', [ApiController::class, 'update_subconta']);
     
-    Route::post('/criar-debito', [ApiController::class, 'criar_debito']);
     Route::post('/criar-credito', [ApiController::class, 'criar_credito']);
-    Route::get('/listar-movimentos', [ApiController::class, 'lista_movimentos']);
 });
+
+Route::post('/criar-debito', [ApiController::class, 'criar_debito']);
+Route::post('/criar-subconta', [ApiController::class, 'criar_subconta']);
+Route::get('/listar-subconta', [ApiController::class, 'get_subconta']);
+Route::get('/editar-subconta/{id}', [ApiController::class, 'edit_subconta']);
+Route::get('/recuperar-subconta-numero', [ApiController::class, 'get_subconta_by']);
+Route::put('/update-subconta/{id}', [ApiController::class, 'update_subconta']);
+Route::get('/listar-contas', [ApiController::class, 'get_conta']);
+Route::get('/listar-movimentos', [ApiController::class, 'lista_movimentos']);
+Route::get('/listar-movimento-por-id/{id}', [ApiController::class, 'lista_movimentos_by_id']);
+    

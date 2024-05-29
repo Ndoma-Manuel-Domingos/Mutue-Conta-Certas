@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Licenca extends Model
 {
     use HasFactory;
+
+    protected $table = "licenca";
+
+    protected $fillable = [
+        'titulo',
+        'modulos',
+        'designacao',
+    ];
 }
