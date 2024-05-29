@@ -6,6 +6,7 @@ use App\Models\Empresa;
 use App\Models\User;
 use App\Models\UserEmpresa;
 use App\Models\Licenca;
+use App\Models\Modulo;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
@@ -17,7 +18,7 @@ class LicencaController extends Controller
 {
     //
     public function index(){
-        $data['licenca'] = Licenca::get();
+        $data['licenca'] = Licenca::with('modulos')->get();
 
         return Inertia::render('Licenca/Index', $data);
     }
@@ -25,14 +26,17 @@ class LicencaController extends Controller
     public function create(){
 
         $data['licenca'] = Licenca::get();
+        $data['modulos'] = Modulo::select('id', 'designacao As text')->get();
+
         return Inertia::render('Licenca/Create', $data);
     }
 
     public function store(Request $request){
+
         try {
             $data = Licenca::create([
                 'titulo' => $request->titulo,
-                'modulos' => $request->modulo,
+                'modulo_id' => $request->modulo_id,
                 'designacao' => $request->designacao,
             ]);
             return response()->json(['message' => "Dados salvos com sucesso!"], 200);
@@ -44,7 +48,8 @@ class LicencaController extends Controller
 
     public function edit($id){
 
-        $data['licenca'] = Licenca::where('id', $id)->first();
+        $data['licenca'] = Licenca::with('modulos')->where('id', $id)->first();
+        $data['modulos'] = Modulo::select('id', 'designacao As text')->get();
 
         return Inertia::render('Licenca/Edit', $data);
     }
@@ -55,7 +60,7 @@ class LicencaController extends Controller
             $licenca = Licenca::findOrFail($id);
 
             $licenca->designacao = $request->designacao;
-            $licenca->modulos = $request->modulos;
+            $licenca->modulo_id = $request->modulo_id;
             $licenca->titulo = $request->titulo;
             $licenca->update();
             return response()->json(['message' => "Dados salvos com sucesso!"], 200);

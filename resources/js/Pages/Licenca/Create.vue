@@ -28,18 +28,25 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6 mb-4">
                                             <label for="numero" class="form-label">Título</label>
-                                            <input type="text" id="numero" v-model="form.titulo"
-                                                class="form-control">
+                                            <input type="text" id="numero" v-model="form.titulo" class="form-control">
                                             <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{
                             form.errors.classe_id }}</span>
                                         </div>
 
-                                        <div class="col-12 col-md-6 mb-4">
+                                        <!-- <div class="col-12 col-md-6 mb-4">
                                             <label for="numero" class="form-label">Módulos</label>
                                             <input type="text" id="numero" v-model="form.modulos"
                                                 class="form-control">
                                             <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{
                             form.errors.classe_id }}</span>
+                                        </div> -->
+
+                                        <div class="col-12 col-md-6 mb-4">
+                                            <label for="pais_id" class="form-label">Módulos</label>
+                                            <Select2 v-model="form.modulo_id" id="modulo_id" class="col-12 col-md-12"
+                                                :options="modulos" :settings="{ width: '100%' }" />
+                                            <span class="text-danger" v-if="form.errors && form.errors.modulo">{{
+                            form.errors.pais_id }}</span>
                                         </div>
 
                                         <div class="col-12 col-md-6 mb-4">
@@ -47,7 +54,7 @@
                                             <input type="text" id="numero" v-model="form.designacao"
                                                 class="form-control">
                                             <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{
-                            form.errors.classe_id }}</span>
+                                                form.errors.classe_id }}</span>
                                         </div>
 
                                     </div>
@@ -70,8 +77,7 @@
 <script>
 export default {
     props: [
-        "classes",
-        "municipio",
+        "modulos",
     ],
     computed: {
         user() {
@@ -91,7 +97,7 @@ export default {
 
             form: {
                 titulo: "",
-                modulos: "",
+                modulo_id: "",
                 designacao: "",
             },
         };

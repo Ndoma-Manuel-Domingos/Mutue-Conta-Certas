@@ -13,7 +13,12 @@ class Licenca extends Model
 
     protected $fillable = [
         'titulo',
-        'modulos',
+        'modulo_id',
         'designacao',
     ];
+
+    public function modulos()
+    {
+        return $this->belongsTo(modulo::class, 'modulo_id', 'id');
+    }
 }

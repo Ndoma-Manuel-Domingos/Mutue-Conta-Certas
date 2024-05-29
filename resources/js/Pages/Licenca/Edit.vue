@@ -33,11 +33,19 @@
                             form.errors.classe_id }}</span>
                                         </div>
 
-                                        <div class="col-12 col-md-6 mb-4">
+                                        <!-- <div class="col-12 col-md-6 mb-4">
                                             <label for="numero" class="form-label">Módulos</label>
                                             <input type="text" id="numero" v-model="form.modulos" class="form-control">
                                             <span class="text-danger" v-if="form.errors && form.errors.classe_id">{{
                             form.errors.classe_id }}</span>
+                                        </div> -->
+
+                                        <div class="col-12 col-md-6 mb-4">
+                                            <label for="pais_id" class="form-label">Módulos</label>
+                                            <Select2 v-model="form.modulo_id" id="modulo_id" class="col-12 col-md-12"
+                                                :options="modulos" :settings="{ width: '100%' }" />
+                                            <span class="text-danger" v-if="form.errors && form.errors.modulo">{{
+                            form.errors.pais_id }}</span>
                                         </div>
 
                                         <div class="col-12 col-md-6 mb-4">
@@ -67,7 +75,7 @@
 
 <script>
 export default {
-    props: ["licenca"],
+    props: ["licenca", "modulos"],
     computed: {
         user() {
             return this.$page.props.auth.user;
@@ -86,7 +94,7 @@ export default {
             form: {
                 designacao: this.licenca.designacao ?? "",
                 titulo: this.licenca.titulo ?? "",
-                modulos: this.licenca.modulos ?? "",
+                modulo_id: this.licenca.modulo_id ?? "",
                 itemId: this.licenca.id ?? "",
             },
         };

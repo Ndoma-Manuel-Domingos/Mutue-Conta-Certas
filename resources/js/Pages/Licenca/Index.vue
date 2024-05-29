@@ -49,7 +49,7 @@
                                                 <td>#</td>
                                                 <td>{{ item.id }}</td>
                                                 <td>{{ item.titulo }}</td>
-                                                <td>{{ item.modulos }}</td>
+                                                <td>{{ item.modulos.designacao }}</td>
                                                 <td>{{ item.designacao }}</td>
                                                 <td>
                                                     <div class="float-right">
