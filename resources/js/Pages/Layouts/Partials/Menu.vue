@@ -111,7 +111,7 @@
           </li>
         </ul>
       </li>
-      
+
       <li class="nav-item">
         <a
           href="#"
@@ -137,7 +137,7 @@
               <p>Imobilizados</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="MAPA DE AMORTIZAÇÃO">
             <Link
               href="/mapa-amortizacoes"
@@ -166,7 +166,7 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
-       
+
           <li class="nav-item" title="DIÁRIOS">
             <Link
               href="/diarios"
@@ -205,7 +205,7 @@
               <p>Movimentos</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="Fluxo de Caixa">
             <Link
               href="/fluxos-caixas"
@@ -218,7 +218,7 @@
               <p>Fluxo de Caixa</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="Demonstração de Fluxo de Caixa">
             <Link
               href="/demonstracao-fluxo-caixa"
@@ -326,7 +326,7 @@
               <p>Balancete</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="Extrato de contas">
             <Link
               href="/extratos-contas"
@@ -339,7 +339,7 @@
               <p>Extrato de Conta</p>
             </Link>
           </li>
-        
+
         </ul>
       </li>
 
@@ -356,7 +356,7 @@
           </p>
         </a>
         <ul class="nav nav-treeview">
-        
+
           <li class="nav-item" title="CATEGORIAS DE IMOBILIZADOS">
             <Link
               href="/categorias-imobilizados"
@@ -369,7 +369,7 @@
               <p>Categorias de Imobilizados</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="TABELA DE AMORITIZAÇÃO">
             <Link
               href="/tabela-amortizacoes"
@@ -382,7 +382,7 @@
               <p>Tabela Amortização</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="TABELA DE ITEMS DE AMORITIZAÇÃO">
             <Link
               href="/tabela-amortizacoes-items"
@@ -395,7 +395,33 @@
               <p>Tabela Amortização Itens</p>
             </Link>
           </li>
-          
+
+          <li class="nav-item" title="Licença">
+            <Link
+              href="/licenca"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Licenca/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Licenças</p>
+            </Link>
+          </li>
+
+          <li class="nav-item" title="Licença">
+            <Link
+              href="/modulo"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Modulo/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Módulos</p>
+            </Link>
+          </li>
+
           <li class="nav-item" title="TIPOS DE CRÉDITOS">
             <Link
               href="/tipos-creditos"
@@ -408,9 +434,9 @@
               <p>Tipos de Créditos</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="CONTRAPARTIDAS">
-            
+
             <Link
               href="/contrapartidas"
               class="nav-link"
@@ -422,7 +448,7 @@
               <p>Contrapartidas</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="CENTRO DE CUSTO">
             <Link
               href="/centro_de_custo"
@@ -435,7 +461,7 @@
               <p>Centro de Custos</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="TIPOS DE MOVIMENTOS">
             <Link
               href="/tipos-movimentos"
@@ -448,7 +474,7 @@
               <p>Tipos de Movimentos</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="DOCUMENTOS">
             <Link
               href="/documentos"
@@ -461,7 +487,7 @@
               <p>Documentos</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="TIPOS DE PROVEITOS">
             <Link
               href="/tipos-proveitos"
@@ -474,7 +500,7 @@
               <p>Tipos de Proveitos</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="REGIME DE EMPRESAS">
             <Link
               href="/regime-empresa"
@@ -487,7 +513,7 @@
               <p>Regime de Empresa</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="TIPOS DE EMPRESAS">
             <Link
               href="/tipos-empresas"
@@ -500,7 +526,7 @@
               <p>Tipos de Empresas</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="GRUPOS DE EMPRESAS">
             <Link
               href="/grupos-empresas"
@@ -525,8 +551,8 @@
               <i class="far fa-circle nav-icon"></i>
               <p>Moedas de Operação</p>
             </Link>
-          </li> 
-          
+          </li>
+
           <li class="nav-item" title="PAISES">
             <Link
               href="/paises"
@@ -565,7 +591,7 @@
               <p>Municípios</p>
             </Link>
           </li>
-          
+
           <li class="nav-item" title="COMUNAS">
             <Link
               href="/comuna"
@@ -580,7 +606,7 @@
           </li>
         </ul>
       </li>
-      
+
       <li class="nav-item">
         <a
           href="#"
@@ -609,7 +635,7 @@
         </ul>
       </li>
 
-      
+
     </ul>
   </nav>
 </template>
