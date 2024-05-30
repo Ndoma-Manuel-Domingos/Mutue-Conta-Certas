@@ -409,6 +409,19 @@
             </Link>
           </li>
 
+          <li class="nav-item" title="Licença">
+            <Link
+              href="/modulo"
+              class="nav-link"
+              :class="{
+                active: $page.component == 'Modulo/Index',
+              }"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Módulos</p>
+            </Link>
+          </li>
+
           <li class="nav-item" title="TIPOS DE CRÉDITOS">
             <Link
               href="/tipos-creditos"

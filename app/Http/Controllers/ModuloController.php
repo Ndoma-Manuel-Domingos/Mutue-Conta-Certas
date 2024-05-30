@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use App\Models\Modulo;
 
 class ModuloController extends Controller
 {
@@ -13,7 +15,9 @@ class ModuloController extends Controller
      */
     public function index()
     {
-        //
+        $data['modulos'] = Modulo::get();
+
+        return Inertia::render('Modulo/Index', $data);
     }
 
     /**
@@ -23,7 +27,7 @@ class ModuloController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Modulo/Create');
     }
 
     /**
@@ -34,7 +38,15 @@ class ModuloController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        try {
+            $data = Modulo::create([
+                'designacao' => $request->designacao,
+            ]);
+            return response()->json(['message' => "Dados salvos com sucesso!"], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 201);
+        }
     }
 
     /**
@@ -56,7 +68,9 @@ class ModuloController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data['modulos'] = Modulo::where('id', $id)->first();
+
+        return Inertia::render('Modulo/Edit', $data);
     }
 
     /**
@@ -68,7 +82,15 @@ class ModuloController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $modulo = Modulo::findOrFail($id);
+
+            $modulo->designacao = $request->designacao;
+            $modulo->update();
+            return response()->json(['message' => "Dados salvos com sucesso!"], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 201);
+        }
     }
 
     /**

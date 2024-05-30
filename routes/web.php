@@ -36,6 +36,7 @@ use App\Http\Controllers\{
     CentroDeCustoController,
     ImobilizadosController,
     LicencaController,
+    ModuloController,
     OperadorController,
     TabelaAmortizacaoController,
     TabelaAmortizacaoItemsController,
@@ -160,6 +161,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('provincia', ProvinciaController::class);
     Route::resource('comuna', ComunaController::class);
     Route::resource('licenca', LicencaController::class);
+    Route::resource('modulo', ModuloController::class);
 
 
     // Exportar Excell
