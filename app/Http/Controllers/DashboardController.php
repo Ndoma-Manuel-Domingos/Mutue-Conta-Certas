@@ -31,10 +31,16 @@ class DashboardController extends Controller
         ->limit(5)
         ->get();
         
-        // ->withSum('quantidade', 'quantidade')
-        // ->having('quantidade_sum_quantidade', '>=', 20) 
        
         return Inertia::render('Dashboard', $data);
+    }
+    
+    public function dashboard_admin(Request $request)
+    {
+    
+        $data['movimentos'] = [];
+               
+        return Inertia::render('DashboardAdmin', $data);
     }
 
 

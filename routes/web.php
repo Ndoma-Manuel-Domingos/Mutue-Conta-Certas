@@ -187,6 +187,7 @@ Route::group(["middleware" => "auth"], function () {
 
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');
+    Route::get('/dashboard-licenca', [DashboardController::class, 'dashboard_admin'])->name('mf.dashboard-admin');
 
 
 });

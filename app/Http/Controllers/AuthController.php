@@ -30,17 +30,17 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         
         if (Auth::attempt($credentials, $request->filled('remember'))) {
-            // Autenticação bem-sucedida
-            
             $user = User::with(['empresas'])->findOrFail(Auth::user()->id);
-            
-            if($user->empresas && count($user->empresas) > 0 ){
-                // return redirect()->intended('/escolher-empresa-operar');
-                return redirect()->intended(RouteServiceProvider::HOME_ESCOLHER_EMPRESAS);
-            }else{
-                return redirect()->intended(RouteServiceProvider::HOME);
+            if ($user->level == 1) {
+                if($user->empresas && count($user->empresas) > 0 ){
+                    // return redirect()->intended('/escolher-empresa-operar');
+                    return redirect()->intended(RouteServiceProvider::HOME_ESCOLHER_EMPRESAS);
+                }else{
+                    return redirect()->intended(RouteServiceProvider::HOME);
+                }
+            } else if($user->level == 2) {
+                return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
             }
-            
         }
  
         return back()->withErrors([

@@ -1,5 +1,5 @@
 <template>
-  <MainLayouts>
+  <MainLayoutsAdmin>
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -37,26 +37,39 @@
                       </thead>
                       
                       <tbody>
-                        <tr v-for="item in movimentos" :key="item">
-                          <td>{{ item.id }}</td>
-                          <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td>
-                          <td>{{ item.data_lancamento }}</td>
-                          <td>{{ item.exercicio.designacao }}</td>
-                          <td>{{ item.criador.name }}</td>
-                          <td>{{ item.tipo_documento.numero }} - {{ item.tipo_documento.designacao }}</td>
-                          <td class="text-info text-right"><strong>{{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
-                          <td class="text-danger text-right"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
-                          <!-- <td>
-                            <div class="float-right">
-                              <a :href="`/movimentos/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>
-                              <a :href="`/movimentos/${item.id}`" class="btn btn-sm btn-info mx-1"><i class="fas fa-info-circle"></i> Detalhe</a>
-                            </div>
-                          </td> -->
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td> 
+                          <td></td>
+                          <td class="text-right"><strong>Total Debito: 100.000,00</strong></td>
+                          <td class="text-right"><strong>Total Credito: 100.000,00</strong></td>
+                          <td></td>
                         </tr>
-                        
                       </tbody>
                       
                       <tfoot>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td> 
+                          <td></td>
+                          <td class="text-right"><strong>Total Debito: 100.000,00</strong></td>
+                          <td class="text-right"><strong>Total Credito: 100.000,00</strong></td>
+                          <td></td>
+                        </tr>
+                        
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td class="text-right"><strong>Total Saldo: 100.000,00</strong></td>
+                        </tr>
                       </tfoot>
                     </table>
                   </div>
@@ -69,10 +82,11 @@
         </div>
       </div>
     </div>
-  </MainLayouts>
+  </MainLayoutsAdmin>
 </template>
 
 <script>
+import MainLayoutsAdmin from './Layouts/MainLayoutsAdmin.vue'
 export default {
   props: ["movimentos"],
   computed: {
@@ -86,6 +100,7 @@ export default {
       return this.$page.props.sessions.exercicio_sessao;
     },
   },
+	components: { MainLayoutsAdmin },
   data() {
     return {};
   },
