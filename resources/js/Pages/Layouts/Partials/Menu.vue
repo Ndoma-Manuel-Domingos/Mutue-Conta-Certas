@@ -396,32 +396,6 @@
             </Link>
           </li>
 
-          <li class="nav-item" title="Licença">
-            <Link
-              href="/licenca"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Licenca/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Licenças</p>
-            </Link>
-          </li>
-
-          <li class="nav-item" title="Licença">
-            <Link
-              href="/modulo"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Modulo/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Módulos</p>
-            </Link>
-          </li>
-
           <li class="nav-item" title="TIPOS DE CRÉDITOS">
             <Link
               href="/tipos-creditos"
@@ -501,109 +475,7 @@
             </Link>
           </li>
 
-          <li class="nav-item" title="REGIME DE EMPRESAS">
-            <Link
-              href="/regime-empresa"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Regime/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Regime de Empresa</p>
-            </Link>
-          </li>
-
-          <li class="nav-item" title="TIPOS DE EMPRESAS">
-            <Link
-              href="/tipos-empresas"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'TipoEmpresas/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Tipos de Empresas</p>
-            </Link>
-          </li>
-
-          <li class="nav-item" title="GRUPOS DE EMPRESAS">
-            <Link
-              href="/grupos-empresas"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'GrupoEmpresas/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Grupos de Empresas</p>
-            </Link>
-          </li>
-
-          <li class="nav-item" title="MOEDAS">
-            <Link
-              href="/moeda"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Moeda/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Moedas de Operação</p>
-            </Link>
-          </li>
-
-          <li class="nav-item" title="PAISES">
-            <Link
-              href="/paises"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Paises/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Países</p>
-            </Link>
-          </li>
-
-          <li class="nav-item" title="PROVINCIA">
-            <Link
-              href="/provincia"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Provincia/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Provincias</p>
-            </Link>
-          </li>
-
-          <li class="nav-item" title="MUNICIPIO">
-            <Link
-              href="/municipio"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Municipio/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Municípios</p>
-            </Link>
-          </li>
-
-          <li class="nav-item" title="COMUNAS">
-            <Link
-              href="/comuna"
-              class="nav-link"
-              :class="{
-                active: $page.component == 'Comuna/Index',
-              }"
-            >
-              <i class="far fa-circle nav-icon"></i>
-              <p>Nova Comuna</p>
-            </Link>
-          </li>
+          
         </ul>
       </li>
 

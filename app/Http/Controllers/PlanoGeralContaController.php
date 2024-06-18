@@ -21,17 +21,13 @@ class PlanoGeralContaController extends Controller
 
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
 
-        $data['plano'] = ClasseEmpresa::whereHas('classe', function ($query) use ($request) {
-            $query->when($request->classe_designacao, function ($query, $value) {
-                $query->where('designacao', 'like', "%" . $value . "%");
-                $query->orWhere('numero', 'like', "%" . $value . "%");
-            });
+        $data['plano'] = ClasseEmpresa::whereHas('classe.contas_empresa', function ($query) {
+            $query->where('empresa_id', $this->empresaLogada());
         })
         ->with(['empresa', 'classe.contas_empresa.conta', 'classe.contas_empresa.sub_contas_empresa'])
         ->where('empresa_id', $this->empresaLogada())
         ->get();
 
-        // dd($data['plano']);
 
         return Inertia::render('PlanoGeralConta/Index', $data);
     }

@@ -309,34 +309,6 @@ class FluxoCaixaController extends Controller
             $conta_salario = Conta::where('numero', '72')->first();
             $subconta_salario = SubConta::where('tipo', 'M')->where('numero', 'like', '72.2.'. "%")->orWhere('numero', 'like', '72.1.'. "%")->where('conta_id', $conta_salario->id)->pluck('id');
 
-
-            // $data['item_movimentos'] = MovimentoItem::with(['subconta.conta', 'empresa', 'documento', 'tipo_movimento', 'movimento'])
-            //     ->whereHas('movimento', function($query) use ($request) {
-            //         $query->when($request->exercicio_id, function($query, $value) {
-            //             $query->where('exercicio_id', $value);
-            //         });
-            //         $query->when($request->periodo_id, function($query, $value) {
-            //             $query->where('periodo_id', $value);
-            //         });
-            //         $query->when($request->data_inicio, function($query, $value) {
-            //             $query->whereDate('data_lancamento', '>=', $value);
-            //         });
-            //         $query->when($request->data_final, function($query, $value) {
-            //             $query->whereDate('data_lancamento', '<=', $value);
-            //         });
-            //     })
-            //     ->where('origem', 'fluxocaixa')
-            //     ->whereIn('subconta_id', function($query) use ($subconta_custo_operacionais, $subconta_salario) {
-            //         $query->select('id')
-            //             ->from('subcontas')
-            //             ->where('tipo', 'M')
-            //             ->where(function ($query) use ($subconta_custo_operacionais, $subconta_salario) {
-            //                 $query->whereIn('numero', $subconta_custo_operacionais)
-            //                       ->orWhereIn('numero', $subconta_salario);
-            //             });
-            //     })
-            //     ->get();
-
             $data['item_movimentos'] = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])
                 ->whereHas('movimento', function($query) use($request){
                     $query->when($request->exercicio_id, function($query, $value){
@@ -356,51 +328,6 @@ class FluxoCaixaController extends Controller
                 ->where('origem', 'fluxocaixa')
                 ->whereIn('subconta_id', $subconta_custo_operacionais)
                 ->get();
-
-            // $dinheiro_subconta_custo_operacionais = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])
-            // ->whereHas('movimento', function($query) use($request){
-            //     $query->when($request->exercicio_id, function($query, $value){
-            //         $query->where('exercicio_id', $value);
-            //     });
-            //     $query->when($request->periodo_id, function($query, $value){
-            //         $query->where('periodo_id', $value);
-            //     });
-
-            //     $query->when($request->data_inicio, function($query, $value){
-            //         $query->whereDate('data_lancamento',  ">=" ,$value);
-            //     });
-            //     $query->when($request->data_final, function($query, $value){
-            //         $query->whereDate('data_lancamento', "<=" ,$value);
-            //     });
-            // })
-            // ->where('origem', 'fluxocaixa')
-            // ->whereIn('subconta_id', $subconta_custo_operacionais)
-            // ->get();
-            // ->sum('debito');
-
-            // $dinheiro_subconta_salario = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])
-            // ->whereHas('movimento', function($query) use($request){
-            //     $query->when($request->exercicio_id, function($query, $value){
-            //         $query->where('exercicio_id', $value);
-            //     });
-            //     $query->when($request->periodo_id, function($query, $value){
-            //         $query->where('periodo_id', $value);
-            //     });
-
-            //     $query->when($request->data_inicio, function($query, $value){
-            //         $query->whereDate('data_lancamento',  ">=" ,$value);
-            //     });
-            //     $query->when($request->data_final, function($query, $value){
-            //         $query->whereDate('data_lancamento', "<=" ,$value);
-            //     });
-            // })
-            // ->where('origem', 'fluxocaixa')
-            // ->whereIn('subconta_id', $subconta_salario)
-            // ->get();
-
-            // ->sum('debito');
-
-            // $data['dinheiro_custo'] = $dinheiro_subconta_custo_operacionais + $dinheiro_subconta_salario;
         }
 
         if($request->demonstracao == "jursos"){
@@ -454,7 +381,7 @@ class FluxoCaixaController extends Controller
         // Retorna a lista de posts
         $user = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
-
+    
         $data['fluxos_caixas'] = [];
 
         $conta = Conta::where('numero', '45')->first();
@@ -473,6 +400,7 @@ class FluxoCaixaController extends Controller
             $query->where('subconta_id', $value);
         })
         ->where('origem', 'fluxocaixa')
+        ->where('tipo_instituicao', 'propina')
         ->groupBy('conta_id', 'empresa_id', 'subconta_id', 'origem')
         ->where('empresa_id', $this->empresaLogada())
         ->first();
@@ -483,6 +411,7 @@ class FluxoCaixaController extends Controller
             $query->where('subconta_id', $value);
         })
         ->where('origem', 'fluxocaixa')
+        ->where('tipo_instituicao', 'propina')
         ->where('empresa_id', $this->empresaLogada())
         ->groupBy('conta_id', 'empresa_id', 'subconta_id', 'origem', 'id')
         ->orderBy('id', 'desc')
@@ -496,8 +425,15 @@ class FluxoCaixaController extends Controller
 
         $data_created = date("Y-m-d");
 
-        $data['item_movimentos'] = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])->where('created_at', '>=', Carbon::createFromDate($data_created))->where('apresentar', 'S')->where('origem', 'fluxocaixa')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)
-        ->orderBy('id', 'desc')->get();
+        $data['item_movimentos'] = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])
+            ->where('created_at', '>=', Carbon::createFromDate($data_created))
+            ->where('apresentar', 'S')
+            ->where('origem', 'fluxocaixa')
+            ->where('tipo_instituicao', 'propina')
+            ->where('empresa_id', $this->empresaLogada())
+            ->where('user_id', $user->id)
+            ->orderBy('id', 'desc')->get();
+        
 
         $data['resultados'] = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])->where('created_at', '>=', Carbon::createFromDate($data_created))->where('apresentar', 'S')->where('origem', 'fluxocaixa')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
                 
@@ -545,6 +481,7 @@ class FluxoCaixaController extends Controller
             "valor.required" => "Campo Obrigatório",
             "documento_id.required" => "Campo Obrigatório",
         ]);
+        
 
         $user = User::findOrFail(auth()->user()->id);
 
@@ -554,7 +491,9 @@ class FluxoCaixaController extends Controller
         $documento = Documento::find($request->documento_id);
         $subconta = SubConta::find($request->sub_conta_id);
         $tipo_movimento = TipoMovimento::find($request->tipo_movimento_id);
-
+        $centro_de_custo = CentroDeCusto::find($request->centro_custo);
+     
+        
         $subconta_do_iva = SubConta::where('numero', '34.5.2')->orWhere('numero', '34.5.2.2')->first();
         $subconta_do_iva_debito = SubConta::where('numero', '34.5.3')->orWhere('numero', '34.5.3')->first();
         $taxa_iva = Taxa::find($request->taxa_iva_id);
@@ -586,8 +525,9 @@ class FluxoCaixaController extends Controller
                     'empresa_id' => $this->empresaLogada(),
                     'descricao' => $request->designacao,
                     'requisitante' => $request->requisitante,
-                    'centro_custo' => $request->centro_custo,
+                    'centro_custo' => $centro_de_custo->id ?? 1,
                     'origem' => "fluxocaixa",
+                    'tipo_instituicao' => "propina",
                     'exercicio_id' => $this->exercicioActivo(),
                     'periodo_id' =>  $this->periodoActivo(),
                     'dia_id' => date("d"),
@@ -615,6 +555,7 @@ class FluxoCaixaController extends Controller
                     'tipo_proveito_id' => $tipo_proveito ? $tipo_proveito->id : NULL,
                     'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
                     'taxta_iva_id' => $taxa_iva->id ?? 1,
+                    'tipo_instituicao' => "propina",
                     'apresentar' => 'S',
                     'movimento_id' => $create->id,
                     'user_id' => $user->id,
@@ -642,6 +583,7 @@ class FluxoCaixaController extends Controller
                             'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
                             'taxta_iva_id' => $taxa_iva->id ?? 1,
                             'origem' => 'fluxocaixa',
+                            'tipo_instituicao' => "propina",
                             'movimento_id' => $create->id,
                             'apresentar' => 'N',
                             'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
@@ -671,6 +613,7 @@ class FluxoCaixaController extends Controller
                             'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
                             'taxta_iva_id' => $taxa_iva->id ?? 1,
                             'origem' => 'fluxocaixa',
+                            'tipo_instituicao' => "propina",
                             'movimento_id' => $create->id,
                             'apresentar' => 'N',
                             'conta_id' => $subconta_movimentar ? $subconta_movimentar->conta_id : NULL,
@@ -682,13 +625,14 @@ class FluxoCaixaController extends Controller
                 }
 
             }else if($tipo_movimento->sigla == "C"){
+                
                 // SE ESTIVEMOS A  CRÉDITAR ENTÃO VAMOS DEBITA EM UMA CONTRAPARTIDA
                 $hash = time();
 
                 $contrapartida = Contrapartida::find($request->contrapartida_id);
                 $subconta = SubConta::find($contrapartida->sub_conta_id);
                 $subconta_principal = SubConta::find($request->sub_conta_id);
-
+                
                 $create = Movimento::create([
                     'hash' => $hash,
                     'debito' => 0,
@@ -697,15 +641,16 @@ class FluxoCaixaController extends Controller
                     'empresa_id' => $this->empresaLogada(),
                     'descricao' => $request->designacao,
                     'requisitante' => $request->requisitante,
-                    'centro_custo' => $request->centro_custo,
+                    'centro_custo' => $centro_de_custo->id ?? 1,
                     'origem' => "fluxocaixa",
+                    'tipo_instituicao' => "propina",
                     'exercicio_id' => $this->exercicioActivo(),
                     'periodo_id' =>  $this->periodoActivo(),
                     'dia_id' => date("d"),
                     'data_lancamento' => date("Y-m-d"),
                     'lancamento_atual' => $ultimo_movimento + 1,
-                    'diario_id' => 2, // $request->diario_id,
-                    'tipo_documento_id' => 2, //$request->tipo_documento_id,
+                    'diario_id' => 2, 
+                    'tipo_documento_id' => 2, 
                     'user_id' => $user->id,
                     'created_by' => $user->id,
                 ]);
@@ -726,6 +671,7 @@ class FluxoCaixaController extends Controller
                     'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
                     'taxta_iva_id' => $taxa_iva->id ?? 1,
                     'origem' => 'fluxocaixa',
+                    'tipo_instituicao' => "propina",
                     'movimento_id' => $create->id,
                     'apresentar' => 'S',
                     'user_id' => $user->id,
@@ -750,6 +696,7 @@ class FluxoCaixaController extends Controller
                     'contrapartida_id' => $contrapartida ? $contrapartida->id : NULL,
                     'taxta_iva_id' => $taxa_iva->id ?? 1,
                     'origem' => 'fluxocaixa',
+                    'tipo_instituicao' => "propina",
                     'movimento_id' => $create->id,
                     'apresentar' => 'N',
                     'user_id' => $user->id,

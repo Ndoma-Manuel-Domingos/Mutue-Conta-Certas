@@ -60,6 +60,7 @@
                       <td>
                                             
                         <div class="float-right">
+                          <a :href="`/empresas-duplicar/${item.id}`" class="btn btn-sm btn-info mx-1"><i class="far fa-copy"></i> Duplicar</a>
                           <a :href="`/empresas/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>
                           <a @click="mudar_estado_empresa(item)" class="btn btn-sm btn-info mx-1" v-if="item.estado_empresa_id == 2"><i class="fas fa-check"></i> Activar</a>
                           <a @click="mudar_estado_empresa(item)" class="btn btn-sm btn-danger mx-1" v-else><i class="fas fa-times"></i> Desctivar</a>

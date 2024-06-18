@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ListagemEmpresaExport;
+use App\Models\ClasseEmpresa;
 use App\Models\Comuna;
 use App\Models\ContactoEmpresa;
+use App\Models\ContaEmpresa;
 use App\Models\DocumentoEmpresa;
 use App\Models\Empresa;
 use App\Models\EnderecoEmpresa;
@@ -16,6 +18,7 @@ use App\Models\Municipio;
 use App\Models\Pais;
 use App\Models\Provincia;
 use App\Models\Regime;
+use App\Models\SubConta;
 use App\Models\TipoContactoEmpresa;
 use App\Models\TipoDocumentoEmpresa;
 use App\Models\TipoEmpresa;
@@ -100,7 +103,7 @@ class EmpresaController extends Controller
             ]);
             
             $user_empresa = UserEmpresa::create([
-                'estado' => 1,
+                'estado' => 0,
                 'empresa_id' => $empresa->id,
                 'user_id' => auth()->user()->id,
             ]);
@@ -186,10 +189,8 @@ class EmpresaController extends Controller
             // Retornar uma resposta JSON com o erro
             return response()->json(['message' => 'Erro ao salvar os dados: ' . $e->getMessage()], 500);
         }
-             
         
-        return redirect()->back(); // response()->json(['message' => "Dados salvos com sucesso!"], 200);
-    
+        return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
     
 
@@ -239,7 +240,7 @@ class EmpresaController extends Controller
                        
         return Inertia::render('Empresas/Edit', $data);
     }
-
+    
     public function update(Request $request, $id)
     {        
 
@@ -341,6 +342,164 @@ class EmpresaController extends Controller
         return redirect()->back(); //  return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
     
+    public function duplicar($id)
+    {
+        // Exibe o formulário para editar um post
+        $data['paises'] = Pais::select('id', 'designacao As text')->get();
+        $data['provincias'] = Provincia::select('id', 'designacao As text')->get();
+        $data['municipios'] = Municipio::select('id', 'designacao As text')->get();
+        $data['comunas'] = Comuna::select('id', 'designacao As text')->get();
+        $data['regimes'] = Regime::select('id', 'designacao As text')->get();
+        $data['moedas'] = Moeda::select('id', 'designacao As d', DB::raw('CONCAT(sigla, " - ", designacao) AS text'))->get();
+        $data['tipos_empresas'] = TipoEmpresa::select('id', 'designacao As text')->get();
+        $data['grupos_empresas'] = GrupoEmpresa::select('id', 'designacao As text')->get();
+        
+        $data['empresa'] = Empresa::with(['endereco', 'regime', 'moeda.base', 'moeda.alternativa', 'moeda.cambio'])->findOrFail($id);
+                       
+        return Inertia::render('Empresas/Duplicar', $data);
+    }
+            
+    public function duplicar_update(Request $request, $id)
+    {        
+ 
+        $request->validate([
+            "nome_empresa" => "required",
+            "codigo_empresa" => "required",
+        ], [
+            "nome_empresa.required" => "Campo Obrigatório",
+            "codigo_empresa.required" => "Campo Obrigatório",
+        ]); 
+        
+        try {
+            DB::beginTransaction();
+                   
+            $empresa =  Empresa::findOrFail($id);
+                            
+            $create =  Empresa::create([
+                'nome_empresa' => $request->nome_empresa,
+                'codigo_empresa' => $request->codigo_empresa,
+                'descricao_empresa' => $request->descricao_empresa,
+                'logotipo_da_empresa' => "",
+                'estado_empresa_id' => $request->estado_empresa_id,
+                'regime_empresa_id' => $request->regime_empresa_id,
+                'tipo_empresa_id' => $request->tipo_empresa_id,
+                'grupo_empresa_id' => $request->grupo_empresa_id,
+                'user_id' => auth()->user()->id,
+                'created_by' => auth()->user()->id,
+            ]);
+            
+            UserEmpresa::create([
+                'estado' => 0,
+                'empresa_id' => $create->id,
+                'user_id' => auth()->user()->id,
+            ]);
+                
+            EnderecoEmpresa::create([
+                'rua' => $request->rua,
+                'casa' => $request->casa,
+                'bairro' => $request->bairro,
+                'codigo_postal' => $request->codigo_postal,
+                'pais_id' => $request->pais_id,
+                'provincia_id' => $request->provincia_id,
+                'municipio_id' => $request->municipio_id,
+                'comuna_id' => $request->comuna_id,
+                'empresa_id' => $create->id,
+            ]);
+                
+            MoedaEmpresa::create([
+                'moeda_base_id' => $request->moeda_base_id,
+                'moeda_alternativa_id' => $request->moeda_alternativa_id,
+                'moeda_cambio_id' => $request->moeda_cambio_id,
+                'empresa_id' => $create->id,
+                'created_by' => auth()->user()->id,
+            ]);
+            
+            $contactos_empresa = ContactoEmpresa::where('empresa_id', $empresa->id)->get();
+         
+            if($contactos_empresa){
+                foreach ($contactos_empresa as $contacto) {
+                    ContactoEmpresa::create([
+                        'contacto_empresas' => $contacto->contacto_empresas . time(),
+                        'tipo_contacto_empresa_id' => $contacto->tipo_contacto_empresa_id,
+                        'empresa_id' => $create->id,
+                        'created_by' => auth()->user()->id,
+                    ]);
+                }
+            }
+           
+            $documentos_empresa = DocumentoEmpresa::where('empresa_id', $empresa->id)->get();
+           
+            if($documentos_empresa){
+                foreach ($documentos_empresa as $documento) {
+                    DocumentoEmpresa::create([
+                        'numero_documento_empresa' => $documento->numero_documento_empresa . time(),
+                        'tipo_documento_empresa_id' => $documento->tipo_documento_empresa_id,
+                        'empresa_id' => $create->id,
+                        'created_by' => auth()->user()->id,
+                    ]);
+                }
+            }
+                    
+            $classes = ClasseEmpresa::where('empresa_id', $empresa->id)->get();
+            if($classes){
+                foreach ($classes as $classe) {
+                    ClasseEmpresa::create([
+                        'classe_id' => $classe->classe_id,
+                        'estado' => $classe->estado,
+                        'empresa_id' => $create->id,
+                        'created_by' => auth()->user()->id,
+                        'updated_by' => auth()->user()->id,
+                        'deleted_by' => auth()->user()->id,
+                    ]);
+                            
+                }
+            }        
+                    
+            $contas = ContaEmpresa::where('empresa_id', $empresa->id)->get();
+            if($contas){
+                foreach ($contas as $conta) {
+                    ContaEmpresa::create([
+                        'classe_id' => $conta->classe_id,
+                        'conta_id' => $conta->conta_id,
+                        'numero' => $conta->numero,
+                        'estado' => $conta->estado,
+                        'created_by' => auth()->user()->id,
+                        'empresa_id' => $create->id,
+                    ]);
+                }
+            }
+            
+            $subcontas = SubConta::where('empresa_id', $empresa->id)->get();
+            if($subcontas){
+                foreach ($subcontas as $conta) {
+                    SubConta::create([
+                        'conta_id' => $conta->conta_id,
+                        'designacao' => $conta->designacao,
+                        'descricao' => $conta->designacao,
+                        'numero' => $conta->numero,
+                        'estado' => $conta->estado,
+                        'tipo' => $conta->tipo,
+                        'empresa_id' => $create->id,
+                    ]);
+                }
+            }
+            
+            // Se tudo estiver bem, comitar as alterações no banco de dados
+            DB::commit();
+    
+            return response()->json(['message' => 'Dados salvos com sucesso!'], 200);
+        } catch (\Exception $e) {
+            // Em caso de erro, desfazer as alterações no banco de dados
+            DB::rollback();
+    
+            // Retornar uma resposta JSON com o erro
+            return response()->json(['message' => 'Erro ao salvar os dados: ' . $e->getMessage()], 500);
+        }
+        
+        return response()->json(['message' => "Dados salvos com sucesso!"], 200);
+    }
+    
+
     public function iniciar_sessao($id)
     {
         $empresa = UserEmpresa::where('empresa_id', $id)->where('user_id', Auth::user()->id)->first();

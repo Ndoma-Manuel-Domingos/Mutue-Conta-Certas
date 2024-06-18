@@ -99,6 +99,7 @@ class ApiController extends Controller
                 'diario_id' => 2, // $request->diario_id,
                 'tipo_documento_id' => 2, //$request->tipo_documento_id,
                 'tipo_instituicao' => $request->tipo_instituicao,
+                'instituicao_id' => $request->instituicao_id,
             ]);
             
             // DEBITAR
@@ -121,6 +122,7 @@ class ApiController extends Controller
                 'apresentar' => 'S',
                 'movimento_id' => $create->id,
                 'tipo_instituicao' => $request->tipo_instituicao,
+                'instituicao_id' => $request->instituicao_id,
             ]);
             //  CREDITAR
             MovimentoItem::create([
@@ -142,6 +144,7 @@ class ApiController extends Controller
                 'apresentar' => 'S',
                 'movimento_id' => $create->id,
                 'tipo_instituicao' => $request->tipo_instituicao,
+                'instituicao_id' => $request->instituicao_id,
             ]);
             
             // DEBITAR E CREDITAR
@@ -165,6 +168,7 @@ class ApiController extends Controller
                 'conta_id' => $subconta_cliente ? $subconta_cliente->conta_id : NULL,
                 'movimento_id' => $create->id,
                 'tipo_instituicao' => $request->tipo_instituicao,
+                'instituicao_id' => $request->instituicao_id,
             ]);
             
             // Se todas as operações foram bem-sucedidas, você pode fazer o commit
@@ -265,6 +269,7 @@ class ApiController extends Controller
                     
             $movimentos = Movimento::with(['exercicio', 'periodo' , 'items'])
             ->where('tipo_instituicao', $request->tipo_instituicao)
+            ->where('instituicao_id', $request->instituicao_id)
             ->orderBy('id', $request->order_by ?? 'desc')->get();
      
             // Se todas as operações foram bem-sucedidas, você pode fazer o commit
@@ -305,7 +310,7 @@ class ApiController extends Controller
             DB::beginTransaction();
             // Realizar operações de banco de dados aqui
         
-            $subconta = SubConta::with(['conta'])->where('tipo_instituicao', $request->tipo_aplicacao)->get();
+            $subconta = SubConta::with(['conta'])->where('instituicao_id', $request->instituicao_id)->where('tipo_instituicao', $request->tipo_aplicacao)->get();
     
             // Se todas as operações foram bem-sucedidas, você pode fazer o commit
             DB::commit();

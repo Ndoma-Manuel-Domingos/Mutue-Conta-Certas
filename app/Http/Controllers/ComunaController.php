@@ -23,7 +23,7 @@ class ComunaController extends Controller
         $data['comuna'] = Comuna::with(['municipio'])->get();
         $data['cont_comuna'] = Comuna::count();
 
-        return Inertia::render('Comuna/Index', $data);
+        return Inertia::render('Admin/Comuna/Index', $data);
     }
 
     /**
@@ -34,7 +34,7 @@ class ComunaController extends Controller
     public function create()
     {
         $data['municipio'] = Municipio::select('id', 'designacao As text')->get();
-        return Inertia::render('Comuna/Create', $data);
+        return Inertia::render('Admin/Comuna/Create', $data);
     }
 
     /**
@@ -78,7 +78,7 @@ class ComunaController extends Controller
     {
         $data['comuna'] = Comuna::with(['municipio'])->where('id', $id)->first();
         $data['municipio'] = Municipio::select('id', 'designacao As text')->get();
-        return Inertia::render('Comuna/Edit', $data);
+        return Inertia::render('Admin/Comuna/Edit', $data);
     }
 
     /**

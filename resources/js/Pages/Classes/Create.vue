@@ -115,18 +115,30 @@ export default {
         })
         .catch((error) => {
           
-          // sweetError("Ocorreu um erro ao actualizar Instituição!");
-          this.$Progress.fail();
-          Swal.fire({
-            toast: true,
-            icon: "danger",
-            title: "Correu um erro ao salvar os dados!",
-            animation: false,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 4000
-          })
           
+          this.$Progress.fail();          
+          if (error.response && error.response.status === 404) {
+            Swal.fire({
+              toast: true,
+              icon: "danger",
+              title: error.response.data.message,
+              animation: false,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 4000
+            })
+          } else {
+            Swal.fire({
+              toast: true,
+              icon: "danger",
+              title: 'Ocorreu um erro inesperado.',
+              animation: false,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 4000
+            })
+          }
+
           console.error("Erro ao fazer requisição POST:", error);
         });
     },

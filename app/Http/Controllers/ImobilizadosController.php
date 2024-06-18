@@ -81,10 +81,14 @@ class ImobilizadosController extends Controller
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
+        $data['imobilizados'] = Imobilizado::with(['amortizacao','amortizacao_item','classificacao','exercicio','periodo','empresa'])
+        ->where('empresa_id', $this->empresaLogada())
+        ->get();
+        
         $data['dados_empresa'] = $this->dadosEmpresaLogada();
-   
 
-        $pdf = PDF::loadView('pdf.contas.MapaAmortizacao', $data)->setPaper('a4', 'landscape');
+        $pdf = PDF::loadView('pdf.contas.MapaAmortizacao', $data)
+            ->setPaper('a4', 'landscape');
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('MapaAmortizacao.pdf');
                
@@ -153,32 +157,37 @@ class ImobilizadosController extends Controller
         ]);
         
         $classificacao = ClassificacaoImobilizado::find($request->classificacao_id);
-    
-        $digits = range(0, 9);
-        shuffle($digits);
-        $uniqueDigits = array_slice($digits, 0, 4);
-        $uniqueNumber = (int) implode('', $uniqueDigits);
+
         
-        $sigla = $classificacao->sigla . "_{$uniqueNumber}";
-    
-        $create = Imobilizado::create([
-            'status' => $request->estado,
-            'designacao' => $request->designacao,
-            'conta' => $request->conta,
-            'origem_id' => $request->origem_id,
-            'classificacao_id' => $classificacao->id,
-            'sigla' => $sigla,
-            'exercicio_id' => $request->exercicio_id,
-            'empresa_id' => $this->empresaLogada(),
-            'periodo_id' => $request->periodo_id,
-            'amortizacao_id' => $request->amortizacao_id,
-            'amortizacao_item_id' => $request->amortizacao_item_id,
-            'valor_aquisicao' => $request->valor_aquisicao,
-            'quantidade' => $request->quantidade,
-            'data_aquisicao' => $request->data_aquisicao,
-            'data_utilizacao' => $request->data_utilizacao,
-            'created_by' => auth()->user()->id,
-        ]);
+        foreach ($request->quantidade as $qtds) {
+              
+            $digits = range(0, 9);
+            shuffle($digits);
+            $uniqueDigits = array_slice($digits, 0, 4);
+            $uniqueNumber = (int) implode('', $uniqueDigits);
+            
+            $sigla = $classificacao->sigla . "-{$uniqueNumber}";
+            
+            $create = Imobilizado::create([
+                'status' => $request->estado,
+                'designacao' => $request->designacao,
+                'conta' => $request->conta,
+                'origem_id' => $request->origem_id,
+                'classificacao_id' => $classificacao->id,
+                'sigla' => $sigla,
+                'exercicio_id' => $request->exercicio_id,
+                'empresa_id' => $this->empresaLogada(),
+                'periodo_id' => $request->periodo_id,
+                'amortizacao_id' => $request->amortizacao_id,
+                'amortizacao_item_id' => $request->amortizacao_item_id,
+                'valor_aquisicao' => $request->valor_aquisicao,
+                'quantidade' => 1,
+                'data_aquisicao' => $request->data_aquisicao,
+                'data_utilizacao' => $request->data_utilizacao,
+                'created_by' => auth()->user()->id,
+            ]);
+        }
+        
         
         // return redirect("/imprimir-ficha-imobilizado?id={$create->id}");
         

@@ -21,6 +21,7 @@ class Movimento extends Model
         'descricao',
         'exercicio_id',
         'periodo_id',
+        'instituicao_id',
         'tipo_instituicao',
         'dia_id',
         'data_lancamento',

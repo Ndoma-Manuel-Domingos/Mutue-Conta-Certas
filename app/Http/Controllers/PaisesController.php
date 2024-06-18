@@ -22,7 +22,7 @@ class PaisesController extends Controller
     {
         $data['paises'] = Pais::get();
 
-        return Inertia::render('Paises/Index', $data);
+        return Inertia::render('Admin/Paises/Index', $data);
     }
 
     /**
@@ -34,7 +34,7 @@ class PaisesController extends Controller
     {
         $data['paises'] = Pais::all();
 
-        return Inertia::render('Paises/Create', $data);
+        return Inertia::render('Admin/Paises/Create', $data);
     }
 
     /**
@@ -77,7 +77,7 @@ class PaisesController extends Controller
     {
         $data['paises'] = Pais::findOrFail($id);
 
-        return Inertia::render('Paises/Edit', $data);
+        return Inertia::render('Admin/Paises/Edit', $data);
     }
 
     /**

@@ -26,6 +26,9 @@ class User extends Authenticatable
         'telefone',
         'empresa_id',
         'is_admin',
+        'level',
+        'foto',
+        'login',
     ];
 
     /**

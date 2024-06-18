@@ -7,6 +7,10 @@
 
     <link rel="stylesheet" href="css/style.css" media="all" />
     <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
         .page-break {
             page-break-after: always;
         }
@@ -47,9 +51,94 @@
 
     <main>
         <h2 style="text-align: center;border-bottom: 1px solid #c2c2c2;padding-bottom: 2px;text-transform: uppercase;font-size: 11pt">MAPA DE REINTEGRAÇÕES e AMORTIZAÇÕES ELEMENTOS DO ACTIVO NÃO REAVLIADOS</h2>
-        <div style="margin:auto 0px"> </div>
+        <div style="margin:auto 0px"></div>
 
+        
         <table class="table table-bordered table-hover" id="tabela_de_diarias">
+            <thead>
+              <tr>
+                <th style="text-align: left;color:white; background-color: gray;font-size: 7pt;" rowspan="3">Nº</th>
+                <th style="text-align: left;color:white; background-color: gray;font-size: 7pt;" rowspan="3">Conta</th>
+                <th style="text-align: left;color:white; background-color: gray;font-size: 7pt;" rowspan="3">Descrição</th>
+                
+                <th style="text-align: center;color:white; background-color: gray;font-size: 7pt;" colspan="2">Data</th>
+                
+                <th style="text-align: center;color:white; background-color: gray;font-size: 7pt;" rowspan="3">Isenção <br> no Código <br>Aduaneiro <br> (Activo Importado) <br> (Sim ou Não)</th>
+                <th style="text-align: left;color:white; background-color: gray;font-size: 7pt;" rowspan="3">Origem</th>
+                <th style="text-align: center;color:white; background-color: gray;font-size: 7pt;" rowspan="3">Número de <br> anos de <br> utilidade <br> esperada</th>
+                <th style="text-align: center;color:white; background-color: gray;font-size: 7pt;" rowspan="3">Ano da <br> reavaliação</th>
+                <th style="text-align: left;color:white; background-color: gray;font-size: 7pt;" rowspan="3">Valor de <br> Aquisição</th>
+                <th style="text-align: left;color:white; background-color: gray;font-size: 7pt;" rowspan="3">Quantidade</th>
+                
+                <th style="text-align: center;color:white; background-color: gray;font-size: 7pt;" colspan="6">Reintegrações <br> e amortizações</th>
+                
+              </tr>
+              
+              <tr>
+                                    
+                <th rowspan="2" style="color:white; background-color: gray;font-size: 7pt;">Aquisição</th>
+                <th rowspan="2" style="color:white; background-color: gray;font-size: 7pt;">Início de <br> utilização</th>
+                                 
+                <th rowspan="2" style="color:white; background-color: gray;font-size: 7pt;">Valores de <br> exercícios<br>  anteriores</th>
+                <th style="text-align: center;color:white; background-color: gray;font-size: 7pt;" colspan="3">Do exercício</th>
+                <th rowspan="2" style="color:white; background-color: gray;font-size: 7pt;">Amortizações <br> acumuladas</th>
+                <th rowspan="2" style="color:white; background-color: gray;font-size: 7pt;">Valor <br> contabilístico</th>
+                
+              </tr>
+                                
+              <tr>
+                      
+                <th style="color:white; background-color: gray;font-size: 7pt;">Taxa%</th>
+                <th style="color:white; background-color: gray;font-size: 7pt;">Taxa corrigida %</th>
+                <th style="color:white; background-color: gray;font-size: 7pt;">Valores</th>
+                
+              </tr>
+          
+            </thead>
+
+            <tbody>
+              @foreach ($imobilizados as $key => $item)
+              <tr>
+                  <td style="text-align: left;font-size: 7pt;">{{ $key + 1 }}</td>
+                  <td style="text-align: left;font-size: 7pt;">{{ $item->conta ?? "" }}</td>
+                  <td style="text-align: left;font-size: 7pt;">{{ $item->designacao ?? "" }}</td>
+                  <td style="text-align: left;font-size: 7pt;">{{ $item->data_aquisicao ?? "" }}</td>
+                  <td style="text-align: left;font-size: 7pt;">{{ $item->data_utilizacao ?? "" }}</td>
+                  <td style="text-align: center;font-size: 7pt;">{{ $item->sigla ?? "" }}</td>
+                  <td style="text-align: left;font-size: 7pt;">{{ $item->origem_id ?? "" }}</td>
+                  <td style="text-align: center;font-size: 7pt;">{{ $item->amortizacao_item->vida_util }}</td>
+                  <td style="text-align: center;font-size: 7pt;">-----</td>
+                  <td style="text-align: right;font-size: 7pt;">{{ number_format($item->valor_aquisicao) }}</td>
+                  <td style="text-align: center;font-size: 7pt;">{{ number_format($item->quantidade) }}</td>
+                  <td style="text-align: left;font-size: 7pt;">-------</td>
+                  <td style="text-align: left;font-size: 7pt;">{{ $item->amortizacao_item->taxa }}</td>
+                  <td style="text-align: left;font-size: 7pt;">--------</td>
+                  <td style="text-align: right;font-size: 7pt;">{{ number_format(0) }}</td>
+                  {{-- <td class="text-right">{{ number_format(calcularAmortizacaoAnual($item->valor_aquisicao, $item->amortizacao_item->taxa, $item->amortizacao_item->vida_util))   }}</td> --}}
+                  <td style="text-align: left;font-size: 7pt;">--------</td>
+                  <td style="text-align: left;font-size: 7pt;">--------</td>
+              </tr>
+              @endforeach
+            </tbody>
+            
+            <tfoot>
+              {{-- <tr>
+                  <td style="text-align: center;font-size: 7pt;" colspan="9">Total Geral (ainda estamos a estudar)</td>
+                  
+                  <td style="text-align: right;font-size: 7pt;">462 000,00</td>
+                  <td style="text-align: left;font-size: 7pt;">0</td>
+                  <td>-----</td>
+                  <td>-----</td>
+                  <td>-------</td>
+                  <td style="text-align: right;font-size: 7pt;">462 000,00</td>
+                  <td style="text-align: right;font-size: 7pt;">0</td>
+                  <td style="text-align: right;font-size: 7pt;">0</td>
+              </tr> --}}
+            </tfoot>
+          </table>
+        
+
+        {{-- <table class="table table-bordered table-hover" id="tabela_de_diarias">
             <thead>
                 <tr>
                     <th style="text-align: left;color:white; background-color: gray;" rowspan="3">Descrição</th>
@@ -133,7 +222,7 @@
                     <td style="text-align: right;font-size: 10px;color:white; background-color: gray;">462 000,00</td>
                 </tr>
             </tfoot>
-        </table>
+        </table> --}}
 
 
         <script type='text/php'>
@@ -143,7 +232,6 @@
             }
         </script>
     </main>
-
 
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 

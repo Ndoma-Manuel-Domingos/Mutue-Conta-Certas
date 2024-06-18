@@ -27,7 +27,7 @@ class MoedaController extends Controller
         })
         ->get();
 
-        return Inertia::render('Moeda/Index', $data);
+        return Inertia::render('Admin/Moeda/Index', $data);
     }
 
     /**
@@ -39,7 +39,7 @@ class MoedaController extends Controller
     {
         $data['moeda'] = Moeda::all();
 
-        return Inertia::render('Moeda/Create', $data);
+        return Inertia::render('Admin/Moeda/Create', $data);
     }
 
     /**
@@ -86,7 +86,7 @@ class MoedaController extends Controller
         try {
 
             $data['moeda'] = Moeda::findOrFail($id);
-            return Inertia::render('Moeda/Edit', $data);
+            return Inertia::render('Admin/Moeda/Edit', $data);
 
         } catch (\Throwable $th) {
             //throw $th;

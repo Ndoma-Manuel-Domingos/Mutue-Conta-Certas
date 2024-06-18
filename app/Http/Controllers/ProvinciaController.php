@@ -22,7 +22,7 @@ class ProvinciaController extends Controller
     {
         $data['provincia'] = Provincia::with(['pais'])->get();
 
-        return Inertia::render('Provincia/Index', $data);
+        return Inertia::render('Admin/Provincia/Index', $data);
     }
 
     /**
@@ -34,7 +34,7 @@ class ProvinciaController extends Controller
     {
         $data['provincia'] = Provincia::all();
         $data['paises'] = Pais::select('id', 'designacao As text')->get();
-        return Inertia::render('Provincia/Create', $data);
+        return Inertia::render('Admin/Provincia/Create', $data);
     }
 
     /**
@@ -78,7 +78,7 @@ class ProvinciaController extends Controller
     {
         $data['provincia'] = Provincia::with(['pais'])->where('id', $id)->first();
         $data['paises'] = Pais::select('id', 'designacao As text')->get();
-        return Inertia::render('Provincia/Edit', $data);
+        return Inertia::render('Admin/Provincia/Edit', $data);
     }
 
     /**
