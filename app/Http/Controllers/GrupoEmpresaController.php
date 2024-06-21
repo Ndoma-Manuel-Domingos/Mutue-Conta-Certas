@@ -24,7 +24,7 @@ class GrupoEmpresaController extends Controller
         })
             ->get();
 
-        return Inertia::render('GrupoEmpresas/Index', $data);
+        return Inertia::render('Admin/GrupoEmpresas/Index', $data);
     }
 
     /**
@@ -36,7 +36,7 @@ class GrupoEmpresaController extends Controller
     {
         $data[''] = [];
 
-        return Inertia::render('GrupoEmpresas/Create', $data);
+        return Inertia::render('Admin/GrupoEmpresas/Create', $data);
     }
 
     /**
@@ -78,7 +78,7 @@ class GrupoEmpresaController extends Controller
     {
         $data['grupo_empresa'] = GrupoEmpresa::findOrFail($id);
 
-        return Inertia::render('GrupoEmpresas/Edit', $data);
+        return Inertia::render('Admin/GrupoEmpresas/Edit', $data);
     }
 
     /**

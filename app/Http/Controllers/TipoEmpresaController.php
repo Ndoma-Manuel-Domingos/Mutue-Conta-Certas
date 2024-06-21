@@ -21,7 +21,7 @@ class TipoEmpresaController extends Controller
     {
         $data['tipos_empresas'] = TipoEmpresa::get();
 
-        return Inertia::render('TipoEmpresas/Index', $data);
+        return Inertia::render('Admin/TipoEmpresas/Index', $data);
     }
 
     /**
@@ -33,7 +33,7 @@ class TipoEmpresaController extends Controller
     {
         $data[''] = [];
 
-        return Inertia::render('TipoEmpresas/Create', $data);
+        return Inertia::render('Admin/TipoEmpresas/Create', $data);
     }
 
     /**
@@ -75,7 +75,7 @@ class TipoEmpresaController extends Controller
     {
         $data['tipo_empresa'] = TipoEmpresa::findOrFail($id);
 
-        return Inertia::render('TipoEmpresas/Edit', $data);
+        return Inertia::render('Admin/TipoEmpresas/Edit', $data);
     }
 
     /**

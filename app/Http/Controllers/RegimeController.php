@@ -20,12 +20,13 @@ class RegimeController extends Controller
      */
     public function index(Request $request)
     {
+    
         $data = Regime::when($request->input_busca_regimes, function($query, $value){
             $query->where('designacao', 'like', "%".$value."%");
         })
         ->paginate(10);
 
-        return Inertia::render('Regime/index', ['regimes' => $data]);
+        return Inertia::render('Admin/Regime/Index', ['regimes' => $data]);
     }
 
     /**
@@ -37,7 +38,7 @@ class RegimeController extends Controller
     {
         $data['regime'] = [];
 
-        return Inertia::render('Regime/Create', ['vazio' => $data]);
+        return Inertia::render('Admin/Regime/Create', ['vazio' => $data]);
     }
 
     /**
@@ -86,7 +87,7 @@ class RegimeController extends Controller
     {
         $data['regime'] = Regime::findOrFail($id);
 
-        return Inertia::render('Regime/Edit', $data);
+        return Inertia::render('Admin/Regime/Edit', $data);
     }
 
     /**

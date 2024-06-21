@@ -240,10 +240,10 @@
                     <tr>
                       <th class="text-center" rowspan="2">Nº</th>
                       <th class="text-center" rowspan="2" style="width: 100px;">Nº Mov</th>
-                      <th rowspan="2">Descrição</th>
-                      <th rowspan="2" class="text-right">Débito</th>
-                      <th rowspan="2" class="text-right">Crédito</th>
-                      <th class="text-center" colspan="2">Saldo</th>
+                      <th rowspan="2" style="width: 450px;">Descrição</th>
+                      <th rowspan="2" class="text-right" style="width: 250px">Débito</th>
+                      <th rowspan="2" class="text-right" style="width: 250px">Crédito</th>
+                      <th class="text-center" colspan="2" style="width: 250px">Saldo</th>
                       <th rowspan="2" style="width: 150px;">Acções</th>
                     </tr>
                     <tr>

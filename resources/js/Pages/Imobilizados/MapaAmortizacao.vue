@@ -88,42 +88,28 @@
                         <td class="text-left">-----</td>
                         <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao) }}</td>
                         <td class="text-left">{{ formatarValorMonetario(item.quantidade) }}</td>
-                        <td class="text-left">{{ item.designacao }}</td>
+                        <td class="text-left">-------</td>
                         <td class="text-left">{{ item.amortizacao_item.taxa }}</td>
-                        <td class="text-left">{{ item.designacao }}</td>
+                        <td class="text-left">--------</td>
                         <td class="text-right">{{ formatarValorMonetario(calcularAmortizacaoAnual(item.valor_aquisicao, item.amortizacao_item.taxa, item.amortizacao_item.vida_util))   }}</td>
-                        <td class="text-left">{{ item.designacao }}</td>
-                        <td class="text-left">{{ item.designacao }}</td>
+                        <td class="text-left">--------</td>
+                        <td class="text-left">--------</td>
                     </tr>
-                    
-                    <!-- <tr v-for="(item, index) in imobilizados" :key="index">
-                        <td class="text-left">{{ item.designacao }}</td>
-                        <td class="text-center">{{ item.data_aquisicao }}</td>
-                        <td class="text-center">{{ item.quantidade }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao) }}</td>
-                        <td class="text-center">{{ item.amortizacao_item.vida_util }}</td>
-                        <td class="text-right">-</td>
-                        <td>{{ item.amortizacao_item.taxa }}%</td>
-                        <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao)  }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao) }}</td>
-                    </tr> -->
-                  
-                    
                   </tbody>
                   
                   <tfoot>
-                    <!-- <tr>
-                        <td class="text-center" colspan="3">Total Geral (ainda estamos a estudar)</td>
+                    <tr>
+                        <td class="text-center" colspan="9">Total Geral (ainda estamos a estudar)</td>
                         
                         <td class="text-right">462 000,00</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="text-left">0</td>
+                        <td>-----</td>
+                        <td>-----</td>
+                        <td>-------</td>
                         <td class="text-right">462 000,00</td>
-                        <td class="text-right">462 000,00</td>
-                        <td class="text-right">462 000,00</td>
-                    </tr> -->
+                        <td class="text-right">0</td>
+                        <td class="text-right">0</td>
+                    </tr>
                   </tfoot>
                 </table>
               

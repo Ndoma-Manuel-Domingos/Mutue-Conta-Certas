@@ -19,6 +19,7 @@ class SubConta extends Model
         'estado',
         'controle_conta_id',
         'tipo_instituicao',
+        "instituicao_id",
         'tipo',
         'conta_id',
         'empresa_id',

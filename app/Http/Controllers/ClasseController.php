@@ -61,20 +61,26 @@ class ClasseController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
         
-        $classes =  ClasseEmpresa::create([
-            'classe_id' => $request->classe_id,
-            'estado' => $request->estado,
-            'empresa_id' => $this->empresaLogada(),
-            'created_by' => auth()->user()->id,
-            'updated_by' => auth()->user()->id,
-            'deleted_by' => auth()->user()->id,
-        ]);
+             
+        $verificar = ClasseEmpresa::where('empresa_id', $this->empresaLogada())
+            ->where('classe_id', $request->classe_id)
+            ->first();
         
-        // return redirect()->route('classes.index');
+        if(!$verificar){
+            ClasseEmpresa::create([
+                'classe_id' => $request->classe_id,
+                'estado' => $request->estado,
+                'empresa_id' => $this->empresaLogada(),
+                'created_by' => auth()->user()->id,
+                'updated_by' => auth()->user()->id,
+                'deleted_by' => auth()->user()->id,
+            ]);        
+        }else {
+            return response()->json(['message' => "Esta Classe Já está cadastrada!"], 404);
+        }
         
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     
-        // Salva um novo post no banco de dados
     }
 
     public function show($id)

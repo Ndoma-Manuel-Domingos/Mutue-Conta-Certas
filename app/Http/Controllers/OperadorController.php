@@ -46,17 +46,31 @@ class OperadorController extends Controller
         $usernames = preg_split('/\s+/', strtolower($full), -1, PREG_SPLIT_NO_EMPTY);
 
         $username = head($usernames) . '.' . last($usernames);
-
-        $user = User::create([
-            'name' => $request->nome,
-            'email' => $request->email,
-            'username' => $username,
-            'password' => Hash::make($request->password),
-            'telefone' => "000-000-000",
-            'is_admin' => 0,
-        ]);
-
-        return response()->json(['message' => "Dados salvos com sucesso!"], 200);
+        
+        // Exclui um post específico do banco de dados
+        try {
+            $user = User::create([
+                'name' => $request->nome,
+                'email' => $request->email,
+                'username' => $username,
+                'password' => Hash::make($request->password),
+                'telefone' => "000-000-000",
+                'is_admin' => 0,
+                'level' => 1,
+            ]);
+            
+            $user_empresa = UserEmpresa::create([
+                'estado' => 1,
+                'empresa_id' => $this->empresaLogada(),
+                'user_id' => $user->id,
+            ]);
+        
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage());
+        }
+        
+        
+        return redirect()->back();
 
     }
 

@@ -35,11 +35,16 @@ use App\Http\Controllers\{
     UtilizadorController,
     CentroDeCustoController,
     ImobilizadosController,
-    LicencaController,
-    ModuloController,
     OperadorController,
     TabelaAmortizacaoController,
     TabelaAmortizacaoItemsController,
+    LicencaUsuarioController,
+};
+use App\Http\Controllers\Admin\{
+    EmpresaController as AdminEmpresaController,
+    LicencaController,
+    ModuloController,
+    OperadorController as AdminOperadorController
 };
 use Illuminate\Support\Facades\Route;
 
@@ -65,6 +70,7 @@ Route::post('/criar-conta', [AuthController::class, 'register_store'])->name('mc
 Route::group(["middleware" => "auth"], function () {
 
     Route::get('/licencas', [LicencaController::class, 'licencas']);
+    Route::get('/assinar-contrato-licencas/{id}', [LicencaController::class, 'assinar_licencas']);
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('mf.logout');
     Route::resource('classes', ClasseController::class);
@@ -83,6 +89,8 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/empresas-mudar-estado/{id}', [EmpresaController::class, 'mudar_estado']);
     Route::get('/empresas-imprimir-pdf', [EmpresaController::class, 'pdf']);
     Route::get('/empresas-imprimir-excel', [EmpresaController::class, 'excel']);
+    Route::get('/empresas-duplicar/{id}', [EmpresaController::class, 'duplicar']);
+    Route::put('/empresas-duplicar/{id}', [EmpresaController::class, 'duplicar_update']);
 
     Route::get('/empresas/iniciar-sessão/{id}', [EmpresaController::class, 'iniciar_sessao']);
     Route::post('/logout-empresa', [EmpresaController::class, 'logout_empresa'])->name('mf.logout_empresa');
@@ -126,6 +134,7 @@ Route::group(["middleware" => "auth"], function () {
 
     Route::resource('utilizadores', UtilizadorController::class);
     Route::resource('operadores', OperadorController::class);
+    Route::resource('operadores-admin', AdminOperadorController::class);
 
     // Rotas de impressao de documentos-Ednilson
     Route::get('imprimir-contas', [ContaController::class, 'imprimirContas']);
@@ -160,9 +169,6 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('municipio', MunicipioController::class);
     Route::resource('provincia', ProvinciaController::class);
     Route::resource('comuna', ComunaController::class);
-    Route::resource('licenca', LicencaController::class);
-    Route::resource('modulo', ModuloController::class);
-
 
     // Exportar Excell
     Route::get('exportar-balancete-excel', [BalanceteController::class, 'exportarExcel']);
@@ -188,9 +194,21 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('exportar-comuna-excel', [ComunaController::class, 'exportarExcel']);
     Route::get('exportar-operador-excel', [OperadorController::class, 'exportarExcel']);
 
-
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');
-    Route::get('/dashboard-licenca', [DashboardController::class, 'dashboard_admin'])->name('mf.dashboard-admin');
+
+
+    /** ROUTAS DO ADMINISTRATOR */
+
+    Route::get('/administrativo', [DashboardController::class, 'dashboard_admin'])->name('mf.dashboard-admin');
+    Route::resource('licenca', LicencaController::class);
+    Route::post('licenca-modulo', [LicencaController::class, 'licenca_modulo']);
+    Route::get('licenca-modulo/{id}', [LicencaController::class, 'licenca_modulo_eliminar']);
+    Route::resource('modulo', ModuloController::class);
+    Route::get('/listar-empresas', [AdminEmpresaController::class, 'index']);
+    Route::get('/detalhes-empresas/{id}', [AdminEmpresaController::class, 'show']);
+    Route::resource('/licenca-usuario', LicencaUsuarioController::class);
+    Route::get('/mudar-estado-licenca/{id}', [LicencaUsuarioController::class, 'mudaEstadoLicenca']);
+
 
 
 });

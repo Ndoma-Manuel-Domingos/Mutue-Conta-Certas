@@ -22,7 +22,7 @@ class MunicipioController extends Controller
     {
         $data['municipio'] = Municipio::with(['provincia'])->get();
 
-        return Inertia::render('Municipio/Index', $data);
+        return Inertia::render('Admin/Municipio/Index', $data);
     }
 
     /**
@@ -34,7 +34,7 @@ class MunicipioController extends Controller
     {
         $data['municipio'] = Municipio::with(['provincia'])->get();
         $data['provincias'] = Provincia::select('id', 'designacao As text')->get();
-        return Inertia::render('Municipio/Create', $data);
+        return Inertia::render('Admin/Municipio/Create', $data);
     }
 
     /**
@@ -77,7 +77,7 @@ class MunicipioController extends Controller
     {
         $data['municipio'] = Municipio::with(['provincia'])->where('id', $id)->first();
         $data['provincias'] = Provincia::select('id', 'designacao As text')->get();
-        return Inertia::render('Municipio/Edit', $data);
+        return Inertia::render('Admin/Municipio/Edit', $data);
     }
 
     /**

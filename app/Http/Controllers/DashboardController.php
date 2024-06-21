@@ -19,19 +19,18 @@ class DashboardController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        
     }
 
     
     public function dashboard(Request $request)
     {
-    
         $data['movimentos'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])
         ->where('empresa_id', $this->empresaLogada())
         ->orderBy('id', 'asc')
         ->limit(5)
         ->get();
         
-       
         return Inertia::render('Dashboard', $data);
     }
     

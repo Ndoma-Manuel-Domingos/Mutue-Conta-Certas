@@ -24,20 +24,20 @@
                                 <span v-if="form.errors.name" class="login-box-msg text-danger" >{{ form.errors.name }}</span>
                             </div>
                                                         
-                            <!-- <div class="col-12 mb-3">
+                            <div class="col-12 mb-3">
                                 <label for="" class="form-label">Tipo Empresa</label>
                                 <div class="input-group">
                                     <Select2
                                         v-model="form.tipo_empresa"
                                         id="estado"
-                                        class="col-12 col-md-12"
+                                        class="col-12 col-md-12 form-control"
                                         :options="tipo_clientes"
                                         :settings="{ width: '100%' }"
                                         @select="getTipoCliente($event)"
                                     />
                                 </div>
                                 <span v-if="form.errors.tipo_empresa" class="login-box-msg text-danger" >{{ form.errors.tipo_empresa }}</span>
-                            </div> -->
+                            </div>
                             
                             <div class="col-12 mb-3">
                                 <label for="" class="form-label">NIF</label>
@@ -73,8 +73,6 @@
                                 </div>
                                 <span v-if="form.errors.r_password" class="login-box-msg text-danger" >{{ form.errors.r_password }}</span>
                             </div>
-                            
-                            
 
                             <div class="col-12">
                                 <div class="row mt-5">
@@ -122,10 +120,8 @@
         methods: {
             getTipoCliente() {
                 if(this.form.tipo_empresa == "singular"){
-                    alert("Empresa Singular")
                 }
                 if(this.form.tipo_empresa == "juridica"){
-                    alert("Empresa Juridica")
                 }
             },
             
@@ -162,6 +158,15 @@
 </script>
 
 <style>
+    
+    .select2-container--default .select2-selection--single {
+      background-color: #ffffff;
+      padding: 10px 10px 35px 10px;
+      border: 1px solid #9b9b9b;
+      width: 308px;
+      margin: -24px 0 0 -11px;
+    }
+
 /* Style the video: 100% width and height to cover the entire window */
     #myVideo {
       position: fixed;

@@ -22,21 +22,10 @@ class ContaController extends Controller
         
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         
-        $data['contas'] = ContaEmpresa::whereHas('conta', function($query) use($request){
-            $query->when($request->input_busca_contas, function($query, $value){
-                $query->where('designacao', 'like', "%".$value."%");
-                $query->orWhere('numero', 'like', "%".$value."%");
-            }); 
-        })
-        ->whereHas('classe', function($query) use($request){
-            $query->when($request->input_busca_contas, function($query, $value){
-                $query->where('designacao', 'like', "%".$value."%");
-                $query->orWhere('numero', 'like', "%".$value."%");
-            }); 
-        })
-        ->with(['empresa', 'conta', 'classe'])->where('empresa_id', $this->empresaLogada())
-        // ->orderBy('numero', 'asc')
-        ->get();
+        $data['contas'] = ContaEmpresa::with(['empresa', 'conta', 'classe'])
+            ->where('empresa_id', $this->empresaLogada())
+            ->orderBy('numero', 'asc')
+            ->get();
         
         return Inertia::render('Contas/Index', $data);
     }
@@ -58,35 +47,39 @@ class ContaController extends Controller
         $request->validate([
             "classe_id" => "required",
             "conta_id" => "required",
-            // "tipo" => "required",
             "numero" => "required",
             "estado" => "required",
         ], 
         [
             "classe_id.required" => "Campo Obrigatório",
             "conta_id.required" => "Campo Obrigatório",
-            // "tipo.required" => "Campo Obrigatório",
             "numero.required" => "Campo Obrigatório",
             "estado.required" => "Campo Obrigatório",
         ]);
         
+        $verificar = ContaEmpresa::where('empresa_id', $this->empresaLogada())
+            ->where('classe_id', $request->classe_id)
+            ->where('conta_id', $request->conta_id)
+            ->where('numero', $request->numero)
+            ->first();
         
-        if($this->empresaLogada()){
-            $classes =  ContaEmpresa::create([
-                'classe_id' => $request->classe_id,
-                'conta_id' => $request->conta_id,
-                // 'tipo' => $request->tipo,
-                'numero' => $request->numero,
-                'estado' => $request->estado,
-                'created_by' => auth()->user()->id,
-                'empresa_id' => $this->empresaLogada(),
-            ]);
+        if(!$verificar){
+            if($this->empresaLogada()){
+                ContaEmpresa::create([
+                    'classe_id' => $request->classe_id,
+                    'conta_id' => $request->conta_id,
+                    'numero' => $request->numero,
+                    'estado' => $request->estado,
+                    'created_by' => auth()->user()->id,
+                    'empresa_id' => $this->empresaLogada(),
+                ]);
+            }
+        }else {
+            return response()->json(['message' => "Esta Conta Já está cadastrada!"], 404);
         }
         
         // return redirect()->route('classes.index');
-        
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
-    
         // Salva um novo post no banco de dados
     }
 

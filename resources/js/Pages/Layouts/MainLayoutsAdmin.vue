@@ -13,8 +13,8 @@
         </ul>
 
         <div class="mx-auto">
-          <div v-if="sessions">
-            <h5 class="text-danger text-uppercase">EMPRESA PRINCIPAL</span> </h5>
+          <div>
+            <h5 class="text-danger text-uppercase"><span>EMPRESA PRINCIPAL</span> </h5>
           </div>
         </div>
 
@@ -84,7 +84,7 @@
 
       <aside class="main-sidebar sidebar-dark-primary elevation-1">
         <!-- Brand Logo -->
-        <a href="index3.html" class="brand-link">
+        <a href="/administrativo" class="brand-link">
           <img
             src="images/logotipo_contas_centas.png"
             alt="AdminLTE Logo"
@@ -108,30 +108,26 @@
             </div>
           </div>
 
-          <Menu />
+          <MenuAdmin />
         </div>
       </aside>
 
-      <div class="content-wrapper">
+      <!-- <div class="content-wrapper"> -->
         <slot />
-      </div>
+      <!-- </div> -->
       <!-- <Footer /> -->
     </div>
   </div>
 </template>
 
 <script>
-import Menu from "./Partials/MenuAdmin.vue";
+import MenuAdmin from "./Partials/MenuAdmin.vue";
 
 export default {
-  components: {
-    Menu,
-  },
-
+  components: { MenuAdmin },
   data() {
     return {};
   },
-
   computed: {
     user() {
       return this.$page.props.auth.user;
@@ -142,13 +138,9 @@ export default {
     sessions_exercicio() {
       return this.$page.props.sessions.exercicio_sessao;
     },
-
   },
-  
   mounted() {
-    // $('.select2').select2()
   },
-  
   methods: {
     logout() {
       this.$Progress.start();
@@ -224,7 +216,7 @@ export default {
     background-color: brown;
   } */
 
-.select2-container--default .select2-selection--single {
+/* .select2-container--default .select2-selection--single {
   background-color: #ffffff;
   padding: 10px 10px 35px 10px;
   border: 1px solid #000000;
@@ -234,5 +226,5 @@ export default {
   padding: 23px 10px 22px 10px;
   font-size: 12pt;
   border: 1px solid #9b9b9b;
-}
+} */
 </style>
