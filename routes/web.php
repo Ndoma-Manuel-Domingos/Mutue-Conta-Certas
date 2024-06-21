@@ -38,6 +38,7 @@ use App\Http\Controllers\{
     OperadorController,
     TabelaAmortizacaoController,
     TabelaAmortizacaoItemsController,
+    LicencaUsuarioController,
 };
 use App\Http\Controllers\Admin\{
     EmpresaController as AdminEmpresaController,
@@ -195,7 +196,7 @@ Route::group(["middleware" => "auth"], function () {
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('mf.dashboard');
 
-    
+
     /** ROUTAS DO ADMINISTRATOR */
 
     Route::get('/administrativo', [DashboardController::class, 'dashboard_admin'])->name('mf.dashboard-admin');
@@ -208,6 +209,6 @@ Route::group(["middleware" => "auth"], function () {
     
     Route::get('/api/movimentos-mes', [DashboardController::class, 'movimentosPorMes']);
 
-    
-
+    Route::resource('/licenca-usuario', LicencaUsuarioController::class);
+    Route::get('/mudar-estado-licenca/{id}', [LicencaUsuarioController::class, 'mudaEstadoLicenca']);
 });
