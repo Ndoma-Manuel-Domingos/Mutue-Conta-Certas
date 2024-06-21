@@ -69,9 +69,16 @@ class ApiController extends Controller
                     
             $hash = time();
             
-            $subconta_cliente = SubConta::with(['conta'])->where('numero', $request->subconta_cliente)->first();
+            
+            $subconta_cliente = SubConta::with(['conta'])->where('tipo_instituicao', $request->tipo_instituicao)->where('numero', $request->subconta_cliente)->first();
             $subconta_caixa_banco = SubConta::with(['conta'])->where('numero', $request->subconta_caixa_banco)->first();
             $subconta_servico = SubConta::with(['conta'])->where('numero', $request->subconta_servico)->first();
+            
+            // return response()->json([
+            //     "cliente" => $subconta_cliente,
+            //     "caixa" => $subconta_caixa_banco,
+            //     "servico" => $subconta_servico,
+            // ]);
             
             $tipo_movimento = TipoMovimento::where('sigla', 'D')->first();
             
@@ -124,6 +131,7 @@ class ApiController extends Controller
                 'tipo_instituicao' => $request->tipo_instituicao,
                 'instituicao_id' => $request->instituicao_id,
             ]);
+            
             //  CREDITAR
             MovimentoItem::create([
                 'hash' => $hash,
@@ -156,6 +164,7 @@ class ApiController extends Controller
                 'descricao' => $request->designacao,
                 'empresa_id' => 1,
                 'subconta_id' => $subconta_cliente ? $subconta_cliente->id : NULL,
+                'conta_id' => $subconta_cliente ? $subconta_cliente->conta_id : NULL,
                 'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
                 'documento_id' => NULL,
                 'tipo_credito_id' => NULL,
@@ -165,7 +174,6 @@ class ApiController extends Controller
                 'origem' => 'movimento',
                 'movimento_id' => $create->id,
                 'apresentar' => 'N',
-                'conta_id' => $subconta_cliente ? $subconta_cliente->conta_id : NULL,
                 'movimento_id' => $create->id,
                 'tipo_instituicao' => $request->tipo_instituicao,
                 'instituicao_id' => $request->instituicao_id,

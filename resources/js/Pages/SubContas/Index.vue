@@ -44,9 +44,9 @@
                   <tbody>
                     <tr v-for="item in subcontas" :key="item">
                       <td>#</td>
-                      <td>{{ item.numero }}</td>
-                      <td>{{ item.designacao }}</td>
-                      <td>{{ item.conta.numero }} - {{ item.conta.designacao }}</td>
+                      <td>{{ item.numero ? item.numero : "-" }}</td>
+                      <td>{{ item.designacao ? item.designacao: "" }}</td>
+                      <td>{{ item.conta ? item.conta.numero : "" }} - {{ item.conta ? item.conta.designacao : "-"  }}</td>
                       <td>{{ item.tipo }}</td>
                       <td class="text-capitalize">{{ item.estado }}</td>
                       <td>

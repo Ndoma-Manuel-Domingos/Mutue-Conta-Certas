@@ -31,23 +31,6 @@ class MovimentoController extends Controller
         // where('empresa_id', $users->empresa_id)->
             
         $data['movimentos'] = Movimento::with(['exercicio', 'periodo' , 'criador'])
-        ->whereHas('diario', function($query) use($request){
-            $query->when($request->tipo_diario, function($query, $value){
-                $query->where('designacao', 'like', "%".$value."%");
-                $query->orWhere('numero', $value);
-            });
-        })
-        ->whereHas('tipo_documento', function($query) use($request){
-            $query->when($request->tipo_documento, function($query, $value){
-                $query->where('designacao', 'like', "%".$value."%");
-                $query->orWhere('numero', $value);
-            });
-        })
-        ->whereHas('criador', function($query) use($request){
-            $query->when($request->operador_id, function($query, $value){
-                $query->where('name', 'like', "%".$value."%");
-            });
-        })
         ->where('empresa_id', $this->empresaLogada())
         ->orderBy('id', 'desc')->get();
 
@@ -140,6 +123,9 @@ class MovimentoController extends Controller
 
     public function show($id)
     {
+        
+        // dd($id);
+    
         $data['movimento'] = Movimento::with(["items.subconta.conta", "exercicio", "diario", "tipo_documento", "empresa", "criador"])->findOrFail($id);
 
         return Inertia::render('Movimentos/Show', $data);
