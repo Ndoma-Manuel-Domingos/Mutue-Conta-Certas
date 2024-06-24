@@ -74,6 +74,8 @@ class ApiController extends Controller
             $subconta_caixa_banco = SubConta::with(['conta'])->where('numero', $request->subconta_caixa_banco)->first();
             $subconta_servico = SubConta::with(['conta'])->where('numero', $request->subconta_servico)->first();
             
+            $tipo_documento = $request->tipo_documento;
+            
             // return response()->json([
             //     "cliente" => $subconta_cliente,
             //     "caixa" => $subconta_caixa_banco,
