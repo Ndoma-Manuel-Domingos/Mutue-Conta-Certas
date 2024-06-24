@@ -41,7 +41,7 @@
                         <span class="lead"><strong>Data:</strong> {{ movimento.data_lancamento }}</span>
                     </div>
                     <div class="col-12 col-md-2">
-                        <span class="lead"><strong>Operador:</strong> {{ movimento.criador.name }}</span>
+                        <span class="lead"><strong>Operador:</strong> {{ movimento.criador ? movimento.criador.name : 'Sem Operador' }}</span>
                     </div>
                 </div>
               </div>

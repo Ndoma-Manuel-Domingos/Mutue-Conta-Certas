@@ -466,6 +466,7 @@ class FluxoCaixaController extends Controller
           
         return Inertia::render('FluxoCaixa/Create', $data);
     }
+    
     public function store(Request $request)
     {
 

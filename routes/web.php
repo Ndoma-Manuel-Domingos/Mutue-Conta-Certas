@@ -206,9 +206,9 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('modulo', ModuloController::class);
     Route::get('/listar-empresas', [AdminEmpresaController::class, 'index']);
     Route::get('/detalhes-empresas/{id}', [AdminEmpresaController::class, 'show']);
+    
+    Route::get('/api/movimentos-mes', [DashboardController::class, 'movimentosPorMes']);
+
     Route::resource('/licenca-usuario', LicencaUsuarioController::class);
     Route::get('/mudar-estado-licenca/{id}', [LicencaUsuarioController::class, 'mudaEstadoLicenca']);
-
-
-
 });
