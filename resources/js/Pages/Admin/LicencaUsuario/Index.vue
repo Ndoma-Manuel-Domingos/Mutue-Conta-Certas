@@ -45,9 +45,9 @@
 
                                         <tr v-for="item in licenca_data" :key="item">
                                             <td>{{ item.id }}</td>
-                                            <td v-for="licenca1 in item.licenca" :key="licenca1">{{ licenca1.titulo }}
+                                            <td v-for="licenca1 in item.licenca" :key="licenca1" >{{ licenca1.titulo }}
                                             </td>
-                                            <td v-for="usuario1 in item.usuario" :key="usuario1">{{ usuario1.name }}
+                                            <td v-for="usuario1 in item.usuario" :key="usuario1" > {{ usuario1.name }}
                                             </td>
                                             <td>
                                                 <div class="float-right">

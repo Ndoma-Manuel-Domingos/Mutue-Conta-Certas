@@ -32,7 +32,7 @@ class LicencaUsuarioController extends Controller
      */
     public function create()
     {
-        $data['usuarios'] = User::select('id', 'name As text')->get();
+        $data['usuarios'] = User::where('is_admin', 1)->where('level', 1)->select('id', 'name As text')->get();
         $data['licencas'] = Licenca::select('id', 'titulo As text')->get();
 
         return Inertia::render('Admin/LicencaUsuario/Create', $data);
