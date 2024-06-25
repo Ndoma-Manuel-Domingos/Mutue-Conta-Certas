@@ -145,4 +145,20 @@ class LicencaUsuarioController extends Controller
 
         return response()->json(['message' => "Dados aletrados com sucesso!"], 200);
     }
+
+    public function licencaUtilizacao()
+    {
+
+        $data['licenca_em_utilizacao'] = LicencaUsuario::with('licenca.modulos.modulo', 'usuario')->where('estado', 1)->get();
+
+        return Inertia::render('Admin/Licenca/LicencaUtilizacao', $data);
+    }
+
+    public function licencaSemUtilizacao()
+    {
+
+        $data['licenca_sem_utilizacao'] = LicencaUsuario::with('licenca.modulos.modulo', 'usuario')->where('estado', 0)->get();
+
+        return Inertia::render('Admin/Licenca/LicencaSemUtilizacao', $data);
+    }
 }

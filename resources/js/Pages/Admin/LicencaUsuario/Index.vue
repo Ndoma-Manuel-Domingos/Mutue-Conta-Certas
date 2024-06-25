@@ -27,8 +27,7 @@
                                 <a href="/licenca-usuario/create" class="btn btn-info"> <i class="fas fa-plus"></i>Nova
                                     Associação </a>
                             </div>
-                            <h5><label style="color: blue;">Licenças Utilizadas : {{ licenca_em_utilizacao }}</label></h5>
-                            <h5><label style="color: red;"> Licenças Sem utilização: {{ licenca_sem_utilizacao }}</label></h5>
+
                             <div class="card-body table-responsive">
                                 <table class="table table-bordered table-hover" id="table_licencas">
 

@@ -8,6 +8,7 @@ use App\Models\LicencaModulo;
 use App\Models\Modulo;
 use App\Models\User;
 use App\Models\UserModulo;
+use App\Models\LicencaUsuario;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -156,11 +157,6 @@ class LicencaController extends Controller
         } catch (\Throwable $th) {
             return response()->json($th->getMessage());
         }
-    }
-
-    public function associarUsuarioLicenca($usuario_id, $licenca_id){
-        dd($usuario_id, $licenca_id);
-
     }
 
 }
