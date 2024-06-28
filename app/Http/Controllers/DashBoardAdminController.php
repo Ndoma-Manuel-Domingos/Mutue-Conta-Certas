@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+use App\Models\Licenca;
+use App\Models\LicencaUsuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +21,8 @@ class DashBoardAdminController extends Controller
     public function index()
     {
         $data['empresas_count'] = Empresa::count();
+        $data['licencas_usadas_count'] = LicencaUsuario::where('estado', 1)->count();
+        $data['licencas_nao_usadas_count'] = LicencaUsuario::where('estado', 0)->count();
 
         return Inertia::render('DashboardAdmin', $data);
     }

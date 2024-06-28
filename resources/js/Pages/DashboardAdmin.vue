@@ -13,38 +13,42 @@
                     <div class="col-lg-3 col-12 col-md-3">
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <p><i class="fa fa-university" aria-hidden="true"> TOTAL DE EMPRESAS ({{ empresas_count }})</i></p>
+                                <h4>{{ empresas_count }}</h4>
+                                <p><i class="fa fa-university" aria-hidden="true"> TOTAL DE EMPRESAS</i></p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-bag"></i>
                             </div>
                             <a href="/listar-empresas" class="small-box-footer">Mais detalhe <i
-                                class="fas fa-arrow-circle-right"></i></a>
+                                    class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
 
                     <div class="col-lg-3 col-12 col-md-3">
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <p>LICENÇAS EM UTILIZAÇÃO</p>
+                                <h4>{{ licencas_usadas_count }}</h4>
+                                <p><i class="fa fa-id-card" aria-hidden="true"> LICENÇAS EM UTILIZAÇÃO</i></p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
                             <a href="licenca-utilizacao" class="small-box-footer">Mais detalhe <i
-                                class="fas fa-arrow-circle-right"></i></a>
+                                    class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
 
                     <div class="col-lg-3 col-12 col-md-3">
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <p>LICENÇAS SEM UTILIZAÇÃO</p>
+                                <h4>{{ licencas_nao_usadas_count }}</h4>
+                                <p><i class="fa fa-id-card" aria-hidden="true"> LICENÇAS SEM UTILIZAÇÃO</i></p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
-                            <a href="licenca-sem-utilizacao" class="small-box-footer">Mais detalhe<i class="fas fa-arrow-circle-right"></i>
+                            <a href="licenca-sem-utilizacao" class="small-box-footer">Mais detalhe<i
+                                    class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
                     </div>
@@ -64,8 +68,10 @@
 <script>
 import MainLayoutsAdmin from './Layouts/MainLayoutsAdmin.vue'
 export default {
-    props:[
-        'empresas_count'
+    props: [
+        'empresas_count',
+        'licencas_usadas_count',
+        'licencas_nao_usadas_count',
     ],
     computed: {
         user() {

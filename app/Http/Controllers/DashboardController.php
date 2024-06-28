@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use App\Models\Empresa;
+use App\Models\LicencaUsuario;
 
 class DashboardController extends Controller
 {
@@ -84,6 +85,8 @@ class DashboardController extends Controller
 
         $data['movimentos'] = [];
         $data['empresas_count'] = Empresa::count();
+        $data['licencas_usadas_count'] = LicencaUsuario::where('estado', 1)->count();
+        $data['licencas_nao_usadas_count'] = LicencaUsuario::where('estado', 0)->count();
 
         return Inertia::render('DashboardAdmin', $data);
     }
