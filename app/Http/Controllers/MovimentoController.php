@@ -123,8 +123,6 @@ class MovimentoController extends Controller
 
     public function show($id)
     {
-        
-        // dd($id);
     
         $data['movimento'] = Movimento::with(["items.subconta.conta", "exercicio", "diario", "tipo_documento", "empresa", "criador"])->findOrFail($id);
 
