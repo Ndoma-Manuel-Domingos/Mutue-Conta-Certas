@@ -32,7 +32,7 @@ class LicencaUsuarioController extends Controller
      */
     public function create()
     {
-        $data['usuarios'] = User::select('id', 'name As text')->get();
+        $data['usuarios'] = User::where('is_admin', 1)->where('level', 1)->select('id', 'name As text')->get();
         $data['licencas'] = Licenca::select('id', 'titulo As text')->get();
 
         return Inertia::render('Admin/LicencaUsuario/Create', $data);
@@ -144,5 +144,21 @@ class LicencaUsuarioController extends Controller
 
 
         return response()->json(['message' => "Dados aletrados com sucesso!"], 200);
+    }
+
+    public function licencaUtilizacao()
+    {
+
+        $data['licenca_em_utilizacao'] = LicencaUsuario::with('licenca.modulos.modulo', 'usuario')->where('estado', 1)->get();
+
+        return Inertia::render('Admin/Licenca/LicencaUtilizacao', $data);
+    }
+
+    public function licencaSemUtilizacao()
+    {
+
+        $data['licenca_sem_utilizacao'] = LicencaUsuario::with('licenca.modulos.modulo', 'usuario')->where('estado', 0)->get();
+
+        return Inertia::render('Admin/Licenca/LicencaSemUtilizacao', $data);
     }
 }

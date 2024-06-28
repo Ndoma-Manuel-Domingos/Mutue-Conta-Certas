@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use App\Models\Empresa;
 
 class DashboardController extends Controller
 {
@@ -20,10 +21,10 @@ class DashboardController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        
+
     }
 
-    
+
     public function dashboard(Request $request)
     {
         $data['movimentos'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])
@@ -31,18 +32,18 @@ class DashboardController extends Controller
         ->orderBy('id', 'asc')
         ->limit(5)
         ->get();
-        
-        
+
+
         $data['resultado'] = Movimento::with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
         ->where('origem', 'fluxocaixa')
         ->where('empresa_id', $this->empresaLogada())
         ->select(
-            DB::raw('SUM(debito) AS debito'), 
-            DB::raw('SUM(credito) AS credito'), 
+            DB::raw('SUM(debito) AS debito'),
+            DB::raw('SUM(credito) AS credito'),
             DB::raw('SUM(iva) AS iva')
         )
         ->first();
-        
+
         // $data['grafico'] = Movimento::with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
         // ->where('origem', 'fluxocaixa')
         // ->where('empresa_id', $this->empresaLogada())
@@ -56,14 +57,14 @@ class DashboardController extends Controller
         // ->groupBy('ano', 'mes')
         // ->orderBy('ano', 'mes')
         // ->get();
-                
+
         return Inertia::render('Dashboard', $data);
     }
-    
+
     public function movimentosPorMes()
     {
         $empresaId = $this->empresaLogada();
-        
+
         $movimentos = Movimento::select(
             DB::raw('MONTH(created_at) as mes'),
             DB::raw('SUM(debito) as total_debito'),
@@ -77,12 +78,13 @@ class DashboardController extends Controller
 
         return response()->json($movimentos);
     }
-    
+
     public function dashboard_admin(Request $request)
     {
-    
+
         $data['movimentos'] = [];
-               
+        $data['empresas_count'] = Empresa::count();
+
         return Inertia::render('DashboardAdmin', $data);
     }
 

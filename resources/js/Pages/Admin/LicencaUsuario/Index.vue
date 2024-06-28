@@ -27,8 +27,7 @@
                                 <a href="/licenca-usuario/create" class="btn btn-info"> <i class="fas fa-plus"></i>Nova
                                     Associação </a>
                             </div>
-                            <h5><label style="color: blue;">Licenças Utilizadas: {{ licenca_em_utilizacao }}</label></h5>
-                            <h5><label style="color: red;"> Licenças Sem utilização: {{ licenca_sem_utilizacao }}</label></h5>
+
                             <div class="card-body table-responsive">
                                 <table class="table table-bordered table-hover" id="table_licencas">
 
@@ -45,9 +44,9 @@
 
                                         <tr v-for="item in licenca_data" :key="item">
                                             <td>{{ item.id }}</td>
-                                            <td v-for="licenca1 in item.licenca" :key="licenca1">{{ licenca1.titulo }}
+                                            <td v-for="licenca1 in item.licenca" :key="licenca1" >{{ licenca1.titulo }}
                                             </td>
-                                            <td v-for="usuario1 in item.usuario" :key="usuario1">{{ usuario1.name }}
+                                            <td v-for="usuario1 in item.usuario" :key="usuario1" > {{ usuario1.name }}
                                             </td>
                                             <td>
                                                 <div class="float-right">
