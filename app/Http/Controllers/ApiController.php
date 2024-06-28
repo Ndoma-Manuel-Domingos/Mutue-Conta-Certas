@@ -74,113 +74,211 @@ class ApiController extends Controller
             $subconta_caixa_banco = SubConta::with(['conta'])->where('numero', $request->subconta_caixa_banco)->first();
             $subconta_servico = SubConta::with(['conta'])->where('numero', $request->subconta_servico)->first();
             
-            $tipo_documento = $request->tipo_documento;
-            
-            // return response()->json([
-            //     "cliente" => $subconta_cliente,
-            //     "caixa" => $subconta_caixa_banco,
-            //     "servico" => $subconta_servico,
-            // ]);
-            
             $tipo_movimento = TipoMovimento::where('sigla', 'D')->first();
             
             $ultimo_movimento = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->count();
             
             $hash = time();
-                    
-            $create = Movimento::create([
-                'hash' => $hash,
-                'debito' => $request->valor,
-                'credito' => $request->valor,
-                'iva' => 0,
-                'empresa_id' => 1,
-                'descricao' => $request->designacao,
-                'requisitante' => 1,
-                'centro_custo' => 1,
-                // 'requisitante' => $request->requisitante,
-                // 'centro_custo' => $request->centro_custo,
-                'origem' => "movimento",
-                'exercicio_id' => 1,
-                'periodo_id' =>  5,
-                'dia_id' => date("d"),
-                'data_lancamento' => date("Y-m-d"),
-                'lancamento_atual' => $ultimo_movimento + 1,
-                'diario_id' => 2, // $request->diario_id,
-                'tipo_documento_id' => 2, //$request->tipo_documento_id,
-                'tipo_instituicao' => $request->tipo_instituicao,
-                'instituicao_id' => $request->instituicao_id,
-            ]);
             
-            // DEBITAR
-            MovimentoItem::create([
-                'hash' => $hash,
-                'debito' => $request->valor,
-                'credito' => 0,
-                'iva' => 0,
-                'descricao' => $request->designacao,
-                'origem' => "movimento",
-                'empresa_id' => 1,
-                'subconta_id' => $subconta_caixa_banco->id,
-                'conta_id' => $subconta_caixa_banco->conta_id,
-                'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
-                'documento_id' => NULL,
-                'tipo_credito_id' => NULL,
-                'tipo_proveito_id' => NULL,
-                'contrapartida_id' =>  NULL,
-                'taxta_iva_id' => 1,
-                'apresentar' => 'S',
-                'movimento_id' => $create->id,
-                'tipo_instituicao' => $request->tipo_instituicao,
-                'instituicao_id' => $request->instituicao_id,
-            ]);
+            if($request->tipo_documento == 'FR'){
+                $tipo_documento_id = 3;
+            }else if($request->tipo_documento == 'FT'){
+                $tipo_documento_id = 1;
+            }else if($request->tipo_documento == 'FP'){
+                $tipo_documento_id = 2;
+            }
             
-            //  CREDITAR
-            MovimentoItem::create([
-                'hash' => $hash,
-                'debito' => 0,
-                'credito' => $request->valor,
-                'iva' => 0,
-                'descricao' => $request->designacao,
-                'origem' => "movimento",
-                'empresa_id' => 1,
-                'subconta_id' => $subconta_servico->id,
-                'conta_id' => $subconta_servico->conta_id,
-                'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
-                'documento_id' => NULL,
-                'tipo_credito_id' => NULL,
-                'tipo_proveito_id' => NULL,
-                'contrapartida_id' =>  NULL,
-                'taxta_iva_id' => 1,
-                'apresentar' => 'S',
-                'movimento_id' => $create->id,
-                'tipo_instituicao' => $request->tipo_instituicao,
-                'instituicao_id' => $request->instituicao_id,
-            ]);
+            if($request->tipo_documento == 'FR'){
+                        
+                $create = Movimento::create([
+                    'hash' => $hash,
+                    'debito' => $request->valor,
+                    'credito' => $request->valor,
+                    'iva' => 0,
+                    'empresa_id' => 1,
+                    'descricao' => $request->designacao,
+                    'requisitante' => 1,
+                    'centro_custo' => 1,
+                    // 'requisitante' => $request->requisitante,
+                    // 'centro_custo' => $request->centro_custo,
+                    'origem' => "movimento",
+                    'exercicio_id' => 1,
+                    'periodo_id' =>  5,
+                    'dia_id' => date("d"),
+                    'data_lancamento' => date("Y-m-d"),
+                    'lancamento_atual' => $ultimo_movimento + 1,
+                    'diario_id' => 2, // $request->diario_id,
+                    'tipo_documento_id' => 2, //$request->tipo_documento_id,
+                    'tipo_instituicao' => $request->tipo_instituicao,
+                    'instituicao_id' => $request->instituicao_id,
+                ]);
+                
+                // DEBITAR
+                MovimentoItem::create([
+                    'hash' => $hash,
+                    'debito' => $request->valor,
+                    'credito' => 0,
+                    'iva' => 0,
+                    'descricao' => $request->designacao,
+                    'origem' => "movimento",
+                    'empresa_id' => 1,
+                    'subconta_id' => $subconta_caixa_banco->id,
+                    'conta_id' => $subconta_caixa_banco->conta_id,
+                    'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
+                    'documento_id' => NULL,
+                    'tipo_credito_id' => NULL,
+                    'tipo_proveito_id' => NULL,
+                    'contrapartida_id' =>  NULL,
+                    'taxta_iva_id' => 1,
+                    'apresentar' => 'S',
+                    'movimento_id' => $create->id,
+                    'tipo_instituicao' => $request->tipo_instituicao,
+                    'instituicao_id' => $request->instituicao_id,
+                ]);
+                
+                //  CREDITAR
+                MovimentoItem::create([
+                    'hash' => $hash,
+                    'debito' => 0,
+                    'credito' => $request->valor,
+                    'iva' => 0,
+                    'descricao' => $request->designacao,
+                    'origem' => "movimento",
+                    'empresa_id' => 1,
+                    'subconta_id' => $subconta_servico->id,
+                    'conta_id' => $subconta_servico->conta_id,
+                    'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
+                    'documento_id' => NULL,
+                    'tipo_credito_id' => NULL,
+                    'tipo_proveito_id' => NULL,
+                    'contrapartida_id' =>  NULL,
+                    'taxta_iva_id' => 1,
+                    'apresentar' => 'S',
+                    'movimento_id' => $create->id,
+                    'tipo_instituicao' => $request->tipo_instituicao,
+                    'instituicao_id' => $request->instituicao_id,
+                ]);
+                
+                // DEBITAR E CREDITAR
+                MovimentoItem::create([
+                    'hash' => $hash,
+                    'debito' => $request->valor,
+                    'credito' => $request->valor,
+                    'iva' => 0,
+                    'descricao' => $request->designacao,
+                    'empresa_id' => 1,
+                    'subconta_id' => $subconta_cliente ? $subconta_cliente->id : NULL,
+                    'conta_id' => $subconta_cliente ? $subconta_cliente->conta_id : NULL,
+                    'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
+                    'documento_id' => NULL,
+                    'tipo_credito_id' => NULL,
+                    'tipo_proveito_id' => NULL,
+                    'contrapartida_id' => NULL,
+                    'taxta_iva_id' => 1,
+                    'origem' => 'movimento',
+                    'movimento_id' => $create->id,
+                    'apresentar' => 'N',
+                    'movimento_id' => $create->id,
+                    'tipo_instituicao' => $request->tipo_instituicao,
+                    'instituicao_id' => $request->instituicao_id,
+                ]);
             
-            // DEBITAR E CREDITAR
-            MovimentoItem::create([
-                'hash' => $hash,
-                'debito' => $request->valor,
-                'credito' => $request->valor,
-                'iva' => 0,
-                'descricao' => $request->designacao,
-                'empresa_id' => 1,
-                'subconta_id' => $subconta_cliente ? $subconta_cliente->id : NULL,
-                'conta_id' => $subconta_cliente ? $subconta_cliente->conta_id : NULL,
-                'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
-                'documento_id' => NULL,
-                'tipo_credito_id' => NULL,
-                'tipo_proveito_id' => NULL,
-                'contrapartida_id' => NULL,
-                'taxta_iva_id' => 1,
-                'origem' => 'movimento',
-                'movimento_id' => $create->id,
-                'apresentar' => 'N',
-                'movimento_id' => $create->id,
-                'tipo_instituicao' => $request->tipo_instituicao,
-                'instituicao_id' => $request->instituicao_id,
-            ]);
+            } else {
+                
+                $create = Movimento::create([
+                    'hash' => $hash,
+                    'debito' => $request->valor,
+                    'credito' => $request->valor,
+                    'iva' => 0,
+                    'empresa_id' => 1,
+                    'descricao' => $request->designacao,
+                    'requisitante' => 1,
+                    'centro_custo' => 1,
+                    // 'requisitante' => $request->requisitante,
+                    // 'centro_custo' => $request->centro_custo,
+                    'origem' => "movimento",
+                    'exercicio_id' => 1,
+                    'periodo_id' =>  5,
+                    'dia_id' => date("d"),
+                    'data_lancamento' => date("Y-m-d"),
+                    'lancamento_atual' => $ultimo_movimento + 1,
+                    'diario_id' => 2, // $request->diario_id,
+                    'tipo_documento_id' => $tipo_documento_id, //$request->tipo_documento_id,
+                    'tipo_instituicao' => $request->tipo_instituicao,
+                    'instituicao_id' => $request->instituicao_id,
+                ]);
+                
+                // DEBITAR
+                // MovimentoItem::create([
+                //     'hash' => $hash,
+                //     'debito' => $request->valor,
+                //     'credito' => 0,
+                //     'iva' => 0,
+                //     'descricao' => $request->designacao,
+                //     'origem' => "movimento",
+                //     'empresa_id' => 1,
+                //     'subconta_id' => $subconta_caixa_banco->id,
+                //     'conta_id' => $subconta_caixa_banco->conta_id,
+                //     'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
+                //     'documento_id' => NULL,
+                //     'tipo_credito_id' => NULL,
+                //     'tipo_proveito_id' => NULL,
+                //     'contrapartida_id' =>  NULL,
+                //     'taxta_iva_id' => 1,
+                //     'apresentar' => 'S',
+                //     'movimento_id' => $create->id,
+                //     'tipo_instituicao' => $request->tipo_instituicao,
+                //     'instituicao_id' => $request->instituicao_id,
+                // ]);
+                
+                //  CREDITAR
+                MovimentoItem::create([
+                    'hash' => $hash,
+                    'debito' => 0,
+                    'credito' => $request->valor,
+                    'iva' => 0,
+                    'descricao' => $request->designacao,
+                    'origem' => "movimento",
+                    'empresa_id' => 1,
+                    'subconta_id' => $subconta_servico->id,
+                    'conta_id' => $subconta_servico->conta_id,
+                    'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
+                    'documento_id' => NULL,
+                    'tipo_credito_id' => NULL,
+                    'tipo_proveito_id' => NULL,
+                    'contrapartida_id' =>  NULL,
+                    'taxta_iva_id' => 1,
+                    'apresentar' => 'S',
+                    'movimento_id' => $create->id,
+                    'tipo_instituicao' => $request->tipo_instituicao,
+                    'instituicao_id' => $request->instituicao_id,
+                ]);
+                
+                // DEBITAR E CREDITAR
+                MovimentoItem::create([
+                    'hash' => $hash,
+                    'debito' => $request->valor,
+                    'credito' => 0,
+                    'iva' => 0,
+                    'descricao' => $request->designacao,
+                    'empresa_id' => 1,
+                    'subconta_id' => $subconta_cliente ? $subconta_cliente->id : NULL,
+                    'conta_id' => $subconta_cliente ? $subconta_cliente->conta_id : NULL,
+                    'tipo_movimento_id' => $tipo_movimento ? $tipo_movimento->id : NULL,
+                    'documento_id' => NULL,
+                    'tipo_credito_id' => NULL,
+                    'tipo_proveito_id' => NULL,
+                    'contrapartida_id' => NULL,
+                    'taxta_iva_id' => 1,
+                    'origem' => 'movimento',
+                    'movimento_id' => $create->id,
+                    'apresentar' => 'N',
+                    'movimento_id' => $create->id,
+                    'tipo_instituicao' => $request->tipo_instituicao,
+                    'instituicao_id' => $request->instituicao_id,
+                ]);
             
+            }
             // Se todas as operações foram bem-sucedidas, você pode fazer o commit
             DB::commit();
         } catch (\Exception $e) {

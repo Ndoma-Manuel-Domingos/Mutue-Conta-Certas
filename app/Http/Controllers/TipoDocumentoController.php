@@ -12,6 +12,7 @@ use Inertia\Inertia;
 // esportar excel
 use App\Exports\MovimentoExport;
 use App\Exports\TipoDocumentoExport;
+use App\Models\Diario;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
@@ -27,15 +28,15 @@ class TipoDocumentoController extends Controller
         $data['tipos_documentos'] = TipoDocumento::when($request->tipo_documento_designacao, function($query, $value){
             $query->where('designacao', 'like', "%".$value."%");
         })
-        ->when($request->tipo_documento_numero, function($query, $value){
-            $query->orWhere('numero', $value);
-        })
-        ->whereHas('diario', function($query) use($request){
-            $query->when($request->tipo_diario, function($query, $value){
-                $query->where('designacao', 'like', "%".$value."%");
-                $query->orWhere('numero', $value);
-            });
-        })
+        // ->when($request->tipo_documento_numero, function($query, $value){
+        //     $query->orWhere('numero', $value);
+        // })
+        // ->whereHas('diario', function($query) use($request){
+        //     $query->when($request->tipo_diario, function($query, $value){
+        //         $query->where('designacao', 'like', "%".$value."%");
+        //         $query->orWhere('numero', $value);
+        //     });
+        // })
         ->where('empresa_id', $this->empresaLogada())
         ->with(['empresa', 'diario'])
         ->get();
