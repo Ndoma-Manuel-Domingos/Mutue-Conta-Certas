@@ -41,37 +41,32 @@ class ImobilizadosController extends Controller
     {
         // Retorna a lista de posts
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-        
-        // $data['registros'] = ContaEmpresa::with(['classe'])->with(['conta.items_movimentos' => function ($query) {
-        //     $query->select(
-        //         'conta_id',
-        //         DB::raw('sum(debito) as TotalDebito'),
-        //         DB::raw('sum(credito) as TotalCredito'),
-        //     )->groupBy('conta_id');
-        // }, 'sub_contas_empresa.items_movimentos' => function ($query) {
-        //     $query->select(
-        //         'subconta_id',
-        //         DB::raw('sum(debito) as total_debito'),
-        //         DB::raw('sum(credito) as total_credito'),
-        //     )->groupBy('subconta_id');
-        // }])
-        // ->whereHas('sub_contas_empresa.items_movimentos.movimento', function($query) use($request){
-        //     $query->when($request->data_inicio, function($query, $value){
-        //         $query->whereDate('data_lancamento',  ">=" ,$value);
-        //     }); 
-        // })
-        // ->whereHas('sub_contas_empresa.items_movimentos.movimento', function($query) use($request){
-        //     $query->when($request->data_final, function($query, $value){
-        //         $query->whereDate('data_lancamento', "<=" ,$value);
-        //     }); 
-        // })
-        // ->paginate(100);
-
+  
         $data['imobilizados'] = Imobilizado::with(['amortizacao','amortizacao_item','classificacao','exercicio','periodo','empresa'])
         ->where('empresa_id', $this->empresaLogada())
         ->get();
-            
-               
+        
+        $valor_acumulado = 0;
+        $valor_contabilistico = 0;
+        $valor_aquisicao = 0;
+        $valores = 0;
+        
+        foreach ($data['imobilizados'] as $item) {
+            $valor_contabilistico += $item->valor_aquisicao - ($item->valor_aquisicao * (($item->amortizacao_item->taxa / 100) * $item->ano_vencimento));
+            $valor_acumulado += ($item->valor_aquisicao * ($item->amortizacao_item->taxa / 100)) * $item->ano_vencimento;
+            $valores += $item->valor_aquisicao * ($item->amortizacao_item->taxa / 100);
+            $valor_aquisicao += $item->valor_aquisicao;
+        }
+                
+        $data['resultado'] = [];
+      
+        $data['resultado'] = (object) [
+            "valor_contabilistico" => $valor_contabilistico,
+            "valor_acumulado" => $valor_acumulado,
+            "valores" => $valores,
+            "valor_aquisicao" => $valor_aquisicao,
+        ];
+        
         return Inertia::render('Imobilizados/MapaAmortizacao', $data);
     }
     
@@ -84,6 +79,28 @@ class ImobilizadosController extends Controller
         $data['imobilizados'] = Imobilizado::with(['amortizacao','amortizacao_item','classificacao','exercicio','periodo','empresa'])
         ->where('empresa_id', $this->empresaLogada())
         ->get();
+        
+        $valor_acumulado = 0;
+        $valor_contabilistico = 0;
+        $valor_aquisicao = 0;
+        $valores = 0;
+        
+        foreach ($data['imobilizados'] as $item) {
+            $valor_contabilistico += $item->valor_aquisicao - ($item->valor_aquisicao * (($item->amortizacao_item->taxa / 100) * $item->ano_vencimento));
+            $valor_acumulado += ($item->valor_aquisicao * ($item->amortizacao_item->taxa / 100)) * $item->ano_vencimento;
+            $valores += $item->valor_aquisicao * ($item->amortizacao_item->taxa / 100);
+            $valor_aquisicao += $item->valor_aquisicao;
+        }
+        
+        $data['resultado'] = [];
+      
+        $data['resultado'] = (object) [
+            "valor_contabilistico" => $valor_contabilistico,
+            "valor_acumulado" => $valor_acumulado,
+            "valores" => $valores,
+            "valor_aquisicao" => $valor_aquisicao,
+        ];
+        
         
         $data['dados_empresa'] = $this->dadosEmpresaLogada();
 
@@ -142,7 +159,6 @@ class ImobilizadosController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             "designacao" => "required",
             "exercicio_id" => "required",
@@ -158,9 +174,8 @@ class ImobilizadosController extends Controller
         
         $classificacao = ClassificacaoImobilizado::find($request->classificacao_id);
 
-        
-        foreach ($request->quantidade as $qtds) {
-              
+        for ($i=0; $i < $request->quantidade; $i++) { 
+            
             $digits = range(0, 9);
             shuffle($digits);
             $uniqueDigits = array_slice($digits, 0, 4);
@@ -186,7 +201,12 @@ class ImobilizadosController extends Controller
                 'data_utilizacao' => $request->data_utilizacao,
                 'created_by' => auth()->user()->id,
             ]);
+            
         }
+        
+        // foreach ($request->quantidade as $qtds) {
+              
+        // }
         
         
         // return redirect("/imprimir-ficha-imobilizado?id={$create->id}");

@@ -32,12 +32,15 @@ class AuthController extends Controller
             
             if ($user->level == 1) {
                 if($user->empresas && count($user->empresas) > 0 ){
-                    return redirect()->intended(RouteServiceProvider::HOME_ESCOLHER_EMPRESAS);
+                    return redirect('/escolher-empresa-operar');
+                    // return redirect()->intended(RouteServiceProvider::HOME_ESCOLHER_EMPRESAS);
                 }else{
-                    return redirect()->intended(RouteServiceProvider::HOME);
+                    return redirect('/dashboard');
+                    // return redirect()->intended(RouteServiceProvider::HOME);
                 }
             } else if($user->level == 2) {
-                return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
+                return redirect('/administrativo');
+                // return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
             }
             
         }
@@ -52,13 +55,15 @@ class AuthController extends Controller
                 
                 if ($user->level == 1) {
                     if($user->empresas && count($user->empresas) > 0 ){
-                        return redirect()->intended(RouteServiceProvider::HOME_ESCOLHER_EMPRESAS);
+                        return redirect('/escolher-empresa-operar');
+                        // return redirect()->intended(RouteServiceProvider::HOME_ESCOLHER_EMPRESAS);
                     }else{
-                        return redirect()->intended(RouteServiceProvider::HOME);
+                        return redirect('/dashboard');
+                        // return redirect()->intended(RouteServiceProvider::HOME);
                     }
                 } else if($user->level == 2) {
-                
-                    return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
+                    return redirect('/administrativo');
+                    // return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
                 }
             }
         
@@ -133,8 +138,9 @@ class AuthController extends Controller
         // event(new Registered($user));
 
         Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME_LICENCA);
+        
+        return redirect('licencas');
+        // return redirect(RouteServiceProvider::HOME_LICENCA);
     }
 
     public function logout(Request $request)

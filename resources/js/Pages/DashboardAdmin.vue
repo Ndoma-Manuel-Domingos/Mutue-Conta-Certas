@@ -14,13 +14,15 @@
                         <div class="small-box bg-info">
                             <div class="inner">
                                 <h4>{{ empresas_count }}</h4>
-                                <p><i class="fa fa-university" aria-hidden="true"> TOTAL DE EMPRESAS</i></p>
+                                <p><i class="fa fa-university" aria-hidden="true"></i> TOTAL DE EMPRESAS</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-bag"></i>
                             </div>
-                            <a href="/listar-empresas" class="small-box-footer">Mais detalhe <i
-                                    class="fas fa-arrow-circle-right"></i></a>
+                            <!-- <Link href="/listar-empresas" class="small-box-footer"
+                                >Mais detalhe <i class="fas fa-arrow-circle-right"></i
+                              ></Link> -->
+                            <a href="/listar-empresas" class="small-box-footer">Mais detalhe <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
 
@@ -28,13 +30,15 @@
                         <div class="small-box bg-success">
                             <div class="inner">
                                 <h4>{{ licencas_usadas_count }}</h4>
-                                <p><i class="fa fa-id-card" aria-hidden="true"> LICENÇAS EM UTILIZAÇÃO</i></p>
+                                <p><i class="fa fa-id-card" aria-hidden="true"></i> LICENÇAS EM UTILIZAÇÃO</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
-                            <a href="licenca-utilizacao" class="small-box-footer">Mais detalhe <i
-                                    class="fas fa-arrow-circle-right"></i></a>
+                            <!-- <Link href="/licenca-utilizacao" class="small-box-footer"
+                                >Mais detalhe <i class="fas fa-arrow-circle-right"></i
+                              ></Link> -->
+                            <a href="licenca-utilizacao" class="small-box-footer">Mais detalhe <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
 
@@ -42,11 +46,14 @@
                         <div class="small-box bg-success">
                             <div class="inner">
                                 <h4>{{ licencas_nao_usadas_count }}</h4>
-                                <p><i class="fa fa-id-card" aria-hidden="true"> LICENÇAS SEM UTILIZAÇÃO</i></p>
+                                <p><i class="fa fa-id-card" aria-hidden="true"></i> LICENÇAS SEM UTILIZAÇÃO</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
+                            <!-- <Link href="/licenca-sem-utilizacao" class="small-box-footer"
+                                >Mais detalhe <i class="fas fa-arrow-circle-right"></i
+                              ></Link> -->
                             <a href="licenca-sem-utilizacao" class="small-box-footer">Mais detalhe<i
                                     class="fas fa-arrow-circle-right"></i>
                             </a>
