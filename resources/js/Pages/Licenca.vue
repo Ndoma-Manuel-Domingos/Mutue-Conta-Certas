@@ -26,7 +26,7 @@
               <div class="card-body">
                 <div class="card card-info card-outline" >
                   <div class="card-header">
-                    <h5 class="card-title">Modulos</h5>
+                    <h5 class="card-title">Módulos</h5>
                   </div>
                   <div class="card-body" style="height: 150px;">
 
