@@ -88,91 +88,31 @@
                         <td class="text-left">-----</td>
                         <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao) }}</td>
                         <td class="text-left">{{ formatarValorMonetario(item.quantidade) }}</td>
-                        <td class="text-left">-------</td>
+                        <td class="text-left"> {{ formatarValorMonetario(item.valor_aquisicao * (item.amortizacao_item.taxa / 100)) }}</td>
                         <td class="text-left">{{ item.amortizacao_item.taxa }}</td>
                         <td class="text-left">--------</td>
-                        <td class="text-right">{{ formatarValorMonetario(calcularAmortizacaoAnual(item.valor_aquisicao, item.amortizacao_item.taxa, item.amortizacao_item.vida_util))   }}</td>
-                        <td class="text-left">--------</td>
-                        <td class="text-left">--------</td>
+                        <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao * (item.amortizacao_item.taxa / 100)) }}</td>
+                        <!-- <td class="text-right">{{ formatarValorMonetario(calcularAmortizacaoAnual(item.valor_aquisicao, item.amortizacao_item.taxa, item.amortizacao_item.vida_util))   }}</td> -->
+                        <td class="text-right">{{ formatarValorMonetario((item.valor_aquisicao * (item.amortizacao_item.taxa / 100)) * item.ano_vencimento ) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao - (item.valor_aquisicao * ((item.amortizacao_item.taxa / 100) * item.ano_vencimento))) }}</td>
                     </tr>
                   </tbody>
                   
                   <tfoot>
                     <tr>
-                        <td class="text-center" colspan="9">Total Geral (ainda estamos a estudar)</td>
-                        
-                        <td class="text-right">462 000,00</td>
+                        <td class="text-center" colspan="9">Total Geral</td>
+                        <td class="text-right">{{ formatarValorMonetario(resultado.valor_aquisicao) }}</td>
                         <td class="text-left">0</td>
                         <td>-----</td>
                         <td>-----</td>
                         <td>-------</td>
-                        <td class="text-right">462 000,00</td>
-                        <td class="text-right">0</td>
-                        <td class="text-right">0</td>
+                        <td class="text-right">{{ formatarValorMonetario(resultado.valores) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(resultado.valor_acumulado) }}</td>
+                        <td class="text-right">{{ formatarValorMonetario(resultado.valor_contabilistico) }}</td>
                     </tr>
                   </tfoot>
                 </table>
-              
-                <!-- <table class="table table-bordered table-hover" id="tabela_de_diarias">
-                  <thead>
-                    <tr>
-                      <th class="text-left" rowspan="3">Descrição</th>
-                      <th class="text-center" rowspan="3">Ano</th>
-                      <th class="text-center" rowspan="3">Qtd</th>
-                      <th class="text-center">Valores de Aquisição</th>
-                      <th class="text-center">Anos em Esperas</th>
-                      <th class="text-center" colspan="4">Reintegrações e amortizações</th>
-                      <th class="text-center" rowspan="3">Activo Imobilizado <br> (Valores líquidos)</th>
-                    </tr>
-                    
-                    <tr>
-                      <th class="text-center" rowspan="2">(c)</th>
-                      <th class="text-center" rowspan="2">(d)</th>
-                      
-                      <th class="text-center" rowspan="2">De exercícios <br> anteriores</th>
-                      <th class="text-center" colspan="2">Do exercícios</th>
-                      <th class="text-center" rowspan="2">Acumuladas</th>
-                    </tr>
-                    
-                    <tr>
-                      <th class="text-center">Taxa</th>
-                      <th class="text-center">Valores</th>
-                    </tr>
-                    
-                  </thead>
-
-                  <tbody>
-                    
-                    <tr v-for="(item, index) in imobilizados" :key="index">
-                        <td class="text-left">{{ item.designacao }}</td>
-                        <td class="text-center">{{ item.data_aquisicao }}</td>
-                        <td class="text-center">{{ item.quantidade }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao) }}</td>
-                        <td class="text-center">{{ item.amortizacao_item.vida_util }}</td>
-                        <td class="text-right">-</td>
-                        <td>{{ item.amortizacao_item.taxa }}%</td>
-                        <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao)  }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao) }}</td>
-                        <td class="text-right">{{ formatarValorMonetario(item.valor_aquisicao) }}</td>
-                    </tr>
-                  
-                    
-                  </tbody>
-                  
-                  <tfoot>
-                    <tr>
-                        <td class="text-center" colspan="3">Total Geral (ainda estamos a estudar)</td>
-                        
-                        <td class="text-right">462 000,00</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-right">462 000,00</td>
-                        <td class="text-right">462 000,00</td>
-                        <td class="text-right">462 000,00</td>
-                    </tr>
-                  </tfoot>
-                </table> -->
+               
               </div>
 
             </div>
@@ -187,7 +127,7 @@
 import Paginacao from "../../components/Paginacao.vue";
 
 export default {
-  props: ["imobilizados"],
+  props: ["imobilizados", "resultado"],
   components: {
     Paginacao,
   },

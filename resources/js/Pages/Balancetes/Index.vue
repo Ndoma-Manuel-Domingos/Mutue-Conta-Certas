@@ -150,7 +150,6 @@
                       <th class="text-primary text-right">{{ resultado_por_conta.total_debito > resultado_por_conta.total_credito ? formatarValorMonetario(resultado_por_conta.total_debito - resultado_por_conta.total_credito) : '-' }}</th>
                       <th class="text-danger text-right">{{ resultado_por_conta.total_credito > resultado_por_conta.total_debito ? formatarValorMonetario(resultado_por_conta.total_credito - resultado_por_conta.total_debito) : '-'  }}</th>
 
-
                       <!-- <th class="text-primary text-right">{{ resultado.total_movimento_debito == 0 ? '-' : formatarValorMonetario(resultado.total_movimento_debito) }}</th>
                       <th class="text-danger text-right">{{ resultado.total_movimento_credito == 0 ? '-' : formatarValorMonetario(resultado.total_movimento_credito) }}</th> -->
                       <!-- <th class="text-primary text-right">{{ resultado.total_movimento_debito > resultado.total_movimento_credito ? formatarValorMonetario(resultado.total_movimento_debito - resultado.total_movimento_credito) : '-' }}</th>
@@ -158,7 +157,7 @@
 
                     </tr>
 
-                    <template v-for="(item, index) in registros.data" :key="index">
+                    <template v-for="(item, index) in registros" :key="index">
                       <!-- CLASSES -->
                       <tr v-show="tipo_balancete_id == 3 || tipo_balancete_id == 4">
                         <th colspan="3" class="text-uppercase">CLASSE {{ item.classe.numero ?? '' }} - {{ item.classe.designacao ?? '' }}</th>
@@ -197,6 +196,9 @@
 
                     </template>
                   </thead>
+                  
+               
+                  
                 </table>
 
               </div>

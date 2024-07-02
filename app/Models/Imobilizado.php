@@ -16,6 +16,8 @@ class Imobilizado extends Model
         'status',
         'conta',
         'origem_id',
+        'designacao',
+        'ano_vencimento',
         'classificacao_id',
         'sigla',
         'exercicio_id',

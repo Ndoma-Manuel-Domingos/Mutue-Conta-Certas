@@ -120,7 +120,7 @@
                         <td>Imobilizações corpóreas ....................................</td>
                         <td class="text-center"><a href="get-subcontas?nota=4">4</a></td>
                         <!-- <td class="text-right" style="color: red;" v-if="total_imobilizacoes_corporeas < 0">{{ total_imobilizacoes_corporeas * -1}}</td> -->
-                        <td class="text-right" style="color: blue;">{{ total_imobilizacoes_corporeas }}</td>
+                        <td class="text-right" style="color: blue;">{{ formatarValorMonetario(total_imobilizacoes_corporeas) }}</td>
                         <td class="text-right">-</td>
                       </tr>
                
@@ -128,7 +128,7 @@
                         <td>Imobilizações incorpóreas ....................................</td>
                         <td class="text-center"><a href="get-subcontas?nota=5">5</a></td>
                         <!-- <td class="text-right" style="color: red;" v-if="total_imobilizacoes_incorporeas < 0">{{ total_imobilizacoes_incorporeas * -1}}</td> -->
-                        <td class="text-right" style="color: blue;">{{ total_imobilizacoes_incorporeas }}</td>
+                        <td class="text-right" style="color: blue;">{{ formatarValorMonetario(total_imobilizacoes_incorporeas) }}</td>
                         <td class="text-right">-</td>
                       </tr>
                

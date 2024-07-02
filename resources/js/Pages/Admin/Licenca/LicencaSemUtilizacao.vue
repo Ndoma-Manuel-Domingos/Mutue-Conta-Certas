@@ -26,11 +26,10 @@
 
                                     <thead>
                                         <tr>
-
                                             <th>Título</th>
                                             <th>Preço</th>
-                                            <!-- <th>Módulos</th> -->
                                             <th>Designação</th>
+                                            <th>Usuário</th>
                                         </tr>
                                     </thead>
 
@@ -38,31 +37,24 @@
                                         <tr v-for="item in licenca_sem_utilizacao" :key="item">
                                             <td>
                                                 <div v-for="licenca in item.licenca" :key="licenca">
-                                                    <span class="small">{{ licenca.titulo }}</span>
+                                                    <span>{{ licenca.titulo }}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div v-for="licenca in item.licenca" :key="licenca">
-                                                    <span class="small">{{ licenca.preco }}</span>
+                                                    <span>{{ licenca.preco }}</span>
                                                 </div>
                                             </td>
-                                            <!-- <td>
-                                                <div v-for="mod in licenca_em_utilizacao" :key="mod">
-                                                    <span class="small" v-for="modulos in mod.licenca" :key="modulos">
-                                                        <div v-for="modulo in modulos['modulos']" :key="modulo">
-
-                                                            {{ modulo.modulo.designacao }}
-                                                        </div>
-                                                        /
-                                                    </span>
-                                                </div>
-                                            </td> -->
                                             <td>
                                                 <div v-for="licenca in item.licenca" :key="licenca">
-                                                    <span class="small">{{ licenca.designacao }} /</span>
+                                                    <span>{{ licenca.designacao }}</span>
                                                 </div>
                                             </td>
-
+                                            <td>
+                                                <div v-for="usuario in item.usuario" :key="usuario">
+                                                    <span>{{ usuario.name ? usuario.name : "" }}</span>
+                                                </div>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

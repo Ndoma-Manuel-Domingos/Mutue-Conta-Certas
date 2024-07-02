@@ -17,7 +17,7 @@
           <div class="col-lg-3 col-12 col-md-3">
             <div class="small-box bg-info">
               <div class="inner">
-                <h4>{{ formatarValorMonetario(resultado.debito) }}</h4>
+                <h4>{{ formatarValorMonetario(resultado.debito ?? 0) }}</h4>
                 <p>Débito Geral Fluxo do Caixa</p>
               </div>
               <div class="icon">
@@ -32,7 +32,7 @@
           <div class="col-lg-3 col-12 col-md-3">
             <div class="small-box bg-danger">
               <div class="inner">
-                <h4>{{ formatarValorMonetario(resultado.credito) }}</h4>
+                <h4>{{ formatarValorMonetario(resultado.credito ?? 0) }}</h4>
                 <p>Crédito Geral Fluxo do Caixa</p>
               </div>
               <div class="icon">
@@ -97,6 +97,7 @@
                         <th>Data</th>
                         <th>Exercício</th>
                         <th>Operador</th>
+                        <th>Descrição</th>
                         <th class="text-right">Débito</th>
                         <th class="text-right">Crédito</th>
                         <!-- <th class="text-right">Ações</th> -->

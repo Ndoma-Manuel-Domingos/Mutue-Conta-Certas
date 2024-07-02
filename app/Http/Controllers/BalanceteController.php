@@ -48,28 +48,13 @@ class BalanceteController extends Controller
                 $query->whereDate('data_lancamento', "<=" ,$value);
             });
         })
-        ->paginate(100);
-
-        // $data['registros_contas'] = ContaEmpresa::with(['classe'])->with(['conta.items_movimentos' => function ($query) {
-        //     $query->select(
-        //         'conta_id',
-        //         DB::raw('sum(debito) as TotalDebito'),
-        //         DB::raw('sum(credito) as TotalCredito'),
-        //     )->groupBy('conta_id');
-        // }])
-        // ->whereHas('sub_contas_empresa.items_movimentos.movimento', function($query) use($request){
-        //     $query->when($request->data_inicio, function($query, $value){
-        //         $query->whereDate('data_lancamento',  ">=" ,$value);
-        //     });
-        // })
-        // ->whereHas('sub_contas_empresa.items_movimentos.movimento', function($query) use($request){
-        //     $query->when($request->data_final, function($query, $value){
-        //         $query->whereDate('data_lancamento', "<=" ,$value);
-        //     });
-        // })
-        // ->paginate(100);
-
-        // dd($data['registros_contas']);
+        ->distinct()
+        ->distinct('classe_id')  // Distinct baseado na classe
+        ->get();
+        
+        // Remove duplicatas manualmente no PHP com base na classe_id
+        $data['registros'] = $data['registros']->unique('classe_id')->values();
+                
 
         $valores = [];
         $valores_por_conta = [];
@@ -82,8 +67,9 @@ class BalanceteController extends Controller
         $total_por_conta_debito = 0;
 
         foreach ($data['registros'] as $movimento) {
+           
             foreach ($movimento['conta']['items_movimentos'] as $contas) {
-
+                
                 $total_por_conta_credito += $contas->TotalCredito;
                 $total_por_conta_debito += $contas->TotalDebito;
 
@@ -91,7 +77,6 @@ class BalanceteController extends Controller
                     "total_credito" => $total_por_conta_credito,
                     "total_debito" => $total_por_conta_debito,
                 ];
-
             }
 
             foreach ($movimento['sub_contas_empresa'] as $mov) {
@@ -115,10 +100,11 @@ class BalanceteController extends Controller
                         "total_credito" => $total_credito,
                         "total_debito" => $total_debito,
                     ];
-
                 }
-            }
+            } 
+            
         }
+        
 
         $data['resultado'] = $valores;
         $data['resultado_por_conta'] = $valores_por_conta;
@@ -193,7 +179,10 @@ class BalanceteController extends Controller
                 $query->whereDate('data_lancamento', "<=" ,$value);
             });
         })
-        ->paginate(15);
+        ->get();
+        
+        // Remove duplicatas manualmente no PHP com base na classe_id
+        $data['registros'] = $data['registros']->unique('classe_id')->values();
 
         $valores = [];
         $valores_por_conta = [];
@@ -257,6 +246,7 @@ class BalanceteController extends Controller
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Balancete.pdf');
     }
+    
     public function exportarExcel(Request $request)
     {
         $data['dados'] = $request;

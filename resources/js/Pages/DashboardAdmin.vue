@@ -19,8 +19,10 @@
                             <div class="icon">
                                 <i class="ion ion-bag"></i>
                             </div>
-                            <a href="/listar-empresas" class="small-box-footer">Mais detalhe <i
-                                    class="fas fa-arrow-circle-right"></i></a>
+                            <!-- <Link href="/listar-empresas" class="small-box-footer"
+                                >Mais detalhe <i class="fas fa-arrow-circle-right"></i
+                              ></Link> -->
+                            <a href="/listar-empresas" class="small-box-footer">Mais detalhe <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
 
@@ -33,8 +35,10 @@
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
-                            <a href="licenca-utilizacao" class="small-box-footer">Mais detalhe <i
-                                    class="fas fa-arrow-circle-right"></i></a>
+                            <!-- <Link href="/licenca-utilizacao" class="small-box-footer"
+                                >Mais detalhe <i class="fas fa-arrow-circle-right"></i
+                              ></Link> -->
+                            <a href="licenca-utilizacao" class="small-box-footer">Mais detalhe <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
 
@@ -47,6 +51,9 @@
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
+                            <!-- <Link href="/licenca-sem-utilizacao" class="small-box-footer"
+                                >Mais detalhe <i class="fas fa-arrow-circle-right"></i
+                              ></Link> -->
                             <a href="licenca-sem-utilizacao" class="small-box-footer">Mais detalhe<i
                                     class="fas fa-arrow-circle-right"></i>
                             </a>

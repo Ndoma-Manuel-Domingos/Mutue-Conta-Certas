@@ -27,7 +27,6 @@ class BalancoController extends Controller
 
     public function index(Request $request)
     {
-        // dd($request->exercicio_id);
         // Retorna a lista de posts
         $dados = $this->anoAnterior();
 
@@ -47,18 +46,19 @@ class BalancoController extends Controller
 
         $contas_passivos_corrente = ContaEmpresa::whereIn('classe_id', $classes_passivos_corrente)->pluck('conta_id');
         $contas_passivos_nao_corrente = ContaEmpresa::whereIn('classe_id', $classes_passivos_nao_corrente)->pluck('conta_id');
-
-        $conta_imobilizacoes_corporeas = ContaEmpresa::
-            with(['sub_contas_empresa.items_movimentos'])->with(['sub_contas_empresa.items_movimentos.movimento'])
+        
+        
+        $conta_imobilizacoes_corporeas = ContaEmpresa::with(['sub_contas_empresa.items_movimentos'])->with(['sub_contas_empresa.items_movimentos.movimento'])
             ->with([
                 'sub_contas_empresa' => function ($query) {
                     $query->where('tipo', 'M');
                 }
             ])
             ->where('conta_id', 3)
-            ->get();
-
-        // dd($conta_imobilizacoes_corporeas_exercicio_anterior);
+            ->get()
+            ->unique('sub_contas_empresa.id')
+            ->values();
+            
 
         $conta_imobilizacoes_incorporeas = ContaEmpresa::
             with(['sub_contas_empresa.items_movimentos', 'sub_contas_empresa.items_movimentos.movimento'])
@@ -67,9 +67,10 @@ class BalancoController extends Controller
                     $query->where('tipo', 'M');
                 }
             ])
-            ->where('conta_id', 4)->get();
-
-        $exercicioId = $request->exercicio_id;
+            ->where('conta_id', 4)
+            ->get()
+            ->unique('sub_contas_empresa.id')
+            ->values();
 
         // balanço
         $contas_existencias = Conta::with([
@@ -152,7 +153,6 @@ class BalancoController extends Controller
 
 
         // chamda do metodo para calcular o total
-
 
         $resultado_corporeas = $this->conversaoValores($conta_imobilizacoes_corporeas);
         $resultado_incorporeas = $this->conversaoValores($conta_imobilizacoes_incorporeas);

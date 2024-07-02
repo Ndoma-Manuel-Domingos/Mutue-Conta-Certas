@@ -108,32 +108,31 @@
                   <td style="text-align: left;font-size: 7pt;">{{ $item->origem_id ?? "" }}</td>
                   <td style="text-align: center;font-size: 7pt;">{{ $item->amortizacao_item->vida_util }}</td>
                   <td style="text-align: center;font-size: 7pt;">-----</td>
-                  <td style="text-align: right;font-size: 7pt;">{{ number_format($item->valor_aquisicao) }}</td>
-                  <td style="text-align: center;font-size: 7pt;">{{ number_format($item->quantidade) }}</td>
-                  <td style="text-align: left;font-size: 7pt;">-------</td>
+                  <td style="text-align: right;font-size: 7pt;">{{ number_format($item->valor_aquisicao, 2, ',', '.') }}</td>
+                  <td style="text-align: center;font-size: 7pt;">{{ number_format($item->quantidade, 2, ',', '.') }}</td>
+                  <td style="text-align: left;font-size: 7pt;">{{ number_format($item->valor_aquisicao * ($item->amortizacao_item->taxa / 100), 2, ',', '.') }}</td>
                   <td style="text-align: left;font-size: 7pt;">{{ $item->amortizacao_item->taxa }}</td>
                   <td style="text-align: left;font-size: 7pt;">--------</td>
-                  <td style="text-align: right;font-size: 7pt;">{{ number_format(0) }}</td>
-                  {{-- <td class="text-right">{{ number_format(calcularAmortizacaoAnual($item->valor_aquisicao, $item->amortizacao_item->taxa, $item->amortizacao_item->vida_util))   }}</td> --}}
-                  <td style="text-align: left;font-size: 7pt;">--------</td>
-                  <td style="text-align: left;font-size: 7pt;">--------</td>
+                  <td style="text-align: right;font-size: 7pt;">{{ number_format($item->valor_aquisicao * ($item->amortizacao_item->taxa / 100), 2, ',', '.') }}</td>
+                  <td style="text-align: left;font-size: 7pt;">{{ number_format(($item->valor_aquisicao * ($item->amortizacao_item->taxa / 100)) * $item->ano_vencimento, 2, ',', '.') }}</td>
+                  <td style="text-align: left;font-size: 7pt;">{{ number_format($item->valor_aquisicao - ($item->valor_aquisicao * (($item->amortizacao_item->taxa / 100) * $item->ano_vencimento)), 2, ',', '.') }}</td>
               </tr>
               @endforeach
             </tbody>
             
             <tfoot>
-              {{-- <tr>
-                  <td style="text-align: center;font-size: 7pt;" colspan="9">Total Geral (ainda estamos a estudar)</td>
+              <tr>
+                  <td style="text-align: center;font-size: 7pt;" colspan="9">Total Geral</td>
                   
-                  <td style="text-align: right;font-size: 7pt;">462 000,00</td>
+                  <td style="text-align: right;font-size: 7pt;">{{ number_format($resultado->valor_aquisicao, 2, ',', '.') }}</td>
                   <td style="text-align: left;font-size: 7pt;">0</td>
                   <td>-----</td>
                   <td>-----</td>
                   <td>-------</td>
-                  <td style="text-align: right;font-size: 7pt;">462 000,00</td>
-                  <td style="text-align: right;font-size: 7pt;">0</td>
-                  <td style="text-align: right;font-size: 7pt;">0</td>
-              </tr> --}}
+                  <td style="text-align: right;font-size: 7pt;">{{ number_format($resultado->valores, 2, ',', '.') }}</td>
+                  <td style="text-align: right;font-size: 7pt;">{{ number_format($resultado->valor_acumulado, 2, ',', '.') }}</td>
+                  <td style="text-align: right;font-size: 7pt;">{{ number_format($resultado->valor_contabilistico, 2, ',', '.') }}</td>
+              </tr>
             </tfoot>
           </table>
         

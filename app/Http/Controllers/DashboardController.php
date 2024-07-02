@@ -28,15 +28,15 @@ class DashboardController extends Controller
 
     public function dashboard(Request $request)
     {
+    
         $data['movimentos'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])
         ->where('empresa_id', $this->empresaLogada())
         ->orderBy('id', 'asc')
         ->limit(5)
         ->get();
 
-
         $data['resultado'] = Movimento::with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
-        ->where('origem', 'fluxocaixa')
+        // ->where('origem', 'fluxocaixa')
         ->where('empresa_id', $this->empresaLogada())
         ->select(
             DB::raw('SUM(debito) AS debito'),
@@ -72,7 +72,7 @@ class DashboardController extends Controller
             DB::raw('SUM(credito) as total_credito'),
             DB::raw('IF(SUM(debito) > SUM(credito), SUM(debito) - SUM(credito), SUM(credito) - SUM(debito)) as total_saldo')
         )
-        ->where('origem', 'fluxocaixa')
+        // ->where('origem', 'fluxocaixa')
         ->where('empresa_id', $empresaId)
         ->groupBy(DB::raw('MONTH(created_at)'))
         ->get();

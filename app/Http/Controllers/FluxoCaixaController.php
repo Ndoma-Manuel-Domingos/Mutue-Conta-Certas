@@ -417,6 +417,7 @@ class FluxoCaixaController extends Controller
         ->orderBy('id', 'desc')
         ->first();
         
+        
         $data['contrapartidas'] = Contrapartida::when($request->tipo_credito_id, function($query, $value){
             $query->where('tipo_credito_id' ,$value);
         })
@@ -437,32 +438,46 @@ class FluxoCaixaController extends Controller
 
         $data['resultados'] = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])->where('created_at', '>=', Carbon::createFromDate($data_created))->where('apresentar', 'S')->where('origem', 'fluxocaixa')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
                 
-        if($data['ultimo_saldo']->debito > $data['ultimo_saldo']->credito){
-            $data['saldo_antes_movimento_item'] = $data['ultimo_saldo']->debito - $data['ultimo_saldo']->credito;
-        }else if($data['ultimo_saldo']->credito > $data['ultimo_saldo']->debito){
-            $data['saldo_antes_movimento_item'] = $data['ultimo_saldo']->credito + $data['ultimo_saldo']->debito;
-        }else{
+        if($data['ultimo_saldo'])    {
+            if($data['ultimo_saldo']->debito > $data['ultimo_saldo']->credito){
+                $data['saldo_antes_movimento_item'] = $data['ultimo_saldo']->debito - $data['ultimo_saldo']->credito;
+            }else if($data['ultimo_saldo']->credito > $data['ultimo_saldo']->debito){
+                $data['saldo_antes_movimento_item'] = $data['ultimo_saldo']->credito + $data['ultimo_saldo']->debito;
+            }else{
+                $data['saldo_antes_movimento_item'] = 0;
+            }
+        }else {
             $data['saldo_antes_movimento_item'] = 0;
         }
         
-        if($data['saldo']->debito > $data['saldo']->credito){
-            $data['saldo_final'] = $data['saldo']->debito - $data['saldo']->credito;
-        }else if($data['saldo']->credito > $data['saldo']->debito){
-            $data['saldo_final'] = $data['saldo']->credito + $data['saldo']->debito;
-        }else{
+        if($data['saldo']){
+            if($data['saldo']->debito > $data['saldo']->credito){
+                $data['saldo_final'] = $data['saldo']->debito  - $data['saldo']->credito;
+            }else if($data['saldo']->credito > $data['saldo']->debito){
+                $data['saldo_final'] = $data['saldo']->credito + $data['saldo']->debito;
+            }else{
+                $data['saldo_final'] = 0;
+            }
+        }else {
             $data['saldo_final'] = 0;
         }
-  
-        if($data['ultimo_saldo'] && $data['ultimo_saldo']->tipo_movimento->sigla == "D"){
-            $data['saldo_apos_movimento'] = $data['saldo_final'];
-            $data['saldo_antes_movimento'] = $data['saldo_final'] - $data['saldo_antes_movimento_item'];
-        }else if($data['ultimo_saldo'] && $data['ultimo_saldo']->tipo_movimento->sigla == "C"){
-            $data['saldo_apos_movimento'] = $data['saldo_final'];
-            $data['saldo_antes_movimento'] = $data['saldo_final'] - $data['saldo_antes_movimento_item'];
-        }else{
+        
+        if($data['ultimo_saldo']){
+            if($data['ultimo_saldo'] && $data['ultimo_saldo']->tipo_movimento->sigla == "D"){
+                $data['saldo_apos_movimento'] = $data['saldo_final'];
+                $data['saldo_antes_movimento'] = $data['saldo_final'] - $data['saldo_antes_movimento_item'];
+            }else if($data['ultimo_saldo'] && $data['ultimo_saldo']->tipo_movimento->sigla == "C"){
+                $data['saldo_apos_movimento'] = $data['saldo_final'];
+                $data['saldo_antes_movimento'] = $data['saldo_final'] - $data['saldo_antes_movimento_item'];
+            }else{
+                $data['saldo_antes_movimento'] = 0;
+                $data['saldo_apos_movimento'] = $data['saldo_final'];
+            }
+        }else {
             $data['saldo_antes_movimento'] = 0;
-            $data['saldo_apos_movimento'] = $data['saldo_final'];
+            $data['saldo_apos_movimento'] = 0;
         }
+        
           
         return Inertia::render('FluxoCaixa/Create', $data);
     }
