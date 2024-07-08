@@ -39,8 +39,9 @@
                       <th>Exercício</th>
                       <th>Período</th>
                       <th style="cursor: pointer;">descrição</th>
-                      <th>Débito</th>
-                      <th>Crédito</th>
+                      <th style="cursor: pointer;">Origem</th>
+                      <th class="text-right">Débito</th>
+                      <th class="text-right">Crédito</th>
                       <th class="text-right">Ações</th>
                     </tr>
                   </thead>
@@ -54,8 +55,9 @@
                       <td>{{ item.exercicio.designacao }}</td>
                       <td>{{ item.periodo.designacao }}</td>
                       <td>{{ item.descricao }}</td>
-                      <td class="text-info"><strong>{{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
-                      <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
+                      <td>{{ item.tipo_instituicao == "propina" ? "Contas Certas" : "Mutue Negócios" }}</td>
+                      <td class="text-info text-right"><strong>{{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
+                      <td class="text-danger text-right"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
                       <td>
                         <div class="float-right">
                           <a :href="`/movimentos/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>

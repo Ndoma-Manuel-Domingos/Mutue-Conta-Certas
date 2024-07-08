@@ -28,7 +28,7 @@ class DashboardController extends Controller
 
     public function dashboard(Request $request)
     {
-    
+ 
         $data['movimentos'] = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])
         ->where('empresa_id', $this->empresaLogada())
         ->orderBy('id', 'asc')
@@ -44,6 +44,7 @@ class DashboardController extends Controller
             DB::raw('SUM(iva) AS iva')
         )
         ->first();
+        
 
         // $data['grafico'] = Movimento::with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
         // ->where('origem', 'fluxocaixa')
