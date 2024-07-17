@@ -24,23 +24,13 @@
                 <h3 class="card-title">{{ item.titulo }}</h3>
               </div>
               <div class="card-body">
-                <div class="card card-info card-outline">
+                <div class="card card-info card-outline" >
                   <div class="card-header">
-                    <h5 class="card-title">Modulos</h5>
+                    <h5 class="card-title">Módulos</h5>
                   </div>
-                  <div class="card-body">
-                    <div class="custom-control custom-checkbox">
-                      <input
-                        class="custom-control-input"
-                        type="checkbox"
-                        id="customCheckbox1"
-                        disabled
-                      />
-                      <label for="customCheckbox1" class="custom-control-label"
-                        >Bug</label
-                      >
-                    </div>
-                    <div class="custom-control custom-checkbox">
+                  <div class="card-body" style="height: 150px;">
+
+                    <div class="custom-control custom-checkbox" v-for="modulos in item.modulos" :key="modulos">
                       <input
                         class="custom-control-input"
                         type="checkbox"
@@ -48,42 +38,10 @@
                         disabled
                       />
                       <label for="customCheckbox2" class="custom-control-label"
-                        >Feature</label
+                        >{{modulos.modulo.designacao}}</label
                       >
                     </div>
-                    <div class="custom-control custom-checkbox">
-                      <input
-                        class="custom-control-input"
-                        type="checkbox"
-                        id="customCheckbox3"
-                        disabled
-                      />
-                      <label for="customCheckbox3" class="custom-control-label"
-                        >Enhancement</label
-                      >
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                      <input
-                        class="custom-control-input"
-                        type="checkbox"
-                        id="customCheckbox4"
-                        disabled
-                      />
-                      <label for="customCheckbox4" class="custom-control-label"
-                        >Documentation</label
-                      >
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                      <input
-                        class="custom-control-input"
-                        type="checkbox"
-                        id="customCheckbox5"
-                        disabled
-                      />
-                      <label for="customCheckbox5" class="custom-control-label"
-                        >Examples</label
-                      >
-                    </div>
+
                   </div>
                 </div>
                 <div class="card card-light card-outline">
@@ -92,10 +50,13 @@
                   </div>
                   <div class="card-body">
                     <p>
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                      Aenean commodo ligula eget dolor. Aenean massa. Cum sociis
-                      natoque penatibus et magnis dis parturient montes,
-                      nascetur ridiculus mus.
+                      {{ item.designacao }}
+                    </p>
+                  </div>
+
+                  <div class="card-footer">
+                    <p>
+                      {{ formatarValorMonetario(item.preco) }}KZ
                     </p>
                   </div>
                 </div>
@@ -120,6 +81,20 @@ import AuthLayouts from "./Layouts/AuthLayouts.vue";
 export default {
   layout: AuthLayouts,
   props: ["licencas"],
+  methods:{
+    formatarValorMonetario(valor) {
+        // Converter o número para uma string e separar parte inteira da parte decimal
+        let partes = String(valor).split('.');
+        let parteInteira = partes[0];
+        let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
+
+        // Adicionar separadores de milhar
+        parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+        // Retornar o valor formatado
+        return parteInteira + parteDecimal;
+    },
+  }
 };
 </script>
 

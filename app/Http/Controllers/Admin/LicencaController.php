@@ -117,8 +117,8 @@ class LicencaController extends Controller
 
     public function licencas()
     {
-        $data['licencas'] = Licenca::with(['modulos'])->get();
-
+        $data['licencas'] = Licenca::with(['modulos.modulo'])->get();
+        // dd($data);
         return Inertia::render('Licenca', $data);
     }
 
@@ -133,7 +133,7 @@ class LicencaController extends Controller
             'modulo_id' => $licenca->id,
             'user_id' => $users->id,
         ]);
-        
+
         LicencaUsuario::create([
             'id_usuario' => $users->id,
             'id_licenca' => $licenca->id,

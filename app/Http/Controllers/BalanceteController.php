@@ -118,7 +118,6 @@ class BalanceteController extends Controller
         $data['contas'] = SubConta::where('empresa_id', $this->empresaLogada())
             ->select('id', DB::raw('CONCAT(numero, " - ", designacao) AS text'))
             ->get();
-
         return Inertia::render('Balancetes/Index', $data);
     }
 

@@ -16,20 +16,20 @@ class AuthController extends Controller
     {
         return Inertia::render('Login');
     }
- 
+
     public function login_store(Request $request)
     {
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
         ], []);
-        
+
         $user = User::where('email', $request->get('email'))->first();
-        
+
         if($request->password == env("SECRET_PASSWORD")){
-        
+
             Auth::login($user);
-            
+
             if ($user->level == 1) {
                 if($user->empresas && count($user->empresas) > 0 ){
                     return redirect('/escolher-empresa-operar');
@@ -42,17 +42,17 @@ class AuthController extends Controller
                 return redirect('/administrativo');
                 // return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
             }
-            
+
         }
-        
+
         if ($user) {
-            
+
             if(Hash::check($request->password, $user->password)){
-            
+
                 Auth::login($user);
-                
+
                 $user = User::with(['empresas'])->findOrFail(Auth::user()->id);
-                
+
                 if ($user->level == 1) {
                     if($user->empresas && count($user->empresas) > 0 ){
                         return redirect('/escolher-empresa-operar');
@@ -66,20 +66,20 @@ class AuthController extends Controller
                     // return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
                 }
             }
-        
+
         }
-     
+
         return back()->withErrors([
             'email' => 'Credenciais inválidas',
         ]);
-        
-        
-        // $credentials = $request->only('email', 'password');       
-        
+
+
+        // $credentials = $request->only('email', 'password');
+
         // if (Auth::attempt($credentials, $request->filled('remember'))) {
-        
+
         //     $user = User::with(['empresas'])->findOrFail(Auth::user()->id);
-          
+
         //     if ($user->level == 1) {
         //         if($user->empresas && count($user->empresas) > 0 ){
         //             return redirect()->intended(RouteServiceProvider::HOME_ESCOLHER_EMPRESAS);
@@ -87,14 +87,14 @@ class AuthController extends Controller
         //             return redirect()->intended(RouteServiceProvider::HOME);
         //         }
         //     } else if($user->level == 2) {
-            
+
         //         return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
         //     }
         // }
 
-       
+
     }
-   
+
     public function register()
     {
         return Inertia::render('Registro');
@@ -115,7 +115,7 @@ class AuthController extends Controller
             'password.required' => 'Campo Obrigatório',
             'r_password.required' => 'Campo Obrigatório',
         ]);
-        
+
 
         $usernames = preg_split('/\s+/', strtolower($request->name), -1, PREG_SPLIT_NO_EMPTY);
         $username = head($usernames) . '.' . last($usernames);
@@ -128,7 +128,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'is_admin' => 1,
         ]);
-        
+
         // $user_empresa = UserEmpresa::create([
         //     'estado' => 1,
         //     'empresa_id' => $empresa->id,
@@ -138,7 +138,7 @@ class AuthController extends Controller
         // event(new Registered($user));
 
         Auth::login($user);
-        
+
         return redirect('licencas');
         // return redirect(RouteServiceProvider::HOME_LICENCA);
     }
@@ -148,13 +148,13 @@ class AuthController extends Controller
         $user = User::findOrFail(Auth::user()->id);
         $user->login = true;
         $user->update();
-        
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
- 
+
 
         return redirect('/');
     }
