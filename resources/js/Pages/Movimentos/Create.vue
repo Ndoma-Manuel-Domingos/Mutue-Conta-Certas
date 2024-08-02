@@ -32,8 +32,9 @@
                               
                                 <div class="col-12 col-md-2 mb-4">
                                   <label for="exercicio_id" class="form-label">Exercício</label>
-                                    <Select2 v-model="form.exercicio_id" id="exercicio_id" disabled
+                                    <Select2 v-model="form.exercicio_id" id="exercicio_id"
                                       :options="exercicios" :settings="{ width: '100%' }" 
+                                      @select="getPeriodos($event)"
                                     />
                                   <span class="text-danger" v-if="form.errors && form.errors.exercicio_id">{{ form.errors.exercicio_id }}</span>
                                 </div>
@@ -41,7 +42,7 @@
                                 <div class="col-12 col-md-2 mb-4">
                                   <label for="periodo_id" class="form-label">Período</label>
                                     <Select2 v-model="form.periodo_id" id="periodo_id"
-                                      :options="periodos" :settings="{ width: '100%' }" 
+                                      :options="lista_periodos" :settings="{ width: '100%' }" 
                                     />
                                   <span class="text-danger" v-if="form.errors && form.errors.periodo_id">{{ form.errors.periodo_id }}</span>
                                 </div>
@@ -54,19 +55,13 @@
                                   <span class="text-danger" v-if="form.errors && form.errors.dia_id">{{ form.errors.dia_id }}</span>
                                 </div>
                                 
-                                <!-- <div class="col-12 col-md-2 mb-4">
-                                  <label for="data_lancamento" class="form-label">Data</label>
-                                  <input type="date" id="data_lancamento" v-model="form.data_lancamento" class="form-control" >
-                                  <span class="text-danger" v-if="form.errors && form.errors.data_lancamento">{{ form.errors.data_lancamento }}</span>
-                                </div> -->
-                                
                                 <div class="col-12 col-md-6 mb-4">
                                   <label for="lancamento_atual" class="form-label">Lançamento Actual</label>
                                   <input type="number" id="lancamento_atual" v-model="form.lancamento_atual" class="form-control" >
                                   <span class="text-danger" v-if="form.errors && form.errors.lancamento_atual">{{ form.errors.lancamento_atual }}</span>
                                 </div>
                                 
-                                <div class="col-12 col-md-6 mb-4">
+                                <div class="col-12 col-md-3 mb-4">
                                   <label for="diario_id" class="form-label">Diários</label>
                                   <Select2 v-model="form.diario_id" id="diario_id"
                                     :options="diarios" :settings="{ width: '100%' }" 
@@ -75,13 +70,21 @@
                                   <span class="text-danger" v-if="form.errors && form.errors.diario_id">{{ form.errors.diario_id }}</span>
                                 </div>
                                 
-                                <div class="col-12 col-md-6 mb-4">
+                                <div class="col-12 col-md-3 mb-4">
                                   <label for="tipo_documento_id" class="form-label">Tipo De Documento</label>
                                     <Select2 v-model="form.tipo_documento_id" id="tipo_documento_id"
                                       :options="tipo_documentos" :settings="{ width: '100%' }" 
                                     />
                                   <span class="text-danger" v-if="form.errors && form.errors.tipo_documento_id">{{ form.errors.tipo_documento_id }}</span>
                                 </div>
+                                
+                                
+                                <div class="col-12 col-md-6 mb-4">
+                                  <label for="referencia_documento" class="form-label">Referência do Documento</label>
+                                  <input type="text" id="referencia_documento" v-model="form.referencia_documento" class="form-control" >
+                                  <span class="text-danger" v-if="form.errors && form.errors.referencia_documento">{{ form.errors.referencia_documento }}</span>
+                                </div>
+                                
                                 
                                 <div class="col-12 col-md-12 mb-4">
                                   <label for="sub_conta_id" class="form-label">Contas</label>
@@ -104,6 +107,9 @@
                               <button class="btn btn-success">
                                 <i class="fas fa-save"></i> Salvar
                               </button>
+                              <button class="btn btn-info float-right" type="button" @click="carregar_lancamento_movimento()">
+                                <i class="fas fa-"></i> Carregar ultimo Lançamento
+                              </button>
                             </div>
                         </div>
                       </div>
@@ -114,27 +120,30 @@
                             <table class="table table-sm" style="width: 100%;">
                               <thead>
                                 <tr>
-                                  <th width="400px">Conta</th>
+                                  <th width="350px">Conta</th>
                                   <th>Debito</th>
                                   <th>Crédito</th>
+                                  <th></th>
                                   <th>IVA</th>
                                   <th>Descrição</th>
                                   <th></th>
                                 </tr>
                               </thead>
-                              <tbody v-for="item in item_movimentos" :key="item">
-                                <tr>
-                                  <td class="pt-3">{{ item.subconta.numero }} - {{ item.subconta.designacao }}</td>
-                                  <td><input type="text" class="form-control border-0 py-0" v-model="item.debito" @keypress="validateInput" @input="formatInputDebito(item)" @keydown.enter="input_valor_debito(item)"></td>
-                                  <td><input type="text" class="form-control border-0" v-model="item.credito" @keypress="validateInput" @input="formatInputCredito(item)" @keydown.enter="input_valor_credito(item)"></td>
-                                  <td><input type="text" class="form-control border-0" v-model="item.iva" @keypress="validateInput" @keydown.enter="input_valor_iva(item)"></td>
-                                  <td><input type="text" class="form-control border-0" v-model="item.descricao" @keydown.enter="input_valor_descricao(item)" placeholder="Descrição"></td>
-                                  <td class="d-flex">
-                                    <a @click="remover_item_movimento(item)" class="text-danger pt-3"><i class="fas fa-times"></i></a>
-                                  </td>
-                                </tr>
-                              </tbody>
-                              
+                                <tbody v-for="item in item_movimentos" :key="item">
+                                  <tr>
+                                    <td class="pt-3">{{ item.subconta.numero }} - {{ item.subconta.designacao }}</td>
+                                    <td><input type="text" class="form-control border-0 py-0" v-model="item.debito" @keypress="validateInput" @input="formatInputDebito(item)" @keydown.enter="input_valor_debito(item)"></td>
+                                    <td><input type="text" class="form-control border-0" v-model="item.credito" @keypress="validateInput" @input="formatInputCredito(item)" @keydown.enter="input_valor_credito(item)"></td>
+                                    <td class="d-flex">
+                                      <a @click="inverter_valores_item_movimento(item)" style="cursor: pointer;font-size: 12px;" class="text-center pt-4"><i class="fas fa-exchange-alt"></i></a>
+                                    </td>
+                                    <td><input type="text" class="form-control border-0" v-model="item.iva" @keypress="validateInput" @keydown.enter="input_valor_iva(item)"></td>
+                                    <td><input type="text" class="form-control border-0" v-model="item.descricao" @keydown.enter="input_valor_descricao(item)" placeholder="Descrição"></td>
+                                    <td class="d-flex">
+                                      <a @click="remover_item_movimento(item)" style="cursor: pointer;" class="text-danger pt-3"><i class="fas fa-times"></i></a>
+                                    </td>
+                                  </tr>
+                                </tbody>
                             </table>
                           </div>
                           <div class="card-footer">
@@ -236,6 +245,7 @@ export default {
       
       tipo_documentos: [],
       item_movimentos: [],
+      lista_periodos: [],
       resultados: [],
       
       form: this.$inertia.form({
@@ -245,6 +255,7 @@ export default {
         lancamento_atual: this.ultimo_movimento + 1,
         diario_id: "",
         tipo_documento_id: "",
+        referencia_documento: "",
         descricao: "",
       }),
     };
@@ -258,6 +269,19 @@ export default {
     
   },
   methods: {
+
+    getPeriodos({ id, text }) {
+      axios
+        .get(`/get-periodos/${this.form.exercicio_id}`)
+        .then((response) => {
+          
+          // this.form.numero = response.data.diario.numero + ".";
+          this.lista_periodos = [];
+          this.lista_periodos = response.data.periodos;
+          
+        })
+        .catch((error) => {});
+    },
 
     getDiario({ id, text }) {
       axios
@@ -285,6 +309,33 @@ export default {
         .catch((error) => {});
     },
     
+    carregar_lancamento_movimento() {
+      axios
+        .get(`/carregar-lancamento-movimento`)
+        .then((response) => {
+          
+          this.item_movimentos = [];
+          this.item_movimentos = response.data.item_movimentos;
+          this.resultados = response.data.resultados;
+          
+        })
+        .catch((error) => {});
+    },
+    
+    inverter_valores_item_movimento(item) {
+      axios
+        .get(`/inverter-valores-movimento/${item.id}`)
+        .then((response) => {
+          
+          this.item_movimentos = [];
+          this.item_movimentos = response.data.item_movimentos;
+          this.resultados = response.data.resultados;
+          
+        })
+        .catch((error) => {});
+     console.log(item)
+    },   
+    
     remover_item_movimento(item) {
       axios
         .get(`/remover-conta-movimento/${item.id}`)
@@ -296,7 +347,7 @@ export default {
           
         })
         .catch((error) => {});
-     console.log(item)
+        console.log(item)
     },    
 
     formatInputCredito(item) {

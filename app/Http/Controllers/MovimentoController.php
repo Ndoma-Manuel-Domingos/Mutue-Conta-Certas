@@ -97,6 +97,7 @@ class MovimentoController extends Controller
                 'origem' => "movimento",
                 'data_lancamento' => date("Y-m-d"),
                 'lancamento_atual' => $request->lancamento_atual,
+                'referencia_documento' => $request->referencia_documento,
                 'diario_id' => $request->diario_id,
                 'tipo_documento_id' => $request->tipo_documento_id,
                 'user_id' => $user->id,
@@ -129,6 +130,18 @@ class MovimentoController extends Controller
         return Inertia::render('Movimentos/Show', $data);
     }
 
+
+    public function carregar_lancamento_movimento()
+    {
+        $user = User::findOrFail(auth()->user()->id);
+
+        $item_movimentos = MovimentoItem::with(['subconta.conta', 'empresa'])->where('movimento_id', NULL)->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->get();
+
+        $resultados = MovimentoItem::with(['subconta.conta', 'empresa'])->whereNull('movimento_id')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
+
+        return response()->json(['item_movimentos' => $item_movimentos, 'resultados' => $resultados], 200);
+
+    }
 
     public function adicionar_conta_movimento($id)
     {
@@ -189,6 +202,36 @@ class MovimentoController extends Controller
 
         $movimento = MovimentoItem::findOrFail($id);
         $movimento->delete();
+
+        $item_movimentos = MovimentoItem::with(['subconta.conta', 'empresa'])->where('movimento_id', NULL)->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->get();
+        $resultados = MovimentoItem::with(['subconta.conta', 'empresa'])->whereNull('movimento_id')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
+
+        return response()->json(['item_movimentos' => $item_movimentos, 'resultados' => $resultados], 200);
+
+    }
+
+    public function inverter_valores_movimento($id)
+    {
+        $user = User::findOrFail(auth()->user()->id);
+
+        $movimento = MovimentoItem::findOrFail($id);
+        
+        $debito = 0;
+        $credito = 0;
+        
+        if($movimento->credito > 0){
+            $debito = $movimento->credito;
+            $credito = 0;
+        }
+        if($movimento->debito > 0){
+            $debito = 0;
+            $credito = $movimento->debito;
+        }
+        
+        $movimento->debito = $debito;
+        $movimento->credito = $credito;
+        
+        $movimento->update();
 
         $item_movimentos = MovimentoItem::with(['subconta.conta', 'empresa'])->where('movimento_id', NULL)->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->get();
         $resultados = MovimentoItem::with(['subconta.conta', 'empresa'])->whereNull('movimento_id')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();

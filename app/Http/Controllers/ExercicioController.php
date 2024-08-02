@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use PDF;
 use App\Exports\MovimentoExport;
+use App\Models\Periodo;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
@@ -58,12 +59,22 @@ class ExercicioController extends Controller
         }
 
         if($this->empresaLogada()){
-
-            Exercicio::create([
+            $exercicio = Exercicio::create([
                 'designacao' => $request->designacao,
                 'empresa_id' => $this->empresaLogada(),
                 'estado' => $request->estado,
             ]);
+            
+            for ($i=1; $i <= 15; $i++) { 
+                Periodo::create([
+                    'numero' => "0{$i}",
+                    'designacao' => "Período 0{$i}",
+                    'exercicio_id' => $exercicio->id,
+                    'empresa_id' => $this->empresaLogada(),
+                    'estado' => $request->estado == 1 ? 'activo' : 'desactivo',
+                ]);
+            }
+            
         }
 
 

@@ -196,28 +196,29 @@
                       <span></span>
                     </div>
                     
-                    
-                    <div class="col-12 col-md-12">
-                      <div class="row">
-                        <div class="col-12 col-md-6 mb-4">
-                          <label for="requisitante" class="form-label"
-                            >Requisitante</label
-                          >
-                          <textarea
-                            id="requisitante"
-                            v-model="form.requisitante"
-                            class="form-control"
-                            placeholder="Requisitante"
-                          ></textarea>
-                          <span
-                            class="text-danger"
-                            v-if="form.errors && form.errors.requisitante"
-                            >{{ form.errors.requisitante }}</span
-                          >
-                        </div>
-                      </div>
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="referencia_documento" class="form-label">Referência do Documento</label>
+                      <input type="text" id="referencia_documento" v-model="form.referencia_documento" placeholder="EX: MUT2024/458383" class="form-control" >
+                      <span class="text-danger" v-if="form.errors && form.errors.referencia_documento">{{ form.errors.referencia_documento }}</span>
                     </div>
                     
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="requisitante" class="form-label"
+                        >Requisitante</label
+                      >
+                      <input
+                        id="requisitante"
+                        v-model="form.requisitante"
+                        class="form-control"
+                        placeholder="Requisitante"
+                        />
+                      <span
+                        class="text-danger"
+                        v-if="form.errors && form.errors.requisitante"
+                        >{{ form.errors.requisitante }}</span
+                      >
+                    </div>
+                   
                   </div>
                 </div>
                 <div class="card-footer">
@@ -360,6 +361,7 @@ export default {
         tipo_proveito_id: "",
         taxa_iva_id: "1",
         requisitante: "",
+        referencia_documento: "",
         centro_custo: "",
       }),
       

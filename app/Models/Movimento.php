@@ -31,6 +31,7 @@ class Movimento extends Model
         'diario_id',
         'origem',
         'tipo_documento_id',
+        'referencia_documento',
         'user_id',
         'created_by',
         'updated_by',

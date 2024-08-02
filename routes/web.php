@@ -46,6 +46,7 @@ use App\Http\Controllers\Admin\{
     ModuloController,
     OperadorController as AdminOperadorController
 };
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,6 +59,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::get('/', [AuthController::class, 'login'])
 ->middleware('guest');
@@ -80,6 +82,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/exercicios/iniciar-sessão/{id}', [ExercicioController::class, 'iniciar_sessao']);
     Route::post('/logout-exercicios', [ExercicioController::class, 'logout_exercicio'])->name('mf.logout_exercicio');
     Route::resource('periodos', PeriodoController::class);
+    Route::get('/get-periodos/{id}', [PeriodoController::class, 'get_periodos']);
     Route::get('/get-info-periodo/{id}', [PeriodoController::class, 'get_info']);
     Route::resource('contas', ContaController::class);
     Route::get('/get-conta/{id}', [ContaController::class, 'get_conta']);
@@ -122,8 +125,10 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('balancos', BalancoController::class);
     Route::resource('extratos-contas', ExtratoContaController::class);
     Route::resource('apuramento-resultados', ApuramentoResultadoController::class);
+    Route::get('/carregar-lancamento-movimento', [MovimentoController::class, 'carregar_lancamento_movimento']);
     Route::get('/adicionar-conta-movimento/{id}', [MovimentoController::class, 'adicionar_conta_movimento']);
     Route::get('/remover-conta-movimento/{id}', [MovimentoController::class, 'remover_conta_movimento']);
+    Route::get('/inverter-valores-movimento/{id}', [MovimentoController::class, 'inverter_valores_movimento']);
     Route::get('/alterar-debito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_debito_conta_movimento']);
     Route::get('/alterar-credito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_credito_conta_movimento']);
     Route::get('/alterar-iva-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_iva_conta_movimento']);
