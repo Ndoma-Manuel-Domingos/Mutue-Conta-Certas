@@ -12,9 +12,16 @@ class Licenca extends Model
     protected $table = "licencas";
 
     protected $fillable = [
-        'titulo',
+        'tipo_licenca_id',
         'designacao',
-        'preco',
+        'descricao',
+        'valor',
+        'preco_final_iva',
+        'tipo_taxa_id',
+        'motivo_isencao_iva_codigo',
+        'limite_usuario',
+        'estado_desconto',
+        'desconto',
     ];
 
     public function modulos()

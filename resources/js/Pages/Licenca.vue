@@ -1,9 +1,10 @@
 <template>
-  <body class="hold-transition sidebar-mini layout-fixed">
-    <div class="content-wrapper kanban">
-      <section class="content-header">
-        <div class="container-fluid">
-          <!-- <div class="row">
+
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <div class="content-wrapper kanban">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <!-- <div class="row">
             <div class="col-sm-6">
               <h1>Kanban Board</h1>
             </div>
@@ -14,87 +15,91 @@
               </ol>
             </div>
           </div> -->
-        </div>
-      </section>
-      <section class="content">
-        <div class="container-fluid h-100">
-          <div v-for="item in licencas" :key="item.id">
-            <div class="card card-row" :class="item.card">
-              <div class="card-header">
-                <h3 class="card-title">{{ item.titulo }}</h3>
-              </div>
-              <div class="card-body">
-                <div class="card card-info card-outline" >
-                  <div class="card-header">
-                    <h5 class="card-title">Módulos</h5>
-                  </div>
-                  <div class="card-body" style="height: 150px;">
+                </div>
+            </section>
+            <section class="content">
+                <div class="container-fluid" style="height: auto; -webkit-scrollbar: none;">
+                    <div v-for="item in licencas" :key="item.id">
+                        <div class="card card-row" :class="item.card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ item.titulo }}</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="card card-info card-outline">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Módulos</h5>
+                                    </div>
+                                    <div class="card-body" style="height: 150px;">
 
-                    <div class="custom-control custom-checkbox" v-for="modulos in item.modulos" :key="modulos">
-                      <input
-                        class="custom-control-input"
-                        type="checkbox"
-                        id="customCheckbox2"
-                        disabled
-                      />
-                      <label for="customCheckbox2" class="custom-control-label"
-                        >{{modulos.modulo.designacao}}</label
-                      >
+                                        <div class="custom-control custom-checkbox" v-for="modulos in item.modulos"
+                                            :key="modulos">
+                                            <input class="custom-control-input" type="checkbox" id="customCheckbox2"
+                                                disabled />
+                                            <label for="customCheckbox2" class="custom-control-label">{{
+                        modulos.modulo.designacao }}</label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="card card-light card-outline">
+
+                                    <div class="card-header">
+                                        <h5 class="card-title">Descrição</h5>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <p>
+                                            {{ item.designacao }}
+                                        </p>
+                                    </div>
+
+                                    <div class="card-footer">
+                                        <p>
+                                            {{ formatarValorMonetario(item.preco) }}KZ
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="card card-light card-outline">
+                                    <div class="card-body">
+                                        <a :href="`/assinar-licenca/${item.id}/${id_empresa}`"
+                                            class="btn btn-lg d-block" :class="item.btn">Assinar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                  </div>
                 </div>
-                <div class="card card-light card-outline">
-                  <div class="card-header">
-                    <h5 class="card-title">Descrição</h5>
-                  </div>
-                  <div class="card-body">
-                    <p>
-                      {{ item.designacao }}
-                    </p>
-                  </div>
-
-                  <div class="card-footer">
-                    <p>
-                      {{ formatarValorMonetario(item.preco) }}KZ
-                    </p>
-                  </div>
-                </div>
-                <div class="card card-light card-outline">
-                  <div class="card-body">
-                    <a :href="`assinar-contrato-licencas/${ item.id }`" class="btn btn-lg d-block" :class="item.btn"
-                      >Assinar</a
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            </section>
         </div>
-      </section>
-    </div>
-  </body>
+    </body>
 </template>
 
 <script>
 import AuthLayouts from "./Layouts/AuthLayouts.vue";
 export default {
-  layout: AuthLayouts,
-  props: ["licencas"],
-  methods:{
-    formatarValorMonetario(valor) {
-        // Converter o número para uma string e separar parte inteira da parte decimal
-        let partes = String(valor).split('.');
-        let parteInteira = partes[0];
-        let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
-
-        // Adicionar separadores de milhar
-        parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-        // Retornar o valor formatado
-        return parteInteira + parteDecimal;
+    layout: AuthLayouts,
+    props: ["licencas", 'empresa_id'],
+    data() {
+        return {
+            id_empresa: null,
+        };
     },
-  }
+    methods: {
+        formatarValorMonetario(valor) {
+            // Converter o número para uma string e separar parte inteira da parte decimal
+            let partes = String(valor).split('.');
+            let parteInteira = partes[0];
+            let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
+
+            // Adicionar separadores de milhar
+            parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+            // Retornar o valor formatado
+            return parteInteira + parteDecimal;
+        },
+    },
+    created() {
+        this.id_empresa = this.empresa_id;
+    },
 };
 </script>
-

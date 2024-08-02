@@ -51,10 +51,11 @@ class BalanceteController extends Controller
         ->distinct()
         ->distinct('classe_id')  // Distinct baseado na classe
         ->get();
-        
+
         // Remove duplicatas manualmente no PHP com base na classe_id
         $data['registros'] = $data['registros']->unique('classe_id')->values();
-                
+
+
 
         $valores = [];
         $valores_por_conta = [];
@@ -67,9 +68,9 @@ class BalanceteController extends Controller
         $total_por_conta_debito = 0;
 
         foreach ($data['registros'] as $movimento) {
-           
+
             foreach ($movimento['conta']['items_movimentos'] as $contas) {
-                
+
                 $total_por_conta_credito += $contas->TotalCredito;
                 $total_por_conta_debito += $contas->TotalDebito;
 
@@ -101,10 +102,10 @@ class BalanceteController extends Controller
                         "total_debito" => $total_debito,
                     ];
                 }
-            } 
-            
+            }
+
         }
-        
+
 
         $data['resultado'] = $valores;
         $data['resultado_por_conta'] = $valores_por_conta;
@@ -120,6 +121,7 @@ class BalanceteController extends Controller
             ->get();
         return Inertia::render('Balancetes/Index', $data);
     }
+
 
     public function create()
     {
@@ -180,7 +182,7 @@ class BalanceteController extends Controller
             });
         })
         ->get();
-        
+
         // Remove duplicatas manualmente no PHP com base na classe_id
         $data['registros'] = $data['registros']->unique('classe_id')->values();
 
@@ -246,7 +248,7 @@ class BalanceteController extends Controller
         $pdf->getDOMPdf()->set_option('isPhpEnabled', true);
         return $pdf->stream('Balancete.pdf');
     }
-    
+
     public function exportarExcel(Request $request)
     {
         $data['dados'] = $request;

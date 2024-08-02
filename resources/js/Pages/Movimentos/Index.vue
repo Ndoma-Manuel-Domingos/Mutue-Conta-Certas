@@ -54,7 +54,8 @@
                       <td>{{ item.exercicio.designacao }}</td>
                       <td>{{ item.periodo.designacao }}</td>
                       <td>{{ item.descricao }}</td>
-                      <td class="text-info"><strong>{{ item.debito == 0 ? '-' : formatarValorMonetario(item.debito) }}</strong></td>
+                      <td class="text-info"><strong>{{ item.debito == 0 ? '-' :
+                      (item.debito) }}</strong></td>
                       <td class="text-danger"><strong>{{ item.credito == 0 ? '-' : formatarValorMonetario(item.credito) }}</strong></td>
                       <td>
                         <div class="float-right">

@@ -46,8 +46,8 @@ class BalancoController extends Controller
 
         $contas_passivos_corrente = ContaEmpresa::whereIn('classe_id', $classes_passivos_corrente)->pluck('conta_id');
         $contas_passivos_nao_corrente = ContaEmpresa::whereIn('classe_id', $classes_passivos_nao_corrente)->pluck('conta_id');
-        
-        
+
+
         $conta_imobilizacoes_corporeas = ContaEmpresa::with(['sub_contas_empresa.items_movimentos'])->with(['sub_contas_empresa.items_movimentos.movimento'])
             ->with([
                 'sub_contas_empresa' => function ($query) {
@@ -58,10 +58,9 @@ class BalancoController extends Controller
             ->get()
             ->unique('sub_contas_empresa.id')
             ->values();
-            
 
-        $conta_imobilizacoes_incorporeas = ContaEmpresa::
-            with(['sub_contas_empresa.items_movimentos', 'sub_contas_empresa.items_movimentos.movimento'])
+
+        $conta_imobilizacoes_incorporeas = ContaEmpresa::with(['sub_contas_empresa.items_movimentos', 'sub_contas_empresa.items_movimentos.movimento'])
             ->with([
                 'sub_contas_empresa' => function ($query) {
                     $query->where('tipo', 'M');
@@ -111,6 +110,110 @@ class BalancoController extends Controller
             })
             ->flatten();
 
+
+        // apuramento de resultados
+        $data_inicio = Carbon::now()->format('d/m/Y');
+        $data_final = Carbon::now()->endOfYear()->format('d/m/Y');
+        $data_inicio_ano = Carbon::now()->startOfYear()->format('d/m/Y');
+
+        $contas_apuramento = ContaEmpresa::with(['classe'])
+            ->with(['conta.items_movimentos', 'sub_contas_empresa.items_movimentos.movimento'])
+            ->with(['sub_contas_empresa' => function ($querey) {
+                $querey->select('*')->whereBetween('conta_id', [45, 62]);
+            }])
+            ->whereIn('classe_id', [7, 8])
+            ->distinct()
+            ->distinct('classe_id')
+            ->get();
+
+            // calculo apuramento
+        $resultado_operacionais_82 = [];
+        $resultado_financeiro_83 = [];
+        $resultado_em_associados_84 = [];
+        $resultado_nao_operacionais_85 = [];
+        $resultado_nao_operacionais_86 = [];
+        $imposto_sobre_lucro = 0;
+        $resultado_liquido_do_exercicio = 0;
+        $RAI = 0;
+
+        $resultados_proveitos_operacionais_credito = 0;
+        $resultados_proveitos_operacionais_debito = 0;
+        $resultados_operacionais_proveitos_debito = 0;
+
+        $resultados_operacionais_proveitos =  $this->calculoProveitosOperacionais($contas_apuramento);
+        $resultados_custos_operacionais =  $this->calculoCustosOperacionais($contas_apuramento);
+        $resultados_proveitos_financeiro =  $this->calculoProveitosFinanceiros($contas_apuramento);
+        $resultados_custos_financeiro =  $this->calculoCustosFinanceiros($contas_apuramento);
+        $resultados_proveitos_associados =  $this->calculoProveitosAssociados($contas_apuramento);
+        $resultados_custos_associados =  $this->calculoCustosAssociados($contas_apuramento);
+        $outros_proveitos_nao_operacionais =  $this->calculoOutrosProveitosNOperacionais($contas_apuramento);
+        $outros_custos_nao_operacionais =  $this->calculoOutrosCustosNOperacionais($contas_apuramento);
+        $outros_proveitos_extraordinarios =  $this->calculoProveitosExtraordinarios($contas_apuramento);
+        $outros_custos_extraordinarios =  $this->calculoCustosExtraordinarios($contas_apuramento);
+
+        $resultados_proveitos_operacionais_credito = $resultados_operacionais_proveitos['credito'];
+        $resultados_proveitos_operacionais_debito = $resultados_operacionais_proveitos['debito'];
+
+        $resultados_custos_operacionais_credito = $resultados_custos_operacionais['credito'];
+        $resultados_custos_operacionais_debito = $resultados_custos_operacionais['debito'];
+
+        $resultados_proveitos_associados_credito = $resultados_proveitos_associados['credito'];
+        $resultados_proveitos_associados_debito = $resultados_proveitos_associados['debito'];
+
+        $resultados_custos_associados_credito = $resultados_custos_associados['credito'];
+        $resultados_custos_associados_debito = $resultados_custos_associados['debito'];
+
+        $resultados_outros_proveitosNao_operacionais_credito = $outros_proveitos_nao_operacionais['credito'];
+        $resultados_outros_proveitosNao_operacionais_debito = $outros_proveitos_nao_operacionais['debito'];
+
+        $resultados_outros_custosNao_operacionais_credito = $outros_custos_nao_operacionais['credito'];
+        $resultados_outros_custosNao_operacionais_debito = $outros_custos_nao_operacionais['debito'];
+
+        $resultados_proveitos_extraordinario_credito = $outros_proveitos_extraordinarios['credito'];
+        $resultados_proveitos_extraordinario_debito = $outros_proveitos_extraordinarios['debito'];
+
+        $resultados_custos_extraordinario_credito = $outros_custos_extraordinarios['credito'];
+        $resultados_custos_extraordinario_debito = $outros_custos_extraordinarios['debito'];
+
+
+
+        $resultado_operacionais_82 = [
+            'proveitos_operacionais_credito' => $resultados_proveitos_operacionais_credito ? $resultados_proveitos_operacionais_credito : 0,
+            'custos_operacionais' => $resultados_custos_operacionais_debito ? $resultados_custos_operacionais_debito : 0,
+        ];
+
+        $resultado_financeiro_83 =[
+            'proveitos_financeiros' => $resultados_proveitos_financeiro['credito'] ? $resultados_proveitos_financeiro['credito'] : 0 ,
+            'custos_financeiros' => $resultados_custos_financeiro['credito'] ? $resultados_custos_financeiro['credito'] : 0,
+        ];
+
+        $resultado_em_associados_84 = [
+            'proveitos_em_associados' => $resultados_proveitos_associados_credito ? $resultados_proveitos_associados_credito : 0,
+            'custos_em_associados' => $resultados_custos_associados_debito ? $resultados_custos_associados_debito : 0,
+        ];
+
+        $resultado_nao_operacionais_85 = [
+            'proveitos_nao_operacionais' => $resultados_outros_proveitosNao_operacionais_credito ? $resultados_outros_proveitosNao_operacionais_credito : 0,
+            'custos_nao_operacionais' => $resultados_outros_custosNao_operacionais_credito ? $resultados_outros_custosNao_operacionais_credito : 0,
+        ];
+
+        $resultado_extraordinario_86 = [
+            'proveitos_nao_operacionais' => $resultados_proveitos_extraordinario_credito ? $resultados_proveitos_extraordinario_credito : 0,
+            'custos_nao_operacionais' => $resultados_custos_extraordinario_debito ? $resultados_custos_extraordinario_debito : 0,
+        ];
+
+        $RAI =
+        $resultado_operacionais_82['proveitos_operacionais_credito'] + $resultado_operacionais_82['custos_operacionais']
+        + $resultado_financeiro_83['proveitos_financeiros'] + $resultado_financeiro_83['custos_financeiros']
+        + $resultado_em_associados_84['proveitos_em_associados'] + $resultado_em_associados_84['custos_em_associados']
+        + $resultado_nao_operacionais_85['proveitos_nao_operacionais'] + $resultado_nao_operacionais_85['custos_nao_operacionais']
+        + $resultado_extraordinario_86['proveitos_nao_operacionais'] + $resultado_extraordinario_86['custos_nao_operacionais'];
+
+        $imposto_sobre_lucro = ($RAI * 0.25);
+        $resultado_liquido_do_exercicio = ($RAI - $imposto_sobre_lucro);
+
+        $data['imposto_sobre_lucro'] = $imposto_sobre_lucro;
+        $data['resultado_liquido_do_exercicio'] = $resultado_liquido_do_exercicio;
 
         $debito_receber = 0;
         $credito_receber = 0;
@@ -175,19 +278,19 @@ class BalancoController extends Controller
             ->get();
 
         $data['conta_do_activos_nao_corrente'] = MovimentoItem::with(['conta', 'movimento'])
-            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'), )
+            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'),)
             ->whereIn('conta_id', $contas_activos_nao_corrente)
             ->groupBy('conta_id')
             ->get();
 
         $data['conta_do_passivos_corrente'] = MovimentoItem::with(['conta', 'movimento'])
-            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'), )
+            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'),)
             ->whereIn('conta_id', $contas_passivos_corrente)
             ->groupBy('conta_id')
             ->get();
 
         $data['conta_do_passivos_nao_corrente'] = MovimentoItem::with(['conta', 'movimento'])
-            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'), )
+            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'),)
             ->whereIn('conta_id', $contas_passivos_nao_corrente)
             ->groupBy('conta_id')
             ->get();
@@ -195,7 +298,7 @@ class BalancoController extends Controller
 
         $capital_proprio = Conta::whereIn('numero', ['51', '55', '81', '88'])->pluck('id');
         $data['capital_proprio'] = MovimentoItem::with(['conta', 'movimento'])
-            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'), )
+            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'),)
             ->whereIn('conta_id', $capital_proprio)
             ->groupBy('conta_id')
             ->get();
@@ -205,6 +308,8 @@ class BalancoController extends Controller
         $data['exercicio_actual'] = Exercicio::select('id', 'designacao As text')->where('estado', 1)->get();
         $data['exercicio_anterior'] = ($exercicio_anterior);
         $data['periodos'] = Periodo::select('id', 'designacao As text')->get();
+
+
 
         return Inertia::render('Balancos/Index', $data);
     }
@@ -219,6 +324,272 @@ class BalancoController extends Controller
 
 
         return $exercicio_anterior;
+    }
+
+    public function calculoProveitosOperacionais($item)
+    {
+        $valoresBalnco = [];
+        $valDebito = 0;
+        $valCredito = 0;
+        $resultado = 0;
+        $collect = collect([]);
+
+        foreach ($item as $value) {
+            $valoresBalnco[] = $value->conta_id;
+        }
+
+        $data = MovimentoItem::select(DB::raw('SUM(credito) AS credito'), DB::raw('SUM(debito) AS debito'))->whereHas('subconta', function ($querey) {
+            $querey->whereBetween('numero', [61, 66]);
+        })->whereIn('conta_id', $valoresBalnco)->get();
+
+        foreach ($data as $saldo) {
+            $valCredito = ['credito' => $saldo->credito, 'debito' => $saldo->debito];
+        }
+
+        return $valCredito;
+    }
+
+    public function calculoCustosOperacionais($item)
+    {
+        $valoresBalnco = [];
+        $valDebito = 0;
+        $valCredito = 0;
+        $resultado = 0;
+        $collect = collect([]);
+
+        foreach ($item as $value) {
+            $valoresBalnco[] = $value->conta_id;
+        }
+
+        $data = MovimentoItem::select(DB::raw('SUM(credito) AS credito'), DB::raw('SUM(debito) AS debito'))->whereHas('subconta', function ($querey) {
+            $querey->whereBetween('numero', [71, 75]);
+        })->whereIn('conta_id', $valoresBalnco)->get();
+
+        if (!$data) {
+            return 0;
+        }
+
+        foreach ($data as $saldo) {
+            $valCredito = ['credito' => $saldo->credito, 'debito' => $saldo->debito];
+        }
+
+        return $valCredito;
+    }
+
+    public function calculoProveitosFinanceiros($item)
+    {
+        $valoresBalnco = [];
+        $valDebito = 0;
+        $valCredito = 0;
+        $resultado = 0;
+        $collect = collect([]);
+
+        foreach ($item as $value) {
+            $valoresBalnco[] = $value->conta_id;
+        }
+
+        $data = MovimentoItem::select(DB::raw('SUM(credito) AS credito'), DB::raw('SUM(debito) AS debito'))->whereHas('subconta', function ($querey) {
+            $querey->where('numero', '>=', 66)->where('numero', '<', 67);
+        })->whereIn('conta_id', $valoresBalnco)->get();
+
+        if (!$data) {
+            return null;
+        }
+
+        foreach ($data as $saldo) {
+            $valCredito = ['credito' => $saldo->credito, 'debito' => $saldo->debito];
+        }
+
+        return $valCredito;
+    }
+
+    public function calculoCustosFinanceiros($item)
+    {
+        $valoresBalnco = [];
+        $valDebito = 0;
+        $valCredito = 0;
+        $resultado = 0;
+        $collect = collect([]);
+
+        foreach ($item as $value) {
+            $valoresBalnco[] = $value->conta_id;
+        }
+
+        $data = MovimentoItem::select(DB::raw('SUM(credito) AS credito'), DB::raw('SUM(debito) AS debito'))->whereHas('subconta', function ($querey) {
+            $querey->where('numero', '>=', 76)->where('numero', '<', 77);
+        })->whereIn('conta_id', $valoresBalnco)->get();
+
+        if (!$data) {
+            return null;
+        }
+
+        foreach ($data as $saldo) {
+            $valCredito = ['credito' => $saldo->credito, 'debito' => $saldo->debito];
+        }
+
+        return $valCredito;
+    }
+
+    public function calculoProveitosAssociados($item)
+    {
+        $valoresBalnco = [];
+        $valDebito = 0;
+        $valCredito = 0;
+        $resultado = 0;
+        $collect = collect([]);
+
+        foreach ($item as $value) {
+            $valoresBalnco[] = $value->conta_id;
+        }
+
+        $data = MovimentoItem::select(DB::raw('SUM(credito) AS credito'), DB::raw('SUM(debito) AS debito'))->whereHas('subconta', function ($querey) {
+            $querey->where('numero', '>=', 67)->where('numero', '<', 68);
+        })->whereIn('conta_id', $valoresBalnco)->get();
+
+        if (!$data) {
+            return null;
+        }
+
+        foreach ($data as $saldo) {
+            $valCredito = ['credito' => $saldo->credito, 'debito' => $saldo->debito];
+        }
+
+        return $valCredito;
+    }
+
+    public function calculoCustosAssociados($item)
+    {
+        $valoresBalnco = [];
+        $valDebito = 0;
+        $valCredito = 0;
+        $resultado = 0;
+        $collect = collect([]);
+
+        foreach ($item as $value) {
+            $valoresBalnco[] = $value->conta_id;
+        }
+
+        $data = MovimentoItem::select(DB::raw('SUM(credito) AS credito'), DB::raw('SUM(debito) AS debito'))->whereHas('subconta', function ($querey) {
+            $querey->where('numero', '>=', 77)->where('numero', '<', 78);
+        })->whereIn('conta_id', $valoresBalnco)->get();
+
+        if (!$data) {
+            return null;
+        }
+
+        foreach ($data as $saldo) {
+            $valCredito = ['credito' => $saldo->credito, 'debito' => $saldo->debito];
+        }
+
+        return $valCredito;
+    }
+
+    public function calculoOutrosProveitosNOperacionais($item)
+    {
+        $valoresBalnco = [];
+        $valDebito = 0;
+        $valCredito = 0;
+        $resultado = 0;
+        $collect = collect([]);
+
+        foreach ($item as $value) {
+            $valoresBalnco[] = $value->conta_id;
+        }
+
+        $data = MovimentoItem::select(DB::raw('SUM(credito) AS credito'), DB::raw('SUM(debito) AS debito'))->whereHas('subconta', function ($querey) {
+            $querey->where('numero', '>=', 68)->where('numero', '<', 69);
+        })->whereIn('conta_id', $valoresBalnco)->get();
+
+        if (!$data) {
+            return null;
+        }
+
+        foreach ($data as $saldo) {
+            $valCredito = ['credito' => $saldo->credito, 'debito' => $saldo->debito];
+        }
+
+        return $valCredito;
+    }
+
+    public function calculoOutrosCustosNOperacionais($item)
+    {
+        $valoresBalnco = [];
+        $valDebito = 0;
+        $valCredito = 0;
+        $resultado = 0;
+        $collect = collect([]);
+
+        foreach ($item as $value) {
+            $valoresBalnco[] = $value->conta_id;
+        }
+
+        $data = MovimentoItem::select(DB::raw('SUM(credito) AS credito'), DB::raw('SUM(debito) AS debito'))->whereHas('subconta', function ($querey) {
+            $querey->where('numero', '>=', 78)->where('numero', '<', 79);
+        })->whereIn('conta_id', $valoresBalnco)->get();
+
+        if (!$data) {
+            return null;
+        }
+
+        foreach ($data as $saldo) {
+            $valCredito = ['credito' => $saldo->credito, 'debito' => $saldo->debito];
+        }
+
+        return $valCredito;
+    }
+
+    public function calculoProveitosExtraordinarios($item)
+    {
+        $valoresBalnco = [];
+        $valDebito = 0;
+        $valCredito = 0;
+        $resultado = 0;
+        $collect = collect([]);
+
+        foreach ($item as $value) {
+            $valoresBalnco[] = $value->conta_id;
+        }
+
+        $data = MovimentoItem::select(DB::raw('SUM(credito) AS credito'), DB::raw('SUM(debito) AS debito'))->whereHas('subconta', function ($querey) {
+            $querey->where('numero', '>=', 69)->where('numero', '<', 70);
+        })->whereIn('conta_id', $valoresBalnco)->get();
+
+        if (!$data) {
+            return null;
+        }
+
+        foreach ($data as $saldo) {
+            $valCredito = ['credito' => $saldo->credito, 'debito' => $saldo->debito];
+        }
+
+        return $valCredito;
+    }
+
+    public function calculoCustosExtraordinarios($item)
+    {
+        $valoresBalnco = [];
+        $valDebito = 0;
+        $valCredito = 0;
+        $resultado = 0;
+        $collect = collect([]);
+
+        foreach ($item as $value) {
+            $valoresBalnco[] = $value->conta_id;
+        }
+
+        $data = MovimentoItem::select(DB::raw('SUM(credito) AS credito'), DB::raw('SUM(debito) AS debito'))->whereHas('subconta', function ($querey) {
+            $querey->where('numero', '>=', 79)->where('numero', '<', 80);
+        })->whereIn('conta_id', $valoresBalnco)->get();
+
+        if (!$data) {
+            return null;
+        }
+
+        foreach ($data as $saldo) {
+            $valCredito = ['credito' => $saldo->credito, 'debito' => $saldo->debito];
+        }
+
+        return $valCredito;
     }
 
     public function conversaoValores($item)
@@ -251,28 +622,23 @@ class BalancoController extends Controller
 
     public function create()
     {
-
     }
 
     public function store(Request $request)
     {
-
     }
 
 
     public function show($id)
     {
-
     }
 
     public function edit($id)
     {
-
     }
 
     public function update(Request $request, $id)
     {
-
     }
 
     public function imprimirBalanco(Request $request)
@@ -297,7 +663,7 @@ class BalancoController extends Controller
                     $query->orWhere('exercicio_id', $value);
                 });
             })
-            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'), )
+            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'),)
             ->whereIn('conta_id', $contas_activos_corrente)
             ->groupBy('conta_id')
             ->get();
@@ -308,7 +674,7 @@ class BalancoController extends Controller
                     $query->orWhere('exercicio_id', $value);
                 });
             })
-            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'), )
+            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'),)
             ->whereIn('conta_id', $contas_activos_nao_corrente)
             ->groupBy('conta_id')
             ->get();
@@ -320,7 +686,7 @@ class BalancoController extends Controller
                     $query->orWhere('exercicio_id', $value);
                 });
             })
-            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'), )
+            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'),)
             ->whereHas('movimento', function ($query) use ($request) {
                 $query->when($request->exercicio_id, function ($query, $value) {
                     $query->orWhere('exercicio_id', $value);
@@ -336,7 +702,7 @@ class BalancoController extends Controller
                     $query->orWhere('exercicio_id', $value);
                 });
             })
-            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'), )
+            ->select('conta_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'),)
             ->whereIn('conta_id', $contas_passivos_nao_corrente)
             ->groupBy('conta_id')
             ->get();
@@ -381,7 +747,6 @@ class BalancoController extends Controller
             ])->where('nota', $request->nota)->get();
 
             $data['count'] = 1;
-
         } elseif ((int) $request->nota == 10) {
 
             // pegar os ids das subcontas
@@ -452,7 +817,6 @@ class BalancoController extends Controller
 
             $data['subcontas1'] = $collect;
             $data['count'] = 3;
-
         } elseif ((int) $request->nota == 9) {
 
             $data['sub_contas'] = SubConta::with([

@@ -70,7 +70,7 @@ Route::post('/criar-conta', [AuthController::class, 'register_store'])->name('mc
 Route::group(["middleware" => "auth"], function () {
 
     Route::get('/licencas', [LicencaController::class, 'licencas']);
-    Route::get('/assinar-contrato-licencas/{id}', [LicencaController::class, 'assinar_licencas']);
+    Route::get('/assinar-contrato-licencas/{id}', [LicencaController::class, 'pagamentoLicenca']);
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('mf.logout');
     Route::resource('classes', ClasseController::class);
@@ -214,4 +214,10 @@ Route::group(["middleware" => "auth"], function () {
 
     Route::resource('/licenca-usuario', LicencaUsuarioController::class);
     Route::get('/mudar-estado-licenca/{id}', [LicencaUsuarioController::class, 'mudaEstadoLicenca']);
+
+    Route::get('assinar-licenca/{id}/{id_empresa}', [LicencaController::class, 'licencaPagamento']);
+    Route::post('pagamento-licenca', [LicencaController::class, 'assinar_licencas'])->name('ml.licencaPagamento');
+
+    Route::get('/licencas-escolha/{id}', [LicencaController::class, 'licencasEscolha'])->name('ml.rescolherLicenca');
+
 });

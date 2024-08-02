@@ -26,7 +26,7 @@
                                 <a href="/licenca/create" class="btn btn-info"> <i class="fas fa-plus"></i>NOVA LICENÇAS </a>
                             </div>
                             <div class="card-body table-responsive">
-                                <table class="table table-bordered table-hover" id="table_licencas">
+                                <t  able class="table table-bordered table-hover" id="table_licencas">
 
                                     <thead>
                                         <tr>
@@ -62,7 +62,7 @@
                                             </td>
                                         </tr>
                                     </tbody>
-                                </table>
+                                </t>
                             </div>
                         </div>
                     </div>
@@ -100,7 +100,7 @@ export default {
     },
     methods: {
         deleteItem(item) {
-            
+
             axios.delete(`/licenca/${item.id}`)
             .then((response) => {
               this.$Progress.finish();
@@ -113,11 +113,11 @@ export default {
                 showConfirmButton: false,
                 timer: 4000
               })
-    
+
               window.location.reload();
             })
             .catch((error) => {
-    
+
               this.$Progress.fail();
               Swal.fire({
                 toast: true,
@@ -128,9 +128,9 @@ export default {
                 showConfirmButton: false,
                 timer: 4000
               })
-    
+
             });
-        
+
             console.log(item.id)
         },
         imprimirPeriodos() {

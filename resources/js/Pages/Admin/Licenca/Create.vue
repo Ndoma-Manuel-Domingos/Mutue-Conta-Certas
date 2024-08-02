@@ -28,22 +28,50 @@
 
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-12 col-md-4 mb-4">
+                                        <!-- <div class="col-6 col-md-2 mb-2">
                                             <label for="titulo" class="form-label">Título</label>
-                                            <input type="text" placeholder="Informe o titulo" id="titulo" v-model="form.titulo" class="form-control">
-                                            <span class="text-danger"  v-if="form.errors && form.errors.titulo">{{ form.errors.titulo }}</span>
+                                            <input type="text" placeholder="Informe o titulo" id="titulo"
+                                                v-model="form.titulo" class="form-control">
+                                            <span class="text-danger" v-if="form.errors && form.errors.titulo">{{
+                            form.errors.titulo }}</span>
+                                        </div> -->
+
+                                        <div class="col-12 col-md-4 mb-4">
+                                            <label for="titulo" class="form-label">Designação</label>
+                                            <input type="text" placeholder="Informe o titulo" id="titulo"
+                                                v-model="form.designacao" class="form-control">
+                                            <span class="text-danger" v-if="form.errors && form.errors.titulo">{{
+                            form.errors.titulo }}</span>
                                         </div>
-                                        
+
+                                        <div class="col-12 col-md-4 mb-4">
+                                            <label for="titulo" class="form-label">Descrição</label>
+                                            <input type="text" placeholder="Informe o titulo" id="titulo"
+                                                v-model="form.descricao" class="form-control">
+                                            <span class="text-danger" v-if="form.errors && form.errors.titulo">{{
+                            form.errors.titulo }}</span>
+                                        </div>
+
+                                        <div class="col-6 col-md-4 mb-4">
+                                            <label for="inputPassword4" class="form-label">Tipo de Licença</label>
+                                            <Select2 id="id" v-model="form.licenca_estado_id" :options="tipo_licencas"
+                                                :settings="{ width: '100%' }" />
+                                        </div>
+
                                         <div class="col-12 col-md-4 mb-4">
                                             <label for="preco" class="form-label">Preço</label>
-                                            <input type="text" placeholder="Informe o titulo" id="preco" v-model="form.preco" class="form-control">
-                                            <span class="text-danger"  v-if="form.errors && form.errors.preco">{{ form.errors.preco }}</span>
+                                            <input type="text" placeholder="Informe o titulo" id="preco"
+                                                v-model="form.preco" class="form-control">
+                                            <span class="text-danger" v-if="form.errors && form.errors.preco">{{
+                            form.errors.preco }}</span>
                                         </div>
 
                                         <div class="col-12 col-md-4 mb-4">
                                             <label for="designacao" class="form-label">Descrição</label>
-                                            <input type="text" placeholder="Informe uma descrição" id="designacao" v-model="form.designacao" class="form-control">
-                                            <span class="text-danger" v-if="form.errors && form.errors.designacao">{{ form.errors.designacao }}</span>
+                                            <input type="text" placeholder="Informe uma descrição" id="designacao"
+                                                v-model="form.designacao" class="form-control">
+                                            <span class="text-danger" v-if="form.errors && form.errors.designacao">{{
+                                                form.errors.designacao }}</span>
                                         </div>
 
                                     </div>
@@ -60,7 +88,7 @@
                 </div>
             </div>
         </div>
-        
+
     </MainLayoutsAdmin>
 </template>
 
@@ -71,6 +99,8 @@ import MainLayoutsAdmin from '../../Layouts/MainLayoutsAdmin.vue';
 export default {
     props: [
         "modulos",
+        "tipo_licencas",
+        "estado_licencas",
     ],
     components: { MainLayoutsAdmin },
     computed: {
@@ -90,9 +120,10 @@ export default {
             ],
 
             form: {
-                titulo: "",
                 preco: "",
                 designacao: "",
+                tipo_licencas_id: null,
+                licenca_estado_id: null,
             },
         };
     },

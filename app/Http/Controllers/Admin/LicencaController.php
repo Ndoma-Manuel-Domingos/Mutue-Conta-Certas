@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\EstadoLicenca;
+use App\Models\FormaPagamento;
 use App\Models\Licenca;
 use App\Models\LicencaModulo;
 use App\Models\Modulo;
 use App\Models\User;
 use App\Models\UserModulo;
 use App\Models\LicencaUsuario;
+use App\Models\TipoLicenca;
+use App\Models\UserEmpresa;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -27,6 +31,8 @@ class LicencaController extends Controller
 
         $data['licenca'] = Licenca::get();
         $data['modulos'] = Modulo::select('id', 'designacao As text')->get();
+        $data['tipo_licencas'] = TipoLicenca::select('id', 'designacao As text')->get();
+        $data['estado_licencas'] = EstadoLicenca::select('id', 'designacao As text')->get();
 
         return Inertia::render('Admin/Licenca/Create', $data);
     }
@@ -122,25 +128,37 @@ class LicencaController extends Controller
         return Inertia::render('Licenca', $data);
     }
 
-
-    public function assinar_licencas($id)
+    public function licencasEscolha($id)
     {
-        $users = User::with('empresa')->findOrFail(auth()->user()->id);
 
-        $licenca = Licenca::findOrFail($id);
+        $data['licencas'] = Licenca::with(['modulos.modulo'])->get();
+        $data['empresa_id'] = (int)($id);
 
-        $create = UserModulo::create([
-            'modulo_id' => $licenca->id,
-            'user_id' => $users->id,
-        ]);
 
-        LicencaUsuario::create([
-            'id_usuario' => $users->id,
-            'id_licenca' => $licenca->id,
-        ]);
-
-        return redirect()->route('mf.dashboard');
+        return Inertia::render('Licenca', $data);
     }
+
+
+    public function assinar_licencas(Request $request)
+    {
+        dd($request);
+        //$users = User::with('empresa')->findOrFail(auth()->user()->id);
+
+        // // $licenca = Licenca::findOrFail($id);
+
+        // $create = UserModulo::create([
+        //     'modulo_id' => $licenca->id,
+        //     'user_id' => $users->id,
+        // ]);
+
+        // LicencaUsuario::create([
+        //     'id_usuario' => $users->id,
+        //     'id_licenca' => $licenca->id,
+        // ]);
+
+        // return redirect()->route('mf.dashboard');
+    }
+
 
     public function destroy($id)
     {
@@ -163,5 +181,20 @@ class LicencaController extends Controller
             return response()->json($th->getMessage());
         }
     }
+
+    public function licencaPagamento($id, $id_empresa){
+
+        $users = User::with('empresa')->findOrFail(auth()->user()->id);
+
+
+        $data['codigo_empresa'] = $id_empresa;
+        $data['empresa_usario'] = UserEmpresa::with(['empresa'])->where('empresa_id', (int)$id_empresa)->where('user_id', $users->id)->first();
+        $data['licenca'] = Licenca::findOrFail((int)$id);
+        $data['forma_pagamento'] = FormaPagamento::select('id', 'descricao AS text')->where('estado', 1)->get();
+
+        return Inertia::render('Admin/Licenca/LicencaPagamento', $data);
+    }
+
+
 
 }

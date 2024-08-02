@@ -102,6 +102,7 @@ class AuthController extends Controller
 
     public function register_store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'nif' => 'required',

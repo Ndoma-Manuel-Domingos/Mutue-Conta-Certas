@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="col-lg-3 col-12 col-md-3">
-                        <div class="small-box bg-success">
+                        <div class="small-box bg-secondary">
                             <div class="inner">
                                 <h4>{{ licencas_nao_usadas_count }}</h4>
                                 <p><i class="fa fa-id-card" aria-hidden="true"></i> LICENÇAS SEM UTILIZAÇÃO</p>
