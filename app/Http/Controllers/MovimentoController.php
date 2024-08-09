@@ -30,9 +30,31 @@ class MovimentoController extends Controller
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
             
-        $data['movimentos'] = Movimento::with(['exercicio', 'periodo' , 'criador'])
+        $data['movimentos'] = Movimento::with(['exercicio', 'periodo' , 'criador', 'items'])
+        ->when($request->exercicio_id, function($query, $value){
+            $query->where('exercicio_id', $value);
+        })
+        ->whereHas('items', function($query) use($request){
+            $query->when($request->sub_contas_id, function($query, $value){
+                $query->where('subconta_id', $value);
+            });
+        })
+        ->when($request->periodo_id, function($query, $value){
+            $query->where('periodo_id', $value);
+        })
+        ->when($request->data_inicio, function($query, $value){
+            $query->whereDate('created_at',  ">=" ,$value);
+        })
+        ->when($request->data_final, function($query, $value){
+            $query->whereDate('created_at', "<=" ,$value);
+        })
         ->where('empresa_id', $this->empresaLogada())
-        ->orderBy('id', 'desc')->get();
+        ->orderBy('id', 'desc')
+        ->get();
+        
+        $data['exercicios'] = Exercicio::select('id', 'designacao As text')->get();
+        $data['periodos'] = Periodo::select('id', 'designacao As text')->get();
+        $data['subcontas'] = SubConta::with(['conta'])->select('id', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->where('empresa_id', $this->empresaLogada())->get();
 
 
         return Inertia::render('Movimentos/Index', $data);
@@ -97,6 +119,8 @@ class MovimentoController extends Controller
                 'origem' => "movimento",
                 'data_lancamento' => date("Y-m-d"),
                 'lancamento_atual' => $request->lancamento_atual,
+                'referencia_documento' => $request->referencia_documento,
+                'data_movimento' => $request->data_movimento,
                 'diario_id' => $request->diario_id,
                 'tipo_documento_id' => $request->tipo_documento_id,
                 'user_id' => $user->id,
@@ -123,12 +147,23 @@ class MovimentoController extends Controller
 
     public function show($id)
     {
-    
         $data['movimento'] = Movimento::with(["items.subconta.conta", "exercicio", "diario", "tipo_documento", "empresa", "criador"])->findOrFail($id);
-
+        
         return Inertia::render('Movimentos/Show', $data);
     }
 
+
+    public function carregar_lancamento_movimento()
+    {
+        $user = User::findOrFail(auth()->user()->id);
+
+        $item_movimentos = MovimentoItem::with(['subconta.conta', 'empresa'])->where('movimento_id', NULL)->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->get();
+
+        $resultados = MovimentoItem::with(['subconta.conta', 'empresa'])->whereNull('movimento_id')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
+
+        return response()->json(['item_movimentos' => $item_movimentos, 'resultados' => $resultados], 200);
+
+    }
 
     public function adicionar_conta_movimento($id)
     {
@@ -197,9 +232,41 @@ class MovimentoController extends Controller
 
     }
 
+    public function inverter_valores_movimento($id)
+    {
+        $user = User::findOrFail(auth()->user()->id);
+
+        $movimento = MovimentoItem::findOrFail($id);
+        
+        $debito = 0;
+        $credito = 0;
+        
+        if($movimento->credito > 0){
+            $debito = $movimento->credito;
+            $credito = 0;
+        }
+        if($movimento->debito > 0){
+            $debito = 0;
+            $credito = $movimento->debito;
+        }
+        
+        $movimento->debito = $debito;
+        $movimento->credito = $credito;
+        
+        $movimento->update();
+
+        $item_movimentos = MovimentoItem::with(['subconta.conta', 'empresa'])->where('movimento_id', NULL)->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->get();
+        $resultados = MovimentoItem::with(['subconta.conta', 'empresa'])->whereNull('movimento_id')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
+
+        return response()->json(['item_movimentos' => $item_movimentos, 'resultados' => $resultados], 200);
+
+    }
+
     public function alterar_debito_conta_movimento($id, $valor)
     {
-
+        
+        // $valor = number_format($valor / 100, 2, '.', '');
+        
         $user = User::findOrFail(auth()->user()->id);
 
         $movimento = MovimentoItem::findOrFail($id);
@@ -216,6 +283,8 @@ class MovimentoController extends Controller
     public function alterar_credito_conta_movimento($id, $valor)
     {
         $user = User::findOrFail(auth()->user()->id);
+        
+        // $valor = number_format($valor / 100, 2, '.', '');
 
         $movimento = MovimentoItem::findOrFail($id);
         $movimento->credito = $valor;
@@ -232,6 +301,8 @@ class MovimentoController extends Controller
     public function alterar_iva_conta_movimento($id, $iva)
     {
         $user = User::findOrFail(auth()->user()->id);
+        
+        // $iva = number_format($iva / 100, 2, '.', '');
 
         $movimento = MovimentoItem::findOrFail($id);
         $movimento->iva = $iva;

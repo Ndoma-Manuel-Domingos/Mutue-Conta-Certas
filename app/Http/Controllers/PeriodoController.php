@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use PDF;
 use App\Exports\MovimentoExport;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
@@ -136,6 +137,21 @@ class PeriodoController extends Controller
 
         return response()->json(['message' => "Dados salvos com sucesso!"], 200);
     }
+    
+    
+    public function get_periodos($id)
+    {
+        $exercicio = Exercicio::findOrFail($id);
+        $periodos = Periodo::select('id', 'designacao AS text')->where('exercicio_id', $exercicio->id)->get();
+
+        return response()->json(
+            [
+                'exercicio' => $exercicio,
+                'periodos' => $periodos,
+            ]
+        , 200);
+    }
+
 
     public function destroy($id)
     {

@@ -21,10 +21,10 @@
                                 <div class="input-group">
                                     <input type="text" v-model="form.name" :class="{'is-invalid' : form.errors.name}" class="form-control form-control-sm " placeholder="Informe o seu Nome" />
                                 </div>
-                                <span v-if="form.errors.name" class="login-box-msg text-danger" >{{ form.errors.name }}</span>
+                                <!-- <span v-if="form.errors.name" class="login-box-msg text-danger" >{{ form.errors.name }}</span> -->
                             </div>
                                                         
-                            <div class="col-12 mb-3">
+                            <!-- <div class="col-12 mb-3">
                                 <label for="" class="form-label">Tipo Empresa</label>
                                 <div class="input-group">
                                     <Select2
@@ -37,7 +37,7 @@
                                     />
                                 </div>
                                 <span v-if="form.errors.tipo_empresa" class="login-box-msg text-danger" >{{ form.errors.tipo_empresa }}</span>
-                            </div>
+                            </div> -->
                             
                             <div class="col-12 mb-3">
                                 <label for="" class="form-label">NIF</label>
@@ -45,7 +45,7 @@
                                     
                                     <input type="text" v-model="form.nif" :class="{'is-invalid' : form.errors.nif}" class="form-control form-control-sm " placeholder="Número de Identificação Fiscal" />
                                 </div>
-                                <span v-if="form.errors.nif" class="login-box-msg text-danger" >{{ form.errors.nif }}</span>
+                                <!-- <span v-if="form.errors.nif" class="login-box-msg text-danger" >{{ form.errors.nif }}</span> -->
                             </div>
                             
                             <div class="col-12 mb-3">
@@ -54,7 +54,7 @@
                                     
                                     <input type="text" v-model="form.email" :class="{'is-invalid' : form.errors.email}" class="form-control form-control-sm " placeholder="Email" />
                                 </div>
-                                <span v-if="form.errors.email" class="login-box-msg text-danger" >{{ form.errors.email }}</span>
+                                <!-- <span v-if="form.errors.email" class="login-box-msg text-danger" >{{ form.errors.email }}</span> -->
                             </div>
                             
                             <div class="col-12 mb-3">
@@ -63,7 +63,7 @@
                                     
                                     <input type="password" v-model="form.password" :class="{'is-invalid' : form.errors.password}"  class="form-control form-control-sm " placeholder="Senha" />
                                 </div>
-                                <span v-if="form.errors.password" class="login-box-msg text-danger" >{{ form.errors.password }}</span>
+                                <!-- <span v-if="form.errors.password" class="login-box-msg text-danger" >{{ form.errors.password }}</span> -->
                             </div>
                             
                             <div class="col-12 mb-3">
@@ -71,7 +71,7 @@
                                 <div class="input-group">
                                     <input type="password" v-model="form.r_password" :class="{'is-invalid' : form.errors.r_password}"  class="form-control form-control-sm " placeholder="Confirmar Senha" />
                                 </div>
-                                <span v-if="form.errors.r_password" class="login-box-msg text-danger" >{{ form.errors.r_password }}</span>
+                                <!-- <span v-if="form.errors.r_password" class="login-box-msg text-danger" >{{ form.errors.r_password }}</span> -->
                             </div>
 
                             <div class="col-12">

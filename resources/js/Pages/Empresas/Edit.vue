@@ -55,6 +55,15 @@
                         />
                         <span class="text-danger" v-if="form.errors && form.errors.estado_empresa_id">{{ form.errors.estado_empresa_id }}</span>
                       </div>
+                
+                      <!-- <div class="col-12 col-md-2 mb-4">
+                        <label for="tipo_empresa_id" class="form-label">Tipo Cliente</label>
+                        <Select2 v-model="form.tipo_empresa_id"
+                          id="tipo_empresa_id" class="col-12 col-md-12"
+                          :options="tipo_clientes" :settings="{ width: '100%' }" 
+                        />
+                        <span class="text-danger" v-if="form.errors && form.errors.tipo_empresa_id">{{ form.errors.tipo_empresa_id }}</span>
+                      </div> -->
                       
                       <div class="col-12 col-md-2 mb-4">
                         <label for="logotipo_da_empresa" class="form-label"
@@ -287,6 +296,12 @@ export default {
         {'id': 1, 'text': "Activo"},
         {'id': 2, 'text': "Desactivo"},
       ],
+      
+      // tipo_clientes: [
+      //   { id: "singular", text: "Singular" },
+      //   { id: "juridica", text: "Jurídica" },
+      // ],
+                
       
       form: this.$inertia.form({
       

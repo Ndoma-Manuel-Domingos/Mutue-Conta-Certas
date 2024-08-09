@@ -4,12 +4,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-info">NOTA DE CONTA</h1>
+                        <h1 class="m-0 text-info">NOTA AO BALONÇO DA CONTA Nº {{ subcontas[0].conta.numero }} - {{ subcontas[0].conta.designacao }} </h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
+                                <a href="/balancos">Voltar</a>
                             </li>
                             <li class="breadcrumb-item active">Listagem</li>
                         </ol>
@@ -23,10 +23,6 @@
                 <div class="row">
                     <div class="col-12 col-md-12">
                         <div class="card">
-                            <!-- <div class="card-header">
-                                <a @click="imprimirPlano()" class="btn-sm btn-danger btn float-left mx-1"><i
-                                        class="fas fa-file-pdf"></i> Visualizar Sub-Contas</a>
-                            </div> -->
                             <div class="card-body">
                                 <table class="table table-bordered table-hover" id="tabela_de_balancetes"
                                     v-if="(count == 3) || (count == 0)">
@@ -36,9 +32,7 @@
                                             <th colspan="2" class="text-center">Saldo</th>
                                         </tr>
                                         <tr class="btn-dark">
-                                            <th class="text-uppercase"
-                                                v-if="(subcontas[0].id != 26) && (subcontas[0].id != 33)">SUBCONTAS DA
-                                                CONTA Nº {{ subcontas[0].conta.numero }}</th>
+                                            <th class="text-uppercase" v-if="(subcontas[0].id != 26) && (subcontas[0].id != 33)">SUBCONTAS DA CONTA Nº {{ subcontas[0].conta.numero }}</th>
                                             <th class="text-uppercase" v-else>SUBCONTAS DA CONTA Nº 11 e 12</th>
 
                                             <th>Devedor</th>
@@ -169,18 +163,22 @@ export default {
         imprimirPlano() {
             window.open("imprimir-plano");
         },
+    
         formatarValorMonetario(valor) {
-            // Converter o número para uma string e separar parte inteira da parte decimal
-            let partes = String(valor).split(".");
-            let parteInteira = partes[0];
-            let parteDecimal = partes.length > 1 ? "." + partes[1] : "";
-
-            // Adicionar separadores de milhar
-            parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-            // Retornar o valor formatado
-            return parteInteira + parteDecimal;
-        }
+          // Converte o valor para uma string com duas casas decimais
+          let valorFormatado = Number(valor).toFixed(2);
+      
+          // Separa a parte inteira da parte decimal
+          let partes = valorFormatado.split(".");
+          let parteInteira = partes[0];
+          let parteDecimal = partes[1] ? "," + partes[1] : "";
+      
+          // Adiciona separadores de milhar
+          parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      
+          // Retorna o valor formatado
+          return parteInteira + parteDecimal;
+        },
 
     },
 };

@@ -18,6 +18,83 @@
 
     <div class="content">
       <div class="container-fluid">
+        
+        <div class="row">
+          <div class="col-12 col-md-12">
+            <form action="">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="sub_contas_id" class="form-label"
+                        >Subcontas</label
+                      >
+                      <Select2
+                        id="sub_contas_id"
+                        v-model="sub_contas_id"
+                        :options="subcontas"
+                        :settings="{ width: '100%' }"
+                      />
+                    </div>
+                    
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="exercicio_id" class="form-label"
+                        >Exercícios</label
+                      >
+                      <Select2
+                        id="exercicio_id"
+                        v-model="exercicio_id"
+                        :options="exercicios"
+                        :settings="{ width: '100%' }"
+                        @select="getPeriodos($event)"
+                      />
+                    </div>
+
+                    <div class="col-12 col-md-2 mb-4">
+                      <label for="periodo_id" class="form-label"
+                        >Períodos</label
+                      >
+                      <Select2
+                        id="periodo_id"
+                        v-model="periodo_id"
+                        :options="lista_periodos"
+                        :settings="{ width: '100%' }"
+                      />
+                    </div>
+
+                    <div class="col-12 col-md-2 mb-4">
+                      <label for="data_inicio" class="form-label"
+                        >Data Inicial</label
+                      >
+                      <input
+                        type="date"
+                        id="data_inicio"
+                        v-model="data_inicio"
+                        class="form-control"
+                      />
+                    </div>
+
+                    <div class="col-12 col-md-2 mb-4">
+                      <label for="data_final" class="form-label"
+                        >Data Final</label
+                      >
+                      <input
+                        type="date"
+                        id="data_final"
+                        v-model="data_final"
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      
         <div class="row">
           <div class="col-12 col-md-12">
             <div class="card">
@@ -34,7 +111,6 @@
                   <thead>
                     <tr>
                       <th style="cursor: pointer;">Nº</th>
-                      <!-- <th style="cursor: pointer;">Diário</th> -->
                       <th>Data</th>
                       <th>Exercício</th>
                       <th>Período</th>
@@ -50,7 +126,6 @@
 
                     <tr v-for="item in movimentos" :key="item">
                       <td>{{ item.id }}</td>
-                      <!-- <td>{{ item.diario.numero }} - {{ item.diario.designacao }}</td> -->
                       <td>{{ item.data_lancamento }}</td>
                       <td>{{ item.exercicio.designacao }}</td>
                       <td>{{ item.periodo.designacao }}</td>
@@ -84,7 +159,10 @@ import Paginacao from "../../components/Paginacao.vue";
 export default {
 
   props: [
-    'movimentos'
+    'movimentos',
+    "exercicios",
+    "periodos",
+    "subcontas",
   ],
   components:{
     Paginacao,
@@ -102,6 +180,14 @@ export default {
   },
   data() {
     return {
+      sub_contas_id: "",
+      exercicio_id: "",
+      periodo_id: "",
+      data_inicio: "", // new Date().toISOString().substr(0, 10),
+      data_final:  "", // new Date().toISOString().substr(0, 10),
+      
+      lista_periodos: [],
+
       params: {},
     };
   },
@@ -123,6 +209,32 @@ export default {
       }
       this.updateData();
     },
+    
+    sub_contas_id: function (val) {
+      this.params.sub_contas_id = val;
+      this.updateData();
+    },
+    
+    exercicio_id: function (val) {
+      this.params.exercicio_id = val;
+      this.updateData();
+    },
+    
+    periodo_id: function (val) {
+      this.params.periodo_id = val;
+      this.updateData();
+    },
+    
+    data_inicio: function (val) {
+      this.params.data_inicio = val;
+      this.updateData();
+    },
+
+    data_final: function (val) {
+      this.params.data_final = val;
+      this.updateData();
+    },
+ 
   },
 
   methods: {
@@ -136,21 +248,38 @@ export default {
         },
       });
     },
+    
+    getPeriodos({ id, text }) {
+      axios
+        .get(`/get-periodos/${this.exercicio_id}`)
+        .then((response) => {
+          // this.form.numero = response.data.diario.numero + ".";
+          this.lista_periodos = [];
+          this.lista_periodos = response.data.periodos;
+          
+        })
+        .catch((error) => {});
+    },
+    
     imprimirPlano() {
       window.open("imprimir-movimentos");
     },
 
+        
     formatarValorMonetario(valor) {
-        // Converter o número para uma string e separar parte inteira da parte decimal
-        let partes = String(valor).split('.');
-        let parteInteira = partes[0];
-        let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
-
-        // Adicionar separadores de milhar
-        parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-        // Retornar o valor formatado
-        return parteInteira + parteDecimal;
+      // Converte o valor para uma string com duas casas decimais
+      let valorFormatado = Number(valor).toFixed(2);
+  
+      // Separa a parte inteira da parte decimal
+      let partes = valorFormatado.split(".");
+      let parteInteira = partes[0];
+      let parteDecimal = partes[1] ? "," + partes[1] : "";
+  
+      // Adiciona separadores de milhar
+      parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  
+      // Retorna o valor formatado
+      return parteInteira + parteDecimal;
     },
 
     ExportarExcelMovimento() {
@@ -158,12 +287,19 @@ export default {
         `exportar-movimento-excel`
       );
     },
-
+    
     formatValor(atual) {
-      const valorFormatado = Intl.NumberFormat("pt-br", {
+      // Converte o valor para um número com duas casas decimais
+      const valor = Number(atual).toFixed(2);
+    
+      // Formata o valor para a moeda especificada (AOA)
+      const valorFormatado = Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "AOA",
-      }).format(atual);
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(valor);
+    
       return valorFormatado;
     },
   },

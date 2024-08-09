@@ -52,9 +52,9 @@ class ImobilizadosController extends Controller
         $valores = 0;
         
         foreach ($data['imobilizados'] as $item) {
-            $valor_contabilistico += $item->valor_aquisicao - ($item->valor_aquisicao * (($item->amortizacao_item->taxa / 100) * $item->ano_vencimento));
-            $valor_acumulado += ($item->valor_aquisicao * ($item->amortizacao_item->taxa / 100)) * $item->ano_vencimento;
-            $valores += $item->valor_aquisicao * ($item->amortizacao_item->taxa / 100);
+            $valor_contabilistico += $item->valor_aquisicao - ($item->valor_aquisicao * ((($item->amortizacao_item->taxa ?? 0) / 100) * $item->ano_vencimento));
+            $valor_acumulado += ($item->valor_aquisicao * (($item->amortizacao_item->taxa ?? 0) / 100)) * $item->ano_vencimento;
+            $valores += $item->valor_aquisicao * (($item->amortizacao_item->taxa ?? 0) / 100);
             $valor_aquisicao += $item->valor_aquisicao;
         }
                 
@@ -86,9 +86,9 @@ class ImobilizadosController extends Controller
         $valores = 0;
         
         foreach ($data['imobilizados'] as $item) {
-            $valor_contabilistico += $item->valor_aquisicao - ($item->valor_aquisicao * (($item->amortizacao_item->taxa / 100) * $item->ano_vencimento));
-            $valor_acumulado += ($item->valor_aquisicao * ($item->amortizacao_item->taxa / 100)) * $item->ano_vencimento;
-            $valores += $item->valor_aquisicao * ($item->amortizacao_item->taxa / 100);
+            $valor_contabilistico += $item->valor_aquisicao - ($item->valor_aquisicao * ((($item->amortizacao_item->taxa ?? 0) / 100) * $item->ano_vencimento));
+            $valor_acumulado += ($item->valor_aquisicao * (($item->amortizacao_item->taxa ?? 0) / 100)) * $item->ano_vencimento;
+            $valores += $item->valor_aquisicao * (($item->amortizacao_item->taxa ?? 0) / 100);
             $valor_aquisicao += $item->valor_aquisicao;
         }
         

@@ -27,7 +27,7 @@
                 <div class="card-header">
                   <h5>
                     <span>Saldo Anterior:</span>
-                    <span class="text-info">{{ formatarValorMonetario(saldo_antes_movimento) }}</span> 
+                    <span class="text-info">{{ formatarValorMonetario(saldo_antes_movimento) }}</span>
                     ||
                     <span>Saldo Actual: </span>
                     <span class="text-info"> {{ formatarValorMonetario(saldo_final) }}</span>
@@ -121,7 +121,7 @@
                         class="col-12 col-md-12"
                         :options="tipo_movimentos"
                         :settings="{ width: '100%' }"
-                        @select="selecinarTipoMovimento($event)"  
+                        @select="selecinarTipoMovimento($event)"
                       />
                       <span
                         class="text-danger"
@@ -181,7 +181,7 @@
                         >{{ form.errors.tipo_proveito_id }}</span
                       >
                     </div>
-                    
+
                     <div class="col-12 col-md-3 mb-4" >
                       <label for="centro_custo" class="form-label"
                         >Centro Custo</label
@@ -195,29 +195,72 @@
                       />
                       <span></span>
                     </div>
-                    
-                    
-                    <div class="col-12 col-md-12">
-                      <div class="row">
-                        <div class="col-12 col-md-6 mb-4">
-                          <label for="requisitante" class="form-label"
-                            >Requisitante</label
-                          >
-                          <textarea
-                            id="requisitante"
-                            v-model="form.requisitante"
-                            class="form-control"
-                            placeholder="Requisitante"
-                          ></textarea>
-                          <span
-                            class="text-danger"
-                            v-if="form.errors && form.errors.requisitante"
-                            >{{ form.errors.requisitante }}</span
-                          >
-                        </div>
-                      </div>
+
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="referencia_documento" class="form-label">Referência do Documento</label>
+                      <input type="text" id="referencia_documento" v-model="form.referencia_documento" placeholder="EX: MUT2024/458383" class="form-control" >
+                      <span class="text-danger" v-if="form.errors && form.errors.referencia_documento">{{ form.errors.referencia_documento }}</span>
                     </div>
-                    
+
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="data_lancamento" class="form-label"
+                        >Data Lançamento</label
+                      >
+                      <input
+                        id="data_lancamento"
+                        v-model="form.data_lancamento"
+                        class="form-control"
+                        placeholder="data_lancamento"
+                        type="date"
+                        />
+                      <span
+                        class="text-danger"
+                        v-if="form.errors && form.errors.data_lancamento"
+                        >{{ form.errors.data_lancamento }}</span
+                      >
+                    </div>
+
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="exercicio_id" class="form-label"
+                        >Exercício</label
+                      >
+                      <Select2
+                        id="exercicio_id"
+                        v-model="exercicio_id"
+                        :options="exercicios"
+                        :settings="{ width: '100%' }"
+                      />
+                    </div>
+
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="periodo_id" class="form-label"
+                        >Período</label
+                      >
+                      <Select2
+                        id="periodo_id"
+                        v-model="periodo_id"
+                        :options="periodos"
+                        :settings="{ width: '100%' }"
+                      />
+                    </div>
+
+                    <div class="col-12 col-md-3 mb-4">
+                      <label for="requisitante" class="form-label"
+                        >Requisitante</label
+                      >
+                      <input
+                        id="requisitante"
+                        v-model="form.requisitante"
+                        class="form-control"
+                        placeholder="Requisitante"
+                        />
+                      <span
+                        class="text-danger"
+                        v-if="form.errors && form.errors.requisitante"
+                        >{{ form.errors.requisitante }}</span
+                      >
+                    </div>
+
                   </div>
                 </div>
                 <div class="card-footer">
@@ -231,7 +274,7 @@
 
           <div class="col-12 col-md-12">
             <div class="card">
-              <div class="card-header"> 
+              <div class="card-header">
                 <h6>Listagem de Movimento</h6>
               </div>
               <div class="card-body">
@@ -251,9 +294,9 @@
                       <th class="text-right">Após Movimento</th>
                     </tr>
                   </thead>
-                  
+
                   <tbody>
-                  
+
                     <tr>
                       <td colspan="3" class="text-right">Total</td>
                       <td class="text-right text-primary">{{ resultados.total_debito == null ? 0 : formatarValorMonetario(resultados.total_debito) }}</td>
@@ -262,27 +305,27 @@
                       <td class="text-right text-primary">{{ formatarValorMonetario(saldo_final) }}</td>
                       <td></td>
                     </tr>
-                    
+
                     <tr v-for="(item, index) in item_movimentos" :key="index">
                       <td class="text-center">{{ index + 1 }} </td>
                       <td class="text-center">{{ item.movimento.lancamento_atual ?? '' }}</td>
                       <td class="text-left">{{ item.descricao }} </td>
                       <td class="text-right text-primary">{{ formatarValorMonetario(item.debito) }} </td>
                       <td class="text-right text-danger">{{ formatarValorMonetario(item.credito) }} </td>
-                      
+
                       <td class="text-right text-primary" v-if="item.debito > item.credito">{{ formatarValorMonetario(item.debito - item.credito) }}</td>
                       <td class="text-right text-danger" v-if="item.credito > item.debito">{{ formatarValorMonetario(item.credito - item.debito) }}</td>
-                
+
                       <td class="text-right text-primary" v-if="item.debito > item.credito">{{ formatarValorMonetario(item.debito - item.credito) }}</td>
                       <td class="text-right text-danger" v-if="item.credito > item.debito">{{ formatarValorMonetario(item.credito - item.debito) }}</td>
-                        
+
                       <td style="width: 150px;">
                         <a @click="remover_fluxo_caixa_item(item)" class="text-danger btn btn-default mx-1"><i class="fas fa-times"></i></a>
                         <a @click="editar_fluxo_caixa_item(item)" class="text-success btn btn-default mx-1"><i class="fas fa-edit"></i></a>
                       </td>
                     </tr>
                   </tbody>
-                
+
                 </table>
               </div>
               <div class="card-footer"></div>
@@ -293,7 +336,7 @@
     </div>
   </MainLayouts>
 </template>
-  
+
 <script>
 export default {
   props: [
@@ -308,8 +351,10 @@ export default {
     "saldo",
     "item_movimentos", "resultados",
     "taxas",
-    "saldo_final", 
-    "saldo_antes_movimento"
+    "saldo_final",
+    "saldo_antes_movimento",
+    "exercicios",
+    "periodos"
   ],
   components: {},
   computed: {
@@ -322,33 +367,33 @@ export default {
     sessions_exercicio() {
       return this.$page.props.sessions.exercicio_sessao;
     },
-    
+
     saldo_actual() {
       var saldo = 0;
-      
+
       if (this.saldo.debito > this.saldo.credito) {
         saldo = this.saldo.debito - this.saldo.credito
       }
       if(this.saldo.credito > this.saldo.debito){
         saldo = this.saldo.credito - this.saldo.debito
       }
-      
+
       return saldo
     },
-    
+
     title_botao() {
       return this.isUpdate
         ? "EDITAR"
         : "ADICIONAR";
     },
-    
+
   },
   data() {
     return {
-      
+
       itemId: null,
       isUpdate: false,
-    
+
       form: this.$inertia.form({
         sub_conta_id: this.sub_conta_id,
         valor: 0,
@@ -360,17 +405,21 @@ export default {
         tipo_proveito_id: "",
         taxa_iva_id: "1",
         requisitante: "",
+        data_lancamento: "",
+        referencia_documento: "",
         centro_custo: "",
+        exercicio_id: "",
+        periodo_id: "",
       }),
-      
+
       contrapartida_id: "",
       tipo_credito_id: "",
       sub_conta_id: "",
-      
+
       valorIntroduzido: 0,
-      
+
       params: {},
-  
+
     };
   },
   mounted() {
@@ -403,20 +452,28 @@ export default {
     formatInput() {
       // Implemente aqui a lógica de formatação desejada
       // Por exemplo, para formatar como moeda
-      this.form.valor = this.form.valor.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      // this.form.valor = this.form.valor.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+      this.form.valor = (parseFloat(this.form.valor.replace(/\D/g, '')) / 100).toFixed(2)
+      .replace('.', ',')
+      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     },
-    
+
     removeFormatting() {
+
       // Remover a formatação
-      this.form.valor = this.form.valor.replace(/\D/g, '');
+      // this.form.valor = this.form.valor.replace(/\D/g, '');
+
+      this.form.valor = parseFloat(this.form.valor.replace(/\./g, '').replace(',', '.'));
+
     },
-    
+
     selecinarTipoMovimento({id, text}){
-    
+
       this.removeFormatting();
 
       if(this.form.tipo_movimento_id == 1){
-      
+
         if( this.form.valor > this.saldo_final ){
           Swal.fire({
             toast: true,
@@ -427,16 +484,16 @@ export default {
             showConfirmButton: false,
             timer: 10000,
           });
-          
+
           this.form.tipo_movimento_id = "";
           this.formatInput()
         }
       }else {
         this.formatInput()
       }
-      
+
     },
-    
+
     updateData() {
       this.$Progress.start();
       this.$inertia.get("/fluxos-caixas/create", this.params, {
@@ -447,7 +504,7 @@ export default {
         },
       });
     },
-    
+
     validateInput(event) {
       // Permitir apenas números
       const keyCode = event.keyCode;
@@ -455,51 +512,55 @@ export default {
         event.preventDefault();
       }
     },
-            
+
     editar_fluxo_caixa_item(item){
         this.form.valor = (item.tipo_movimento.sigla == "D" ? item.debito : item.credito);
-        
+
         this.form.sub_conta_id = item.subconta_id;
         this.form.documento_id = item.documento_id;
         this.form.tipo_movimento_id = item.tipo_movimento_id;
         this.form.tipo_proveito_id = item.tipo_proveito_id;
-        
+
         this.tipo_credito_id = item.tipo_credito_id;
         this.contrapartida_id = item.contrapartida_id;
         this.form.tipo_credito_id = item.tipo_credito_id;
         this.form.contrapartida_id = item.contrapartida_id;
-        
+
         this.form.designacao = item.descricao;
-        
+
         this.isUpdate = true;
         this.itemId = item.id;
-        
+
     },
-        
+
     remover_fluxo_caixa_item(item) {
       axios
         .get(`/remover-fluxo-caixa/${item.id}`)
         .then((response) => {
-          
+
           this.item_movimentos = [];
           this.item_movimentos = response.data.item_movimentos;
           this.resultados = response.data.resultados;
-          
+
         })
         .catch((error) => {});
         console.log(item)
-    },    
+    },
 
     submit() {
-           
-      this.$Progress.start(); 
-            
+
+      this.$Progress.start();
+
       this.form.tipo_credito_id = this.tipo_credito_id;
       this.form.contrapartida_id = this.contrapartida_id;
       this.form.sub_conta_id = this.sub_conta_id;
-    
-      this.removeFormatting();
-    
+
+      // console.log(this.form.valor)
+
+      // console.error(this.removeFormatting());
+
+      // return
+
       if(this.form.tipo_movimento_id == 1){
         if( this.form.valor > this.saldo_final ){
           Swal.fire({
@@ -511,12 +572,12 @@ export default {
             showConfirmButton: false,
             timer: 10000,
           });
-          
+
           this.form.tipo_movimento_id = "";
           this.form.valor = 0;
         }
       }
-    
+
       this.form.post(route("fluxos-caixas.store"), {
         preverseScroll: true,
         onSuccess: () => {
@@ -531,11 +592,11 @@ export default {
             showConfirmButton: false,
             timer: 4000,
           });
-          
+
           // if(this.form.tipo_movimento_id == 1){
             this.imprimirComprovativo();
           // }
-          
+
           window.location.reload();
           this.$Progress.finish();
         },
@@ -556,8 +617,24 @@ export default {
         },
       });
     },
-    
+
     formatarValorMonetario(valor) {
+      // Converte o valor para uma string com duas casas decimais
+      let valorFormatado = Number(valor).toFixed(2);
+
+      // Separa a parte inteira da parte decimal
+      let partes = valorFormatado.split(".");
+      let parteInteira = partes[0];
+      let parteDecimal = partes[1] ? "," + partes[1] : "";
+
+      // Adiciona separadores de milhar
+      parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+      // Retorna o valor formatado
+      return parteInteira + parteDecimal;
+    },
+
+    /*formatarValorMonetario(valor) {
       // Converter o número para uma string e separar parte inteira da parte decimal
       let partes = String(valor).split(".");
       let parteInteira = partes[0];
@@ -568,8 +645,8 @@ export default {
 
       // Retornar o valor formatado
       return parteInteira + parteDecimal;
-    },
-    
+    },*/
+
     imprimirComprovativo() {
       window.open(
         `/fluxos-caixas-imprimir-nota-entregue?id=0`,
@@ -583,5 +660,5 @@ export default {
   },
 };
 </script>
-  
-  
+
+

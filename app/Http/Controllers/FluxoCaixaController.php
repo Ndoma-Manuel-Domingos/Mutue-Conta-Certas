@@ -381,10 +381,12 @@ class FluxoCaixaController extends Controller
         // Retorna a lista de posts
         $user = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
-    
+
         $data['fluxos_caixas'] = [];
 
         $conta = Conta::where('numero', '45')->first();
+        $data['exercicios'] = Exercicio::select('id', 'designacao AS text')->where('empresa_id', $this->empresaLogada())->get();
+        $data['periodos'] = Periodo::select('id', 'designacao AS text')->where('empresa_id', $this->empresaLogada())->get();
 
         $data['subcontas'] = SubConta::where('tipo', 'M')->where('conta_id', $conta->id)->select('id', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->orderBy('numero','asc')->get();
         $data['documentos'] = Documento::select('id', 'designacao AS text')->get();
@@ -404,7 +406,7 @@ class FluxoCaixaController extends Controller
         ->groupBy('conta_id', 'empresa_id', 'subconta_id', 'origem')
         ->where('empresa_id', $this->empresaLogada())
         ->first();
-        
+
         $data['ultimo_saldo'] = MovimentoItem::with(['conta', 'tipo_movimento'])
         ->select('conta_id', 'subconta_id', 'empresa_id', 'origem', 'tipo_movimento_id', DB::raw('sum(debito) as debito'), DB::raw('sum(credito) as credito'))
         ->when($request->sub_conta_id, function($query, $value){
@@ -416,8 +418,8 @@ class FluxoCaixaController extends Controller
         ->groupBy('conta_id', 'empresa_id', 'subconta_id', 'origem', 'id')
         ->orderBy('id', 'desc')
         ->first();
-        
-        
+
+
         $data['contrapartidas'] = Contrapartida::when($request->tipo_credito_id, function($query, $value){
             $query->where('tipo_credito_id' ,$value);
         })
@@ -434,10 +436,10 @@ class FluxoCaixaController extends Controller
             ->where('empresa_id', $this->empresaLogada())
             ->where('user_id', $user->id)
             ->orderBy('id', 'desc')->get();
-        
+
 
         $data['resultados'] = MovimentoItem::with(['subconta.conta', 'empresa', "documento", "tipo_movimento", "movimento"])->where('created_at', '>=', Carbon::createFromDate($data_created))->where('apresentar', 'S')->where('origem', 'fluxocaixa')->where('empresa_id', $this->empresaLogada())->where('user_id', $user->id)->selectRaw('SUM(debito) AS total_debito, SUM(credito) AS total_credito')->first();
-                
+
         if($data['ultimo_saldo'])    {
             if($data['ultimo_saldo']->debito > $data['ultimo_saldo']->credito){
                 $data['saldo_antes_movimento_item'] = $data['ultimo_saldo']->debito - $data['ultimo_saldo']->credito;
@@ -449,7 +451,7 @@ class FluxoCaixaController extends Controller
         }else {
             $data['saldo_antes_movimento_item'] = 0;
         }
-        
+
         if($data['saldo']){
             if($data['saldo']->debito > $data['saldo']->credito){
                 $data['saldo_final'] = $data['saldo']->debito  - $data['saldo']->credito;
@@ -461,7 +463,7 @@ class FluxoCaixaController extends Controller
         }else {
             $data['saldo_final'] = 0;
         }
-        
+
         if($data['ultimo_saldo']){
             if($data['ultimo_saldo'] && $data['ultimo_saldo']->tipo_movimento->sigla == "D"){
                 $data['saldo_apos_movimento'] = $data['saldo_final'];
@@ -477,27 +479,32 @@ class FluxoCaixaController extends Controller
             $data['saldo_antes_movimento'] = 0;
             $data['saldo_apos_movimento'] = 0;
         }
-        
-          
+
+
         return Inertia::render('FluxoCaixa/Create', $data);
     }
-    
+
     public function store(Request $request)
     {
-
         $request->validate([
             "tipo_movimento_id" => "required",
             "sub_conta_id" => "required",
-            "valor" => "required",
-            "documento_id" => "required"
+            "valor" => "required|numeric",
+            "documento_id" => "required",
+            "data_lancamento" => "required",
         ], [
 
             "tipo_movimento_id.required" => "Campo Obrigatório",
             "sub_conta_id.required" => "Campo Obrigatório",
             "valor.required" => "Campo Obrigatório",
             "documento_id.required" => "Campo Obrigatório",
+            "valor.numeric" => "O valor deve ser numérico.",
+            "data_lancamento.required" => "Campo Obrigatório",
         ]);
-        
+
+        // $request->valor2 = number_format($request->valor / 100, 2, '.', '');
+
+        // dd($request->valor2, $request->valor);
 
         $user = User::findOrFail(auth()->user()->id);
 
@@ -508,15 +515,13 @@ class FluxoCaixaController extends Controller
         $subconta = SubConta::find($request->sub_conta_id);
         $tipo_movimento = TipoMovimento::find($request->tipo_movimento_id);
         $centro_de_custo = CentroDeCusto::find($request->centro_custo);
-     
-        
+
         $subconta_do_iva = SubConta::where('numero', '34.5.2')->orWhere('numero', '34.5.2.2')->first();
         $subconta_do_iva_debito = SubConta::where('numero', '34.5.3')->orWhere('numero', '34.5.3')->first();
         $taxa_iva = Taxa::find($request->taxa_iva_id);
-        
-        
+
         $conta_cliente = SubConta::where('numero', '31.1')->first();
-                 
+
         $ultimo_movimento = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->where('empresa_id', $this->empresaLogada())->count();
 
         $novo_valor_com_iva = (($request->valor ?? 0) * (($taxa_iva->taxa ?? 0) / 100));
@@ -541,13 +546,14 @@ class FluxoCaixaController extends Controller
                     'empresa_id' => $this->empresaLogada(),
                     'descricao' => $request->designacao,
                     'requisitante' => $request->requisitante,
+                    'referencia_documento' => $request->referencia_documento,
                     'centro_custo' => $centro_de_custo->id ?? 1,
                     'origem' => "fluxocaixa",
                     'tipo_instituicao' => "propina",
-                    'exercicio_id' => $this->exercicioActivo(),
-                    'periodo_id' =>  $this->periodoActivo(),
+                    'exercicio_id' => $request->exercicio_id,
+                    'periodo_id' =>  $request->periodo_id,
                     'dia_id' => date("d"),
-                    'data_lancamento' => date("Y-m-d"),
+                    'data_lancamento' => $request->data_lancamento,
                     'lancamento_atual' => $ultimo_movimento + 1,
                     'diario_id' => 2, // $request->diario_id,
                     'tipo_documento_id' => 2, //$request->tipo_documento_id,
@@ -641,14 +647,14 @@ class FluxoCaixaController extends Controller
                 }
 
             }else if($tipo_movimento->sigla == "C"){
-                
+
                 // SE ESTIVEMOS A  CRÉDITAR ENTÃO VAMOS DEBITA EM UMA CONTRAPARTIDA
                 $hash = time();
 
                 $contrapartida = Contrapartida::find($request->contrapartida_id);
                 $subconta = SubConta::find($contrapartida->sub_conta_id);
                 $subconta_principal = SubConta::find($request->sub_conta_id);
-                
+
                 $create = Movimento::create([
                     'hash' => $hash,
                     'debito' => 0,
@@ -657,16 +663,17 @@ class FluxoCaixaController extends Controller
                     'empresa_id' => $this->empresaLogada(),
                     'descricao' => $request->designacao,
                     'requisitante' => $request->requisitante,
+                    'referencia_documento' => $request->referencia_documento,
                     'centro_custo' => $centro_de_custo->id ?? 1,
                     'origem' => "fluxocaixa",
                     'tipo_instituicao' => "propina",
-                    'exercicio_id' => $this->exercicioActivo(),
-                    'periodo_id' =>  $this->periodoActivo(),
+                    'exercicio_id' => $request->exercicio_id,
+                    'periodo_id' =>  $request->periodo_id,
                     'dia_id' => date("d"),
-                    'data_lancamento' => date("Y-m-d"),
+                    'data_lancamento' => $request->data_lancamento,
                     'lancamento_atual' => $ultimo_movimento + 1,
-                    'diario_id' => 2, 
-                    'tipo_documento_id' => 2, 
+                    'diario_id' => 2,
+                    'tipo_documento_id' => 2,
                     'user_id' => $user->id,
                     'created_by' => $user->id,
                 ]);
@@ -718,8 +725,8 @@ class FluxoCaixaController extends Controller
                     'user_id' => $user->id,
                     'created_by' => $user->id,
                 ]);
-            }            
-            
+            }
+
             // Confirmar a transação
             DB::commit();
 

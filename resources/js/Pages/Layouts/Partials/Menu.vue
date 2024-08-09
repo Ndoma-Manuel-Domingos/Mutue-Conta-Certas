@@ -155,7 +155,7 @@
                     active: $page.component == 'FluxoCaixa/Demonstracao',
                 }">
                         <i class="far fa-circle nav-icon"></i>
-                        <p>Demonstração de Fluxo de Caixa</p>
+                        <p>Demo. de Fluxo de Caixa</p>
                         </Link>
                     </li>
 
@@ -164,7 +164,7 @@
                     active: $page.component == 'ApuramentoResultado/Index',
                 }">
                         <i class="far fa-circle nav-icon"></i>
-                        <p>Apuramento de Resultados</p>
+                        <p>Apuram. de Resultados</p>
                         </Link>
                     </li>
                 </ul>
@@ -198,6 +198,38 @@
                     </li>
                 </ul>
             </li>
+            
+            <!-- <li class="nav-item" v-if="sessions">
+                <a href="#" class="nav-link" :class="{ active: $page.component.startsWith('AreaFinanceira/') }">
+                    <i class="nav-icon fas fa-file-pdf"></i>
+                    <p>
+                        <i class="right fas fa-angle-left"></i>
+                        Gestão Facturas
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item" title="Painel Controle">
+                        <Link href="/facturas/painel" class="nav-link" :class="{ active: $page.component == 'Facturas/Home', }">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Painel Controle</p>
+                        </Link>
+                    </li>
+                    
+                    <li class="nav-item" title="Exercicios">
+                        <Link href="/facturas" class="nav-link" :class="{ active: $page.component == 'Facturas/Index', }">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Facturas</p>
+                        </Link>
+                    </li>
+
+                    <li class="nav-item" title="Periodos">
+                        <Link href="/facturas" class="nav-link" :class="{ active: $page.component == 'Facturas/Index', }">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pagamento de Facturas</p>
+                        </Link>
+                    </li>
+                </ul>
+            </li> -->
 
             <li class="nav-item">
                 <a href="#" class="nav-link" :class="{ active: $page.component.startsWith('AreaFinanceira/') }">
@@ -353,7 +385,6 @@
                     </li>
                 </ul>
             </li>
-
 
         </ul>
     </nav>

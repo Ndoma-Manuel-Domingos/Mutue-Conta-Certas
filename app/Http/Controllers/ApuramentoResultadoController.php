@@ -27,7 +27,7 @@ class ApuramentoResultadoController extends Controller
         $exercicio_id = $request->exercicio_id;
 
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
-        $data['contas_apuramento'] = ContaEmpresa::select('classe_id', 'empresa_id', 'classe_id', 'numero')->whereIn('classe_id', [7, 8, 9])
+        $data['contas_apuramento'] = ContaEmpresa::select('classe_id')->whereIn('classe_id', [7, 8, 9])
             ->with([
                 'classe',
                 'conta.items_movimentos' => function ($query) {

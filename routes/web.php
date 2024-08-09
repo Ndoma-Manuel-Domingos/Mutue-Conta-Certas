@@ -34,6 +34,7 @@ use App\Http\Controllers\{
     TipoProveitoController,
     UtilizadorController,
     CentroDeCustoController,
+    FacturaController,
     ImobilizadosController,
     OperadorController,
     TabelaAmortizacaoController,
@@ -46,7 +47,9 @@ use App\Http\Controllers\Admin\{
     ModuloController,
     OperadorController as AdminOperadorController
 };
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +61,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::get('/', [AuthController::class, 'login'])
 ->middleware('guest');
@@ -80,6 +84,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/exercicios/iniciar-sessão/{id}', [ExercicioController::class, 'iniciar_sessao']);
     Route::post('/logout-exercicios', [ExercicioController::class, 'logout_exercicio'])->name('mf.logout_exercicio');
     Route::resource('periodos', PeriodoController::class);
+    Route::get('/get-periodos/{id}', [PeriodoController::class, 'get_periodos']);
     Route::get('/get-info-periodo/{id}', [PeriodoController::class, 'get_info']);
     Route::resource('contas', ContaController::class);
     Route::get('/get-conta/{id}', [ContaController::class, 'get_conta']);
@@ -110,6 +115,10 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/get-diario/{id}', [DiarioController::class, 'get_diario']);
     Route::resource('tipos-documentos', TipoDocumentoController::class);
     Route::resource('movimentos', MovimentoController::class);
+
+    Route::get('/facturas/painel', [FacturaController::class, 'home']);
+    Route::resource('facturas', FacturaController::class);
+
     Route::resource('fluxos-caixas', FluxoCaixaController::class);
     Route::post('/adicionar-fluxo-caixa', [FluxoCaixaController::class, 'adicionar_fluxo_caixa']);
     Route::put('/editar-fluxo-caixa/{id}', [FluxoCaixaController::class, 'editar_fluxo_caixa']);
@@ -125,6 +134,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('apuramento-resultado-pesquisa', [ApuramentoResultadoController::class, 'index']);
     Route::get('/adicionar-conta-movimento/{id}', [MovimentoController::class, 'adicionar_conta_movimento']);
     Route::get('/remover-conta-movimento/{id}', [MovimentoController::class, 'remover_conta_movimento']);
+    Route::get('/inverter-valores-movimento/{id}', [MovimentoController::class, 'inverter_valores_movimento']);
     Route::get('/alterar-debito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_debito_conta_movimento']);
     Route::get('/alterar-credito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_credito_conta_movimento']);
     Route::get('/alterar-iva-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_iva_conta_movimento']);

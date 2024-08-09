@@ -44,6 +44,20 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12 text-center my-2">
+                                        <a href="https://ato.mutue-negocios.ao/">ATO</a>
+                                    </div>
+                                    <div class="col-12 text-center my-2">
+                                        <a href="https://logistica.mutue.ao/">Mutue Compras e Logística</a>
+                                    </div>
+                                    <div class="col-12 text-center my-2">
+                                        <a href="https://gp.mutue.ao/">Mutue Gestão de Pessoas</a>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -64,8 +78,8 @@
     import { getCurrentInstance } from 'vue'
 
     const form = useForm({
-        email: "mutue@gmail.com",
-        password: "12345678"
+        email: "",
+        password: ""
     })
 
     const internalInstance = getCurrentInstance();

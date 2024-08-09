@@ -78,28 +78,24 @@
 import AuthLayouts from "./Layouts/AuthLayouts.vue";
 export default {
     layout: AuthLayouts,
-    props: ["licencas", 'empresa_id'],
-    data() {
-        return {
-            id_empresa: null,
-        };
-    },
+    props: ["licencas"],
     methods: {
+
         formatarValorMonetario(valor) {
-            // Converter o número para uma string e separar parte inteira da parte decimal
-            let partes = String(valor).split('.');
+            // Converte o valor para uma string com duas casas decimais
+            let valorFormatado = Number(valor).toFixed(2);
+
+            // Separa a parte inteira da parte decimal
+            let partes = valorFormatado.split(".");
             let parteInteira = partes[0];
-            let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
+            let parteDecimal = partes[1] ? "," + partes[1] : "";
 
-            // Adicionar separadores de milhar
-            parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            // Adiciona separadores de milhar
+            parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-            // Retornar o valor formatado
+            // Retorna o valor formatado
             return parteInteira + parteDecimal;
         },
     },
-    created() {
-        this.id_empresa = this.empresa_id;
-    },
-};
+}
 </script>

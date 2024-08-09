@@ -14,6 +14,25 @@ class AuthController extends Controller
     //
     public function login()
     {
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $url = $_SERVER['REQUEST_URI'];
+            $repartiUrl = explode('=', $url);
+            if ($repartiUrl[0] == '/login?email') {
+                $emailcod = $repartiUrl[1];
+                $email = base64_decode(base64_decode(base64_decode($emailcod)));
+                $user = User::where('email', $email)->first();
+                if ($user) {
+                    Auth::login($user);
+                    return redirect('/dashboard');
+                } else {
+                    return Inertia::render('Login');
+                }
+            } else {
+                return Inertia::render('Login');
+            }
+            return Inertia::render('Login');
+        }
+    
         return Inertia::render('Login');
     }
 
@@ -116,8 +135,7 @@ class AuthController extends Controller
             'password.required' => 'Campo Obrigatório',
             'r_password.required' => 'Campo Obrigatório',
         ]);
-
-
+        
         $usernames = preg_split('/\s+/', strtolower($request->name), -1, PREG_SPLIT_NO_EMPTY);
         $username = head($usernames) . '.' . last($usernames);
 

@@ -47,14 +47,14 @@
           <div class="col-lg-3 col-12 col-md-3">
             <div class="small-box bg-success">
               <div class="inner">
-                <h4 v-if="resultado.debito > resultado.credito">
+                <h4 v-if="(resultado.debito ?? 0) > (resultado.credito ?? 0)">
                   {{
-                    formatarValorMonetario(resultado.debito - resultado.credito)
+                    formatarValorMonetario((resultado.debito ?? 0) - (resultado.credito ?? 0))
                   }}
                 </h4>
-                <h4 v-else-if="resultado.debito < resultado.credito">
+                <h4 v-else-if="(resultado.debito ?? 0) < (resultado.credito ?? 0)">
                   {{
-                    formatarValorMonetario(resultado.credito - resultado.debito)
+                    formatarValorMonetario((resultado.credito ?? 0) - (resultado.debito ?? 0))
                   }}
                 </h4>
                 <h4 v-else>---</h4>
@@ -85,7 +85,7 @@
             <div>
               <div class="card">
                 <div class="card-header">
-                  <h5>Listagem dos ultimos Movimentos</h5>
+                  <h5>Listagem dos últimos Movimentos</h5>
                 </div>
                 <div class="card-body table-responsive p-0">
                   <table class="table table-hover text-nowrap">
@@ -93,14 +93,12 @@
                       <tr>
                         <th style="cursor: pointer">Nº</th>
                         <th style="cursor: pointer">Diário</th>
-                        <!-- <th style="cursor: pointer;">Documento</th> -->
                         <th>Data</th>
                         <th>Exercício</th>
                         <th>Operador</th>
                         <th>Descrição</th>
                         <th class="text-right">Débito</th>
                         <th class="text-right">Crédito</th>
-                        <!-- <th class="text-right">Ações</th> -->
                       </tr>
                     </thead>
 
@@ -122,22 +120,16 @@
                           <strong>{{
                             item.debito == 0
                               ? "-"
-                              : formatarValorMonetario(item.debito)
+                              : formatarValorMonetario(item.debito ?? 0)
                           }}</strong>
                         </td>
                         <td class="text-danger text-right">
                           <strong>{{
                             item.credito == 0
                               ? "-"
-                              : formatarValorMonetario(item.credito)
+                              : formatarValorMonetario(item.credito ?? 0)
                           }}</strong>
                         </td>
-                        <!-- <td>
-                            <div class="float-right">
-                              <a :href="`/movimentos/${item.id}/edit`" class="btn btn-sm btn-success mx-1"><i class="fas fa-edit"></i> Editar</a>
-                              <a :href="`/movimentos/${item.id}`" class="btn btn-sm btn-info mx-1"><i class="fas fa-info-circle"></i> Detalhe</a>
-                            </div>
-                          </td> -->
                       </tr>
                     </tbody>
 
@@ -150,11 +142,7 @@
           </div>
         </div>
 
-        <!-- <div class="row">
-          <div class="col-12 col-md-12">
-            <div id="chart" style="width: 100%; height: 400px;"></div>
-          </div>
-        </div> -->
+
       </div>
     </div>
   </MainLayouts>
