@@ -134,8 +134,7 @@ class AuthController extends Controller
             'password.required' => 'Campo Obrigatório',
             'r_password.required' => 'Campo Obrigatório',
         ]);
-
-
+        
         $usernames = preg_split('/\s+/', strtolower($request->name), -1, PREG_SPLIT_NO_EMPTY);
         $username = head($usernames) . '.' . last($usernames);
 

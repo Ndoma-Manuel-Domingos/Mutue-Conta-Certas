@@ -82,17 +82,21 @@ export default {
   layout: AuthLayouts,
   props: ["licencas"],
   methods:{
+    
     formatarValorMonetario(valor) {
-        // Converter o número para uma string e separar parte inteira da parte decimal
-        let partes = String(valor).split('.');
-        let parteInteira = partes[0];
-        let parteDecimal = partes.length > 1 ? '.' + partes[1] : '';
-
-        // Adicionar separadores de milhar
-        parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-        // Retornar o valor formatado
-        return parteInteira + parteDecimal;
+      // Converte o valor para uma string com duas casas decimais
+      let valorFormatado = Number(valor).toFixed(2);
+  
+      // Separa a parte inteira da parte decimal
+      let partes = valorFormatado.split(".");
+      let parteInteira = partes[0];
+      let parteDecimal = partes[1] ? "," + partes[1] : "";
+  
+      // Adiciona separadores de milhar
+      parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  
+      // Retorna o valor formatado
+      return parteInteira + parteDecimal;
     },
   }
 };

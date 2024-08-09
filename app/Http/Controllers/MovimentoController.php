@@ -30,9 +30,31 @@ class MovimentoController extends Controller
         $users = User::with('empresa')->findOrFail(auth()->user()->id);
         // where('empresa_id', $users->empresa_id)->
             
-        $data['movimentos'] = Movimento::with(['exercicio', 'periodo' , 'criador'])
+        $data['movimentos'] = Movimento::with(['exercicio', 'periodo' , 'criador', 'items'])
+        ->when($request->exercicio_id, function($query, $value){
+            $query->where('exercicio_id', $value);
+        })
+        ->whereHas('items', function($query) use($request){
+            $query->when($request->sub_contas_id, function($query, $value){
+                $query->where('subconta_id', $value);
+            });
+        })
+        ->when($request->periodo_id, function($query, $value){
+            $query->where('periodo_id', $value);
+        })
+        ->when($request->data_inicio, function($query, $value){
+            $query->whereDate('created_at',  ">=" ,$value);
+        })
+        ->when($request->data_final, function($query, $value){
+            $query->whereDate('created_at', "<=" ,$value);
+        })
         ->where('empresa_id', $this->empresaLogada())
-        ->orderBy('id', 'desc')->get();
+        ->orderBy('id', 'desc')
+        ->get();
+        
+        $data['exercicios'] = Exercicio::select('id', 'designacao As text')->get();
+        $data['periodos'] = Periodo::select('id', 'designacao As text')->get();
+        $data['subcontas'] = SubConta::with(['conta'])->select('id', DB::raw('CONCAT(numero, " - ", designacao) AS text'))->where('empresa_id', $this->empresaLogada())->get();
 
 
         return Inertia::render('Movimentos/Index', $data);
@@ -98,6 +120,7 @@ class MovimentoController extends Controller
                 'data_lancamento' => date("Y-m-d"),
                 'lancamento_atual' => $request->lancamento_atual,
                 'referencia_documento' => $request->referencia_documento,
+                'data_movimento' => $request->data_movimento,
                 'diario_id' => $request->diario_id,
                 'tipo_documento_id' => $request->tipo_documento_id,
                 'user_id' => $user->id,
@@ -124,9 +147,8 @@ class MovimentoController extends Controller
 
     public function show($id)
     {
-    
         $data['movimento'] = Movimento::with(["items.subconta.conta", "exercicio", "diario", "tipo_documento", "empresa", "criador"])->findOrFail($id);
-
+        
         return Inertia::render('Movimentos/Show', $data);
     }
 
@@ -242,7 +264,9 @@ class MovimentoController extends Controller
 
     public function alterar_debito_conta_movimento($id, $valor)
     {
-
+        
+        // $valor = number_format($valor / 100, 2, '.', '');
+        
         $user = User::findOrFail(auth()->user()->id);
 
         $movimento = MovimentoItem::findOrFail($id);
@@ -259,6 +283,8 @@ class MovimentoController extends Controller
     public function alterar_credito_conta_movimento($id, $valor)
     {
         $user = User::findOrFail(auth()->user()->id);
+        
+        // $valor = number_format($valor / 100, 2, '.', '');
 
         $movimento = MovimentoItem::findOrFail($id);
         $movimento->credito = $valor;
@@ -275,6 +301,8 @@ class MovimentoController extends Controller
     public function alterar_iva_conta_movimento($id, $iva)
     {
         $user = User::findOrFail(auth()->user()->id);
+        
+        // $iva = number_format($iva / 100, 2, '.', '');
 
         $movimento = MovimentoItem::findOrFail($id);
         $movimento->iva = $iva;

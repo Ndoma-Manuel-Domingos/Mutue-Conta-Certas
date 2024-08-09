@@ -203,6 +203,24 @@
                     </div>
                     
                     <div class="col-12 col-md-3 mb-4">
+                      <label for="data_lancamento" class="form-label"
+                        >Data Lançamento</label
+                      >
+                      <input
+                        id="data_lancamento"
+                        v-model="form.data_lancamento"
+                        class="form-control"
+                        placeholder="data_lancamento"
+                        type="date"
+                        />
+                      <span
+                        class="text-danger"
+                        v-if="form.errors && form.errors.data_lancamento"
+                        >{{ form.errors.data_lancamento }}</span
+                      >
+                    </div>
+                    
+                    <div class="col-12 col-md-3 mb-4">
                       <label for="requisitante" class="form-label"
                         >Requisitante</label
                       >
@@ -361,6 +379,7 @@ export default {
         tipo_proveito_id: "",
         taxa_iva_id: "1",
         requisitante: "",
+        data_lancamento: "",
         referencia_documento: "",
         centro_custo: "",
       }),
@@ -405,12 +424,20 @@ export default {
     formatInput() {
       // Implemente aqui a lógica de formatação desejada
       // Por exemplo, para formatar como moeda
-      this.form.valor = this.form.valor.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      // this.form.valor = this.form.valor.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      
+      this.form.valor = (parseFloat(this.form.valor.replace(/\D/g, '')) / 100).toFixed(2)
+      .replace('.', ',')
+      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     },
     
     removeFormatting() {
+      
       // Remover a formatação
-      this.form.valor = this.form.valor.replace(/\D/g, '');
+      // this.form.valor = this.form.valor.replace(/\D/g, '');
+      
+      this.form.valor = parseFloat(this.form.valor.replace(/\./g, '').replace(',', '.'));
+    
     },
     
     selecinarTipoMovimento({id, text}){
@@ -499,8 +526,12 @@ export default {
       this.form.tipo_credito_id = this.tipo_credito_id;
       this.form.contrapartida_id = this.contrapartida_id;
       this.form.sub_conta_id = this.sub_conta_id;
-    
-      this.removeFormatting();
+      
+      // console.log(this.form.valor)
+      
+      // console.error(this.removeFormatting());
+      
+      // return
     
       if(this.form.tipo_movimento_id == 1){
         if( this.form.valor > this.saldo_final ){
@@ -560,6 +591,22 @@ export default {
     },
     
     formatarValorMonetario(valor) {
+      // Converte o valor para uma string com duas casas decimais
+      let valorFormatado = Number(valor).toFixed(2);
+  
+      // Separa a parte inteira da parte decimal
+      let partes = valorFormatado.split(".");
+      let parteInteira = partes[0];
+      let parteDecimal = partes[1] ? "," + partes[1] : "";
+  
+      // Adiciona separadores de milhar
+      parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  
+      // Retorna o valor formatado
+      return parteInteira + parteDecimal;
+    },
+        
+    /*formatarValorMonetario(valor) {
       // Converter o número para uma string e separar parte inteira da parte decimal
       let partes = String(valor).split(".");
       let parteInteira = partes[0];
@@ -570,7 +617,7 @@ export default {
 
       // Retornar o valor formatado
       return parteInteira + parteDecimal;
-    },
+    },*/
     
     imprimirComprovativo() {
       window.open(

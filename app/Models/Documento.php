@@ -14,6 +14,7 @@ class Documento extends Model
     
     protected $fillable = [
         'designacao',
+        'sigla',
         'created_by',
         'updated_by',
         'deleted_by',

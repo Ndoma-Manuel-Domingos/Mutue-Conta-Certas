@@ -88,10 +88,17 @@ export default {
       });
     },
     formatValor(atual) {
-      const valorFormatado = Intl.NumberFormat("pt-br", {
+      // Converte o valor para um número com duas casas decimais
+      const valor = Number(atual).toFixed(2);
+    
+      // Formata o valor para a moeda especificada (AOA)
+      const valorFormatado = Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "AOA",
-      }).format(atual);
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(valor);
+    
       return valorFormatado;
     },
   },

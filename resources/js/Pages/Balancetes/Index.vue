@@ -97,9 +97,6 @@
                   </div>
                 </form>
               </div>
-              <!-- <div class="card-footer">
-                <a href="/balancetes" class="d-block btn btn-primary text-uppercase"><i class="fas fa-broom"></i> Limpar a Pesquisa</a>
-              </div> -->
             </div>
           </div>
 
@@ -387,16 +384,20 @@ export default {
       );
     },
 
+    
     formatarValorMonetario(valor) {
-      // Converter o número para uma string e separar parte inteira da parte decimal
-      let partes = String(valor).split(".");
+      // Converte o valor para uma string com duas casas decimais
+      let valorFormatado = Number(valor).toFixed(2);
+  
+      // Separa a parte inteira da parte decimal
+      let partes = valorFormatado.split(".");
       let parteInteira = partes[0];
-      let parteDecimal = partes.length > 1 ? "." + partes[1] : "";
-
-      // Adicionar separadores de milhar
+      let parteDecimal = partes[1] ? "," + partes[1] : "";
+  
+      // Adiciona separadores de milhar
       parteInteira = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-      // Retornar o valor formatado
+  
+      // Retorna o valor formatado
       return parteInteira + parteDecimal;
     },
 
@@ -413,10 +414,17 @@ export default {
     },
 
     formatValor(atual) {
-      const valorFormatado = Intl.NumberFormat("pt-br", {
+      // Converte o valor para um número com duas casas decimais
+      const valor = Number(atual).toFixed(2);
+    
+      // Formata o valor para a moeda especificada (AOA)
+      const valorFormatado = Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "AOA",
-      }).format(atual);
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(valor);
+    
       return valorFormatado;
     },
   },

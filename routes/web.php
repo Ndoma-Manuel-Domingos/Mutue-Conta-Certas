@@ -34,6 +34,7 @@ use App\Http\Controllers\{
     TipoProveitoController,
     UtilizadorController,
     CentroDeCustoController,
+    FacturaController,
     ImobilizadosController,
     OperadorController,
     TabelaAmortizacaoController,
@@ -48,6 +49,7 @@ use App\Http\Controllers\Admin\{
 };
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -113,6 +115,10 @@ Route::group(["middleware" => "auth"], function () {
     Route::get('/get-diario/{id}', [DiarioController::class, 'get_diario']);
     Route::resource('tipos-documentos', TipoDocumentoController::class);
     Route::resource('movimentos', MovimentoController::class);
+    
+    Route::get('/facturas/painel', [FacturaController::class, 'home']);
+    Route::resource('facturas', FacturaController::class);
+    
     Route::resource('fluxos-caixas', FluxoCaixaController::class);
     Route::post('/adicionar-fluxo-caixa', [FluxoCaixaController::class, 'adicionar_fluxo_caixa']);
     Route::put('/editar-fluxo-caixa/{id}', [FluxoCaixaController::class, 'editar_fluxo_caixa']);

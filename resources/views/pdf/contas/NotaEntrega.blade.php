@@ -111,8 +111,8 @@
             <img src="images/{{$dados_empresa->logotipo_da_empresa ?? 'log.png' }}" style="width: 150px;height: 150px;position: absolute;top: -40px">
         </div>
         <div id="company">
-            <h2 class="name">{{$dados_empresa->nome_empresa}}</h2>
-            <div>{{$dados_empresa->endereco->rua}}, {{$dados_empresa->endereco->bairro}}, <br>
+            <h2 class="name">{{$dados_empresa->nome_empresa ?? ""}}</h2>
+            <div>{{$dados_empresa->endereco->rua}}, {{$dados_empresa->endereco->bairro ?? ""}}, <br>
             </div>
             <div>+244 947716133/+244 942364667</div>
             <div><a href="mailto:geral@uma.co.ao">geral@uma.co.ao</a></div>
@@ -121,23 +121,23 @@
     </header>
     <main>
         <h2 style="text-align: left;border-bottom: 1px solid #c2c2c2;padding-bottom: 2px;text-transform: uppercase;font-size: 11pt;font-weight: 100">NOTA DE SAÍDA DE CAIXA</h2>
-        <h3 style="text-transform: uppercase;">{{ $dados_empresa->nome_empresa }}-Sáida Nº: <strong>{{ $movimento->lancamento_atual }}</strong></h3>
+        <h3 style="text-transform: uppercase;">{{ $dados_empresa->nome_empresa ?? "" }}-Sáida Nº: <strong>{{ $movimento->lancamento_atual ?? "" }}</strong></h3>
 
         <div style="margin:auto 0px"> </div>
         
-        <p style="line-height: 30px;border-bottom: 1px solid #dadada;padding-bottom: 60px"><strong style="">Requisitante:</strong> <br> {{ $movimento->requisitante }}  </p>
+        <p style="line-height: 30px;border-bottom: 1px solid #dadada;padding-bottom: 60px"><strong style="">Requisitante:</strong> <br> {{ $movimento->requisitante ?? "" }}  </p>
         
         <p style="line-height: 30px;border-bottom: 1px solid #dadada;padding-bottom: 60px"><strong>Centro de Custo:</strong> <br> {{ $movimento->centro_de_custo->designacao ?? "" }}  </p>
             
         <p style="line-height: 30px;border-bottom: 1px solid #dadada"><strong>Referente à Saída: </strong> 
             @foreach ($movimento->items as $item)
                 @if ($item->apresentar == "S")
-                <span>{{ $item->descricao }}</span>
+                <span>{{ $item->descricao ?? "" }}</span>
                 @endif
             @endforeach
         </p>
-        <p style="line-height: 30px;border-bottom: 1px solid #dadada"><strong>Valor (AKz):</strong> {{ number_format($movimento->credito, 2, '.', ',')  }}</p>
-        <p style="line-height: 30px;border-bottom: 1px solid #dadada"><strong>Extenso: </strong> {{ valor_por_extenso($movimento->credito) }} kwanzas</p>
+        <p style="line-height: 30px;border-bottom: 1px solid #dadada"><strong>Valor (AKz):</strong> {{ number_format(($movimento->credito ?? 0), 2, '.', ',')  }}</p>
+        <p style="line-height: 30px;border-bottom: 1px solid #dadada"><strong>Extenso: </strong> {{ valor_por_extenso($movimento->credito ?? 0) }} kwanzas</p>
             
         <div style="margin:auto 0px"> </div>
 

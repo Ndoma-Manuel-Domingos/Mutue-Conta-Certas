@@ -267,10 +267,13 @@ export default {
       // Por exemplo, para formatar como moeda
       this.form.valor_aquisicao = this.form.valor_aquisicao.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }, 
-        
+
+    
     removeFormatting() {
       // Remover a formatação
-      this.form.valor_aquisicao = this.form.valor_aquisicao.replace(/\D/g, '');
+      // this.form.valor_aquisicao = this.form.valor_aquisicao.replace(/\D/g, '');
+      
+      this.form.valor_aquisicao = parseFloat(this.form.valor_aquisicao.replace(/\./g, '').replace(',', '.'));
     },
         
     validateInput(event) {

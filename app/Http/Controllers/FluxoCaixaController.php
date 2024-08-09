@@ -484,21 +484,26 @@ class FluxoCaixaController extends Controller
     
     public function store(Request $request)
     {
-
         $request->validate([
             "tipo_movimento_id" => "required",
             "sub_conta_id" => "required",
-            "valor" => "required",
-            "documento_id" => "required"
+            "valor" => "required|numeric",
+            "documento_id" => "required",
+            "data_lancamento" => "required",
         ], [
 
             "tipo_movimento_id.required" => "Campo Obrigatório",
             "sub_conta_id.required" => "Campo Obrigatório",
             "valor.required" => "Campo Obrigatório",
             "documento_id.required" => "Campo Obrigatório",
+            "valor.numeric" => "O valor deve ser numérico.",
+            "data_lancamento.required" => "Campo Obrigatório",
         ]);
         
-
+        // $request->valor2 = number_format($request->valor / 100, 2, '.', '');
+        
+        // dd($request->valor2, $request->valor);
+        
         $user = User::findOrFail(auth()->user()->id);
 
         $tipo_proveito = TipoProveito::find($request->tipo_proveito_id);
@@ -508,12 +513,10 @@ class FluxoCaixaController extends Controller
         $subconta = SubConta::find($request->sub_conta_id);
         $tipo_movimento = TipoMovimento::find($request->tipo_movimento_id);
         $centro_de_custo = CentroDeCusto::find($request->centro_custo);
-     
         
         $subconta_do_iva = SubConta::where('numero', '34.5.2')->orWhere('numero', '34.5.2.2')->first();
         $subconta_do_iva_debito = SubConta::where('numero', '34.5.3')->orWhere('numero', '34.5.3')->first();
         $taxa_iva = Taxa::find($request->taxa_iva_id);
-        
         
         $conta_cliente = SubConta::where('numero', '31.1')->first();
                  
@@ -548,7 +551,7 @@ class FluxoCaixaController extends Controller
                     'exercicio_id' => $this->exercicioActivo(),
                     'periodo_id' =>  $this->periodoActivo(),
                     'dia_id' => date("d"),
-                    'data_lancamento' => date("Y-m-d"),
+                    'data_lancamento' => $request->data_lancamento,
                     'lancamento_atual' => $ultimo_movimento + 1,
                     'diario_id' => 2, // $request->diario_id,
                     'tipo_documento_id' => 2, //$request->tipo_documento_id,
@@ -665,7 +668,7 @@ class FluxoCaixaController extends Controller
                     'exercicio_id' => $this->exercicioActivo(),
                     'periodo_id' =>  $this->periodoActivo(),
                     'dia_id' => date("d"),
-                    'data_lancamento' => date("Y-m-d"),
+                    'data_lancamento' => $request->data_lancamento,
                     'lancamento_atual' => $ultimo_movimento + 1,
                     'diario_id' => 2, 
                     'tipo_documento_id' => 2, 

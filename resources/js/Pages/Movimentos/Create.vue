@@ -55,10 +55,16 @@
                                   <span class="text-danger" v-if="form.errors && form.errors.dia_id">{{ form.errors.dia_id }}</span>
                                 </div>
                                 
-                                <div class="col-12 col-md-6 mb-4">
+                                <div class="col-12 col-md-3 mb-4">
                                   <label for="lancamento_atual" class="form-label">Lançamento Actual</label>
                                   <input type="number" id="lancamento_atual" v-model="form.lancamento_atual" class="form-control" >
                                   <span class="text-danger" v-if="form.errors && form.errors.lancamento_atual">{{ form.errors.lancamento_atual }}</span>
+                                </div>
+                                
+                                <div class="col-12 col-md-3 mb-4">
+                                  <label for="data_movimento" class="form-label">Data Movimento</label>
+                                  <input type="date" id="data_movimento" v-model="form.data_movimento" class="form-control" >
+                                  <span class="text-danger" v-if="form.errors && form.errors.data_movimento">{{ form.errors.data_movimento }}</span>
                                 </div>
                                 
                                 <div class="col-12 col-md-3 mb-4">
@@ -256,6 +262,7 @@ export default {
         diario_id: "",
         tipo_documento_id: "",
         referencia_documento: "",
+        data_movimento: "",
         descricao: "",
       }),
     };
@@ -353,13 +360,23 @@ export default {
     formatInputCredito(item) {
       // Implemente aqui a lógica de formatação desejada
       // Por exemplo, para formatar como moeda
-      item.credito = item.credito.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      // item.credito = item.credito.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      
+      item.credito = (parseFloat(item.credito.replace(/\D/g, '')) / 100).toFixed(2)
+        .replace('.', ',')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      
     },
     
     formatInputDebito(item) {
       // Implemente aqui a lógica de formatação desejada
       // Por exemplo, para formatar como moeda
-      item.debito = item.debito.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      // item.debito = item.debito.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      
+      item.debito = (parseFloat(item.debito.replace(/\D/g, '')) / 100).toFixed(2)
+        .replace('.', ',')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        
     },
     
     validateInput(event) {
@@ -368,13 +385,14 @@ export default {
       if ((keyCode < 48 || keyCode > 57) && keyCode !== 8 && keyCode !== 9 && keyCode !== 37 && keyCode !== 39) {
         event.preventDefault();
       }
-    },
+    },  
     
     removeFormatting(val) {
       // Remover a formatação
-      return val.replace(/\D/g, '');
+      // return val.replace(/\D/g, '');
+      
+      return parseFloat(val.replace(/\./g, '').replace(',', '.'));
     },
-    
 
     input_valor_debito(item) {
       
@@ -408,7 +426,8 @@ export default {
           
         }else {
           
-          var debito = item.debito.replace(/\D/g, '');
+          // var debito = item.debito.replace(/\D/g, '');
+          var debito = parseFloat(item.debito.replace(/\./g, '').replace(',', '.'));
         
           axios
             .get(`/alterar-debito-conta-movimento/${item.id}/${debito}`)
@@ -422,7 +441,6 @@ export default {
             .catch((error) => {});
                       
             event.preventDefault();
-        
         }
       
         }
@@ -450,7 +468,8 @@ export default {
         
       }else{
     
-        var credito = item.credito.replace(/\D/g, '');
+        // var credito = item.credito.replace(/\D/g, '');
+        var credito = parseFloat(item.credito.replace(/\./g, '').replace(',', '.'));
       
         axios
           .get(`/alterar-credito-conta-movimento/${item.id}/${credito}`)
@@ -469,8 +488,11 @@ export default {
     },
     
     input_valor_iva(item) {
+      
+      var iva = parseFloat(item.iva.replace(/\./g, '').replace(',', '.'));
+      
       axios
-        .get(`/alterar-iva-conta-movimento/${item.id}/${item.iva}`)
+        .get(`/alterar-iva-conta-movimento/${item.id}/${iva}`)
         .then((response) => {
           
           this.item_movimentos = [];
@@ -589,10 +611,17 @@ export default {
     },
     
     formatValor(atual) {
-      const valorFormatado = Intl.NumberFormat("pt-br", {
+      // Converte o valor para um número com duas casas decimais
+      const valor = Number(atual).toFixed(2);
+    
+      // Formata o valor para a moeda especificada (AOA)
+      const valorFormatado = Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "AOA",
-      }).format(atual);
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(valor);
+    
       return valorFormatado;
     },
     

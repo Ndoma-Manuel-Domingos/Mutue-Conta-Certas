@@ -25,6 +25,7 @@ class Movimento extends Model
         'tipo_instituicao',
         'dia_id',
         'data_lancamento',
+        'data_movimento',
         'requisitante',
         'centro_custo',
         'lancamento_atual',
