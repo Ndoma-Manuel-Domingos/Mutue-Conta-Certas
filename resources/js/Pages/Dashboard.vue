@@ -113,7 +113,7 @@
                         </td>
                         <td>{{ item.data_lancamento }}</td>
                         <td>{{ item.exercicio.designacao }}</td>
-                        <!-- <td>{{ item.criador.name }}</td> -->
+                        <td>{{ item.criador ? item.criador.name: "" }}</td>
                         <td>
                           {{ item.tipo_documento.numero }} -
                           {{ item.tipo_documento.designacao }}

@@ -67,8 +67,8 @@ class ApiController extends Controller
             DB::beginTransaction();
             // Realizar operações de banco de dados aqui
                     
+            // criação de hash
             $hash = time();
-            
             
             $subconta_cliente = SubConta::with(['conta'])->where('tipo_instituicao', $request->tipo_instituicao)->where('numero', $request->subconta_cliente)->first();
             $subconta_caixa_banco = SubConta::with(['conta'])->where('numero', $request->subconta_caixa_banco)->first();
@@ -76,9 +76,8 @@ class ApiController extends Controller
             
             $tipo_movimento = TipoMovimento::where('sigla', 'D')->first();
             
+            // encontrar o ultimo registro de novimentos
             $ultimo_movimento = Movimento::with(['exercicio', 'diario' ,'tipo_documento', 'criador'])->count();
-            
-            $hash = time();
             
             if($request->tipo_documento == 'FR'){
                 $tipo_documento_id = 3;
@@ -88,6 +87,8 @@ class ApiController extends Controller
                 $tipo_documento_id = 2;
             }
             
+            
+            // caso o tipo de documento é uma factura recibo DEBITO
             if($request->tipo_documento == 'FR'){
                         
                 $create = Movimento::create([
@@ -184,7 +185,7 @@ class ApiController extends Controller
                 ]);
             
             } else {
-                
+                // quanto o tipo de documento uma factura diferente da factura recibo CREDITO
                 $create = Movimento::create([
                     'hash' => $hash,
                     'debito' => $request->valor,

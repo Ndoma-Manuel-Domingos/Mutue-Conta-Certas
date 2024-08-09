@@ -122,6 +122,7 @@ Route::group(["middleware" => "auth"], function () {
     Route::resource('balancos', BalancoController::class);
     Route::resource('extratos-contas', ExtratoContaController::class);
     Route::resource('apuramento-resultados', ApuramentoResultadoController::class);
+    Route::get('apuramento-resultado-pesquisa', [ApuramentoResultadoController::class, 'index']);
     Route::get('/adicionar-conta-movimento/{id}', [MovimentoController::class, 'adicionar_conta_movimento']);
     Route::get('/remover-conta-movimento/{id}', [MovimentoController::class, 'remover_conta_movimento']);
     Route::get('/alterar-debito-conta-movimento/{id}/{valor}', [MovimentoController::class, 'alterar_debito_conta_movimento']);

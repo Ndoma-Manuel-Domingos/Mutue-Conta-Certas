@@ -45,6 +45,7 @@ class DashboardController extends Controller
         )
         ->first();
 
+
         // $data['grafico'] = Movimento::with(['items', 'exercicio', 'periodo', 'diario', 'tipo_documento', 'empresa', 'criador'])
         // ->where('origem', 'fluxocaixa')
         // ->where('empresa_id', $this->empresaLogada())
